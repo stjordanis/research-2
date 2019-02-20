@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>2 staking - W3F Research</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="../..">W3F Research</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#nominator-keys">Nominator keys</a></li>
+            <li><a href="#one-vs-two-layer">One vs two layer</a></li>
+            <li><a href="#certificate-location">Certificate location</a></li>
+            <li><a href="#certificate-size">Certificate size</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h2 id="nominator-keys">Nominator keys</h2>
+<p>In some sense, all public keys derive their authority from some combination of ceremonies and certificates, with certificate root keys deriving tehir authority entirely from ceremonies.  As an example, trust-on-first-use schemes might be considered a pair of cerimonies, the key being associated to an identity first, and the threat of other comparing keys fingerprints.</p>
+<p>We apply this perspective to a consensus algorithm for a proof-of-stake blockchains like polkadot by regarding the chain itself as one large ceremony and treating the staked account as the root of trust.  We then have certificates issued by these staked account keys that authenticate both the session keys used by Polkadot validators and block producers, as well as the long-term transport layer authentication keys required by TLS or Noise (see concerns about libp2p's secio).  </p>
+<p>We must support, or may even require that, these session keys and TLS keys rotate periodically.  At thesame time, we must support staked account keys being air gapped, which prevents them from signing anything regularly.  In consequence, we require a layer layer called nominator keys that lies strictly between staked account keys and session keys.  In this post, we shall discuss the certificate scheme for delegating from staked account keys to nominator keys and delegating from nominator keys to session keys, which includes several unanswered questions.</p>
+<p>In principle, any certificate format should work for nominator keys, but some certificate schemes provide more flexibility, while others save space.  We do not require much flexibility per se, but at least some of these certificates should live inside the staked account, and have some associated data:</p>
+<ul>
+<li>block hash and height when staked,</li>
+<li>unstaking block hash and height, if unstaking, and</li>
+<li>permissions, like only block production, validator nomination, and validator operator.</li>
+</ul>
+<h3 id="one-vs-two-layer">One vs two layer</h3>
+<p>We can support nominated proof-of-stake with only one layer per se.  We would have validator operator nominator keys point directly to their validator's current session keys, while nominator keys that only nominate would likely point to validator operator's nominator keys.  We expect all nominator keys act as owners for a block production node's session key because we do not permit delegation for block production.</p>
+<p>We could require another layer, either by envisioning the session key itself as two layer, or by adding a second layer of nominator key.  I think a two layer session key simplifies session key rollover, which improves forward security and thus reduces the benefits of compromising nodes.  </p>
+<h3 id="certificate-location">Certificate location</h3>
+<p>We could either store certificates with account data, or else provide certificates in protocol interactions, but almost surely the certificate delegating from the staked account to the nominator key belongs in the account data.</p>
+<p>We should take care with the certificates from the nominator key to the session key because the session key requires a proof-of-possesion.  If we place them into the account, then there is a temptation to trust them and not check the proof-of-possesion ourselves.  We cannot necessarily trust the chain for proofs-of-possesion because doing so might provides escalation for attackers who succeed in posting any invalid data.  If we provide them in interactions then there is a temptation to check the proof-of-possesion repeatedly.  We should evaluate either attaching a self-checked flag to the staked account database vs storing session keys in some self-checked account database separate from the account database for which nodes trust the chain.  </p>
+<h3 id="certificate-size">Certificate size</h3>
+<p>We could save some space by using implicit certificates to issue nominator keys, but we consider our initial implementation in <a href="https://github.com/w3f/schnorr-dalek/blob/master/src/cert.rs#L181"><code>schnorr-dalek/src/cert.rs</code></a> insufficient.  In essence, an accounts nominator key could be defined by an additional 32 bytes attached to the account, along with any associated data.  </p>
+<p>We need to hold a conversation about (a) what form this associated data should take, and (b) if the space savings are worth the complexity of an implicit certificates scheme, mostly <a href="https://github.com/w3f/schnorr-dalek/issues/4">reviewing the literature</a>.  </p>
+<p>We clearly need non-implicit certificates for non-owning nominators.  As a result, we might actually reduce the code complexity by not using implicit certificates in the nomination process.  We might then achieve better code reuse by not using implicit certificates anywhere. </p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>1 accounts - W3F Research</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="../..">W3F Research</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#account-signatures-and-keys">Account signatures and keys</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h2 id="account-signatures-and-keys">Account signatures and keys</h2>
+<p>We believe Polkadot accounts should primarily use Schnorr signatures with both public keys and the <code>R</code> point in the signature encoded using the <a href="https://ristretto.group">Ristretto</a> point compression for the Ed25519 curve.  We should collaborate with the <a href="https://github.com/dalek-cryptography">dalek ecosystem</a> for which Ristretto was developed, but provide a simpler signature crate, for which <a href="https://github.com/w3f/schnorr-dalek">schnorr-dalek</a> provides a first step.</p>
+<p>I'll write a another comment giving more details behind this choice, but the high level summary goes:</p>
+<p>Account keys must support the diverse functionality desired of account keys on other systems like Ethereum and Bitcoin.  As such, our account keys shall use Schnorr signatures because these support fast batch verification and hierarchical deterministic key derivation ala <a href="https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#Child_key_derivation_CKD_functions">BIP32</a>. All features from the <a href="https://github.com/sipa/bips/blob/bip-schnorr/bip-schnorr.mediawiki">Bitcoin Schnoor wishlist</a> provides a case for Schnorr signatures matter too, like</p>
+<ul>
+<li>interactive threshold and multi-signaturtes, as well as</li>
+<li>adaptor, and perhaps even blind, signatures for swaps and payment channels. </li>
+</ul>
+<p>We make conservative curve choices here because account keys must live for decades.  In particular, we avoid pairing-based cryptography and BLS signatures for accounts, at the cost of true aggregation of the signatures in a block when verifying blocks, and less interactive threshold and multi-signaturtes. [1]. </p>
+<p>In the past, there was a tricky choice between the more secure curves:</p>
+<ul>
+<li>miss-implementation resistance is stronger with Edwards curves, including the Ed25519 curve, but</li>
+<li>miss-use resistance in stronger when curves have cofactor 1, like secp256k1.</li>
+</ul>
+<p>In fact, miss-use resistance was historically a major selling point for Ed25519, which itself is a Schnorr variant, but this miss-use resistance extends only so far as the rudimentary signature scheme properties it provided.  Yet, any advanced signature scheme functions, beyond batch verification, break precisely due to Ed25519's miss-use resistance.  In fact, there are tricks for doing at least hierarchical deterministic key derivation on Ed25519, as implemented in <a href="https://github.com/w3f/hd-ed25519">hd-ed25519</a>, but almost all previous efforts <a href="https://forum.web3.foundation/t/key-recovery-attack-on-bip32-ed25519/44">produced insecure results</a>.</p>
+<p>We observe that secp256k1 provides a good curve choice from among the curves of cofactor 1, which simplify make implementing fancier protocols.  We do worry that such curves appear at least slightly weaker than Edwards curves.   We worry much more than such curves tend to be harder to implement well, due to having incomplete addition formulas, and thus require more review (see <a href="https://safecurves.cr.yp.to">safecurves.cr.yp.to</a>).  We could select only solid implementations for Polkadot itself, but we cannot control the implementations selected elsewhere in our ecosystem, especially by wallet software.</p>
+<p>In short, we want an Edwards curve but without the cofactor, which do not exist, except..</p>
+<p>In Edwards curve of with cofactor 4, <a href="https://www.shiftleft.org/papers/decaf/">Mike Hamburg's Decaf point compression</a> only permits serialising and deserialising points on the subgroup of order $l$, which provides a perfect solution.  <a href="https://ristretto.group">Ristretto</a> pushes this point compression to cofactor 8, making it applicable to the Ed25519 curve.  Implementations exist in both <a href="https://doc.dalek.rs/curve25519_dalek/ristretto/index.html">Rust</a> and <a href="https://github.com/Ristretto/libristretto255">C</a>.  If required in another language, the compression and decompression functions are reasonable to implement using an existing field implementation, and fairly easy to audit.  </p>
+<p>In the author's words, "Rather than bit-twiddling, point mangling, or otherwise kludged-in ad-hoc fixes, Ristretto is a thin layer that provides protocol implementors with the correct abstraction: a prime-order group."</p>
+<hr />
+<p>[1] Aggregation can dramatically reduce signed message size when applying numerous signatures, but if performance is the only goal then batch verification techniques similar results, and exist for mny signature schemes, including Schnorr.  There are clear advantages to reducing interactiveness in threshold and multi-signaturtes, but parachains can always provide these on Polkadot.  Importantly, there are numerous weaknesses in all known curves that support pairings, but the single most damning weakness is the pairing $e : G_1 \times G_2 \to G_T$ itself.    In essence, we use elliptic curves in the first palce because they insulate us somewhat from mathematicians ever advancing understanding of number theory.  Yet, any known pairing maps into a group $G_T$ that re-exposes us, so attacks based on index-calculus, etc. improve more quickly.  As a real world example, there were weaknesses found in BN curve of the sort used by ZCash during development, so after launch they needed to develop and migrate to a <a href="https://z.cash/blog/new-snark-curve/">new curve</a>.  We expect this to happen again for roughly the same reasons that RSA key sizes increase slowly over time.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>ICMP Scheme - W3F Research</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="..">W3F Research</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#icmp-scheme">ICMP Scheme</a></li>
+            <li><a href="#motivation">Motivation</a></li>
+            <li><a href="#inter-chain-messaging-scheme-assumptions">Inter-chain messaging scheme assumptions</a></li>
+            <li><a href="#steps-order-of-receiving-and-sending-messages-belonging-to-a-parachain-blob">Steps (Order) of Receiving and Sending Messages Belonging to a Parachain Blob:</a></li>
+            <li><a href="#compact-routing-proofs">Compact Routing Proofs</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="icmp-scheme">ICMP Scheme</h1>
+<h2 id="motivation">Motivation</h2>
+<p>We want to enable inter-chain messageing among parachains. We want guarantee that when we send a block we are sure that we have received all the previous messages. Moreover, we want to put a limit on the size of incoming messages to avoid overflowing. </p>
+<h2 id="inter-chain-messaging-scheme-assumptions">Inter-chain messaging scheme assumptions</h2>
+<p>We assume all parachains have an internal input and output queue. Moreover, there is a fixed amount of data each parachain can send to another parachain.</p>
+<p>To avoid parachains being flooded and over loaded, a parachain can block messages coming from other parachains. The bridges are notified of this blocking and convey it to the users on the corresponding parachain. </p>
+<p>PoV Block is execution proof witness data. This might include:</p>
+<ul>
+<li>Output Messages (as message bundle hash preimages)</li>
+<li>External data (“transactions”, “extrinsics” or any other data extrinsic to Polkadot)</li>
+<li>Witness (cryptogrpahic proof statements of data validity)</li>
+<li>New header (probably only the case for verification-only STFs like zkSTARKs or whatever)</li>
+</ul>
+<h2 id="steps-order-of-receiving-and-sending-messages-belonging-to-a-parachain-blob">Steps (Order) of Receiving and Sending Messages Belonging to a Parachain Blob:</h2>
+<ol>
+<li>The collator needs to first check whether he has any incoming messages (which he might not have)<ul>
+<li>Collator runs relay chain light client to determine relay chain header</li>
+<li>Collator tracks parachain header and that parachain’s input queue as a set of hashes of message-bundles (which requires tracking all parachain’s output queues since the last time the parachain accepted input)</li>
+<li>Collator queries parachain validators or collators or availability guarantors (based on relay chain data) in order to get actual message data from bundles</li>
+</ul>
+</li>
+<li>Collator has a transaction pool </li>
+<li>The collator creates block candidate based on this transaction pool, previous header, and any other data (e.g. inherents), and incoming messages </li>
+<li>Collator builds a PoV block candidate for this parachain on the data from 3, this includes outgoing messages</li>
+<li>Collator distributes it to all parachain validators</li>
+<li>Parachain validator produces attestations on some subset of valid PoV candidates that it receives and redistributes to other parachain validators and block author</li>
+<li>Block author selects a set of PoV candidates, at most one for each parachain, which are fully attested by their group</li>
+<li>Block author distributes the relay chain block candidate to other validators</li>
+</ol>
+<h2 id="compact-routing-proofs">Compact Routing Proofs</h2>
+<p>It may be possible to use some sort of proof-of-knowledge to prove that the output queues have been routed to the correct input queues correctly, taking into account temporarily-offline parachains.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
