@@ -67,7 +67,7 @@
 <h1 id="sequential-phragmen-method-the-simple-version">Sequential Phragmén Method - the simple version</h1>
 <p>This note outlines a multiwinner election method introduced by Edvard Phragmén in the 1890's and specified as a sequential greedy algorithm by <a href="https://aaai.org/ocs/index.php/AAAI/AAAI17/paper/download/14757/13791">Brill et al. (2017)</a>, adapted to the problem of electing validators in Polkadot. In particular, we have adapted Brill et al.'s algorithm and proofs to the weighted case. </p>
 <p>We give needed notations in Section 1. In Section 2, we show that this algorithm runs in time 
-$$O(m|E|)$$
+<script type="math/tex; mode=display">O(m|E|)</script>
 if each lookup and floating arithmetic operation is considered constant time, where $m$ is the number of elected validators, and $|E|$ is the number of edges in the graph (the sum over the nominators of the number of supported candidates). </p>
 <p>In Section 3, we also show that the elected commitee observes the property of Proportional Justified Representation (PJR), a popular axiom in the area of election theory showing that an election is "fair".</p>
 <p>Finally, in Section 4 we propose a post-computation that runs in time $\tilde{O}(m|E|)$ (ignoring logarithmic terms) and computes for the elected set the precise budget distribution that maximizes the minimum stake in the elected committee.</p>
@@ -94,22 +94,23 @@ l_v \leftarrow 0 \ \forall v\in V$. </li>
 <p><strong>Running time</strong>: We assume that each candidate validator has at least one supporter. Each one of the $m$ rounds performs $O(|E|)$ arithmetic operations, because each relation $nv\in E$ is inspected at most twice per round. Hence, assuming that floating operations and table lookups take constant time, the running time of the algorithm is $O(m|E|)$.</p>
 <p><strong>General idea</strong>: The algorithm elects validators sequentially. It executes $m$ rounds, electing a new validator $v_i$ in the $i$-th round, and adding it to set $S$. The algorithm also progressively builds an edge weight vector, defining all weights ${w_{nv_i}: \ n\in N_{v_i}}$ of edges incident to $v_i$ as soon as $v_i$ is elected. Finally, the weight vector $w$ is multiplied by a scalar to ensure it observes the budget constraints.</p>
 <p>The algorithm keeps track of <em>scores</em> over nominators and validators. For each nominator $n\in N$, $n$'s score is the fraction of its budget $b_n$ that has been used up so far; i.e., $l_n:=\frac{1}{b_n}\sum_{v\in V_n} w_{nv}$. The guiding principle of this heuristic is to <em>try to minimize the maximum score $l_n$ over all nominators in each round</em>. Consider round $i$: if a new validator $v_i$ is elected, we assign one unit of support to it, i.e. we define edge weights so that $\sum_{n\in N_{v_i} }w_{nv_i}=1$ (this choice of constant is irrevelant, and will change when vector $w$ is scaled in the last step). These edge weights are chosen so that all supporters of $v_i$ end up with the same score at the end of round $i$, i.e. for all $n'\in N_{v_i}$:
-\begin{align}
+<script type="math/tex; mode=display">\begin{align}
 l_{n'}^{new} 
-&amp;= \frac{\sum_{n\in N_{v_i}} l_n^{new}\cdot b_n}{\sum_{n\in N_{v_i}}  b_n} \
-&amp; = \frac{\sum_{n\in N_{v_i}} (l_n^{old}\cdot b_n +w_{nv_i})}{\sum_{n\in N_{v_i}}  b_n} \
-&amp; = \frac{1+ \sum_{n\in N_{v_i}} l_n^{old}\cdot b_n}{\sum_{n\in N_{v_i}}  b_n} =: l_{v_i}.\
-\end{align}</p>
+&= \frac{\sum_{n\in N_{v_i}} l_n^{new}\cdot b_n}{\sum_{n\in N_{v_i}}  b_n} \\
+& = \frac{\sum_{n\in N_{v_i}} (l_n^{old}\cdot b_n +w_{nv_i})}{\sum_{n\in N_{v_i}}  b_n} \\
+& = \frac{1+ \sum_{n\in N_{v_i}} l_n^{old}\cdot b_n}{\sum_{n\in N_{v_i}}  b_n} =: l_{v_i}.\\
+\end{align}</script>
+</p>
 <p>This common nominator score is precisely our definition of validator $v_i$'s score $l_{v_i}$, and the algorithm greedily chooses the validator with smallest score in each round (breaking ties arbitrarily). </p>
 <p><strong>Proof of correctness</strong>: It remains to show that the chosen edge weights are always non-negative, and that they observe the budget constraints after the last scaling. For this, we need the following lemma, which states that scores never decrease. Let $l_n^{(i)}$ and $l_v^{(i)}$ represent respectively that scores of nominator $n$ and validator $v$ at the end of the $i$-th round. </p>
 <p><strong>Lemma 1</strong>: $l_v^{(i)}\leq l_v^{(i+1)}$ and $l_n^{(i)}\leq l_n^{(i+1)}$ for each $n\in N$, $v\in S$ and $i&lt;m$.</p>
 <p><em>Proof</em>. We prove the inequalities by strong induction on $i$, where the base case $i=0$ is trivial if we set $l_v^{(0)}=l_n^{(0)}:=0$ for each $n$ and $v$. Assume now that all the proposed inequalities hold up to $i-1$.</p>
 <p>Validator inequalities: Consider a validator $v_j\in S$. If $j\leq i$, then the identity $l_{v_j}^{(i+1)}=l_{v_j}^i$ follows from the fact that a validator's score doesn't change anymore once it has been elected. Else, if $j&gt;i$, 
-$$l_{v_j}^{(i+1)}:=\frac{1+\sum_{n\in N_{v_j} } b_n\cdot l_n^{(i)}}{\sum_{n\in N_{v_j} } b_n} 
-\geq \frac{1+\sum_{n\in N_{v_j} } b_n\cdot l_n^{(i-1)}}{\sum_{n\in N_{v_j} } b_n} \geq =:l_{v_j}^{(i)},$$
+<script type="math/tex; mode=display">l_{v_j}^{(i+1)}:=\frac{1+\sum_{n\in N_{v_j} } b_n\cdot l_n^{(i)}}{\sum_{n\in N_{v_j} } b_n} 
+\geq \frac{1+\sum_{n\in N_{v_j} } b_n\cdot l_n^{(i-1)}}{\sum_{n\in N_{v_j} } b_n} \geq =:l_{v_j}^{(i)},</script>
 where we used the nominator inequalities $l_n^{(i-1)}\leq l_n^{(i)}$ assumed by induction hypothesis. This shows the validator inequalities up to $i$.</p>
-<p>Nominator inequalities: Consider now a nominator $n$, and assume by contradiction that $l_n^{(i+1)}<l_n^{(i)}$. As $n$'s score has changed in round $i+1$, $n$ must support validator $v_{i+1}$, and so $l_n^{(i+1)}=l_{v_{i+1}}^{(i+1)}$. On the other hand, $l_n^{(i)}=l_n^{(j)} = l_{v_{j}}^{(j)}$ for some $j\leq i$. Putting things together,
-$$l_{v_j}^{(j)} = l_n^{(i)} > l_n^{(i+1)} = l_{v_{i+1}}^{(i+1)} \geq l_{v_{i+1}}^{(j)}, $$
+<p>Nominator inequalities: Consider now a nominator $n$, and assume by contradiction that $l_n^{(i+1)}&lt;l_n^{(i)}$. As $n$'s score has changed in round $i+1$, $n$ must support validator $v_{i+1}$, and so $l_n^{(i+1)}=l_{v_{i+1}}^{(i+1)}$. On the other hand, $l_n^{(i)}=l_n^{(j)} = l_{v_{j}}^{(j)}$ for some $j\leq i$. Putting things together,
+<script type="math/tex; mode=display">l_{v_j}^{(j)} = l_n^{(i)} > l_n^{(i+1)} = l_{v_{i+1}}^{(i+1)} \geq l_{v_{i+1}}^{(j)}, </script>
 where the last inequality follows from validator inequalities up to $i$, which we just proved in the previous paragraph. We conclude that in round $j$, validator $v_{i+1}$ had a strictly smaller score than $v_j$, which contradicts the choice of $v_j$.
 $\square$</p>
 <p>It easily follows that all edge weights are non-negative. Moreover, using the definition of the nominator scores,  before the final weight scaling the budget inequalities are equivalent to $l_n\leq l_{v_m}$ for each $n\in N$, and this inequality holds because for each $n\in N$ there is an $i\leq m$ such that $l_n=l_{v_i}\leq l_{v_m}$.</p>
@@ -124,21 +125,21 @@ $\square$</p>
 <p><strong>Lemma 2:</strong> Sequential Phragmén satisfies PJR.</p>
 <p><em>Proof:</em> Assume the opposite, hence there is an instance $(N\cup V, E, b, m)$ with output committe $S$, an integer $1\leq t\leq m$ and a nominator subset $N'\subseteq N$ as in the definition above.</p>
 <p>For simplicity, we ignore the last scaling of the edge weight vector in the algorithm. Hence, every elected validator in $S$ receives a support of one unit, and the sum of supports over $S$ is $m$. Since we know that each budget constraint is violated by a multiplicative term of at most $l_{v_m}$ (the score of the last added validator), we obtain the bound<br />
-\begin{equation}
+<script type="math/tex; mode=display">\begin{equation}
 l_{v_m}\geq \frac{m}{\sum_{n\in N} b_n}.
-\end{equation}
+\end{equation}</script>
 As $l_{v_m}$ is an upper bound on the nominator score $l_n$ for each $n\in N$ (by Lemma 1), and $l_n$ is the proportion of $m$'s budget that's used, the previous inequality is tight only if $l_n = m/\sum_{n\in N} b_n$ for each $n\in N$.</p>
 <p>Let $S'=S\cap(\cup_n\in N') V_n$, where $|S|&lt;=t-1$ by hypothesis. Since nominators in $N'$ only need to provide support to validators in $S'$, the sum over $N'$ of used budgets must be smaller than $|S'|$, i.e. 
-$$\sum_{n\in N'} l_n\cdot b_n \leq |S'| &lt;= t-1.$$
+<script type="math/tex; mode=display">\sum_{n\in N'} l_n\cdot b_n \leq |S'| <= t-1.</script>
 By a (weighted) average argument, this implies that there is a nominator $n'\in N'$ with score 
-$$l_{n'}\leq \frac{\sum_{n\in N'} l_n\cdot b_n}{\sum_{n\in N'} b_n} &lt; \frac{t}{\sum_{n\in N'} b_n} \leq \frac{t}{\frac{t}{m} \sum_{n\in N} b_n} = \frac{m}{ \sum_{n\in N} b_n},$$
+<script type="math/tex; mode=display">l_{n'}\leq \frac{\sum_{n\in N'} l_n\cdot b_n}{\sum_{n\in N'} b_n} < \frac{t}{\sum_{n\in N'} b_n} \leq \frac{t}{\frac{t}{m} \sum_{n\in N} b_n} = \frac{m}{ \sum_{n\in N} b_n},</script>
 where the last inequality is by hypothesis. This implies that the inequality $l_{v_m} &gt; m/\sum_{n\in N} b_n$ is not tight.</p>
 <p>Consider now running a new round (round $m+1$) on the algorithm, and fix an unelected validator $v'\in \cap_{n\in N'} V_n$ (which must exist by hypothesis). If we compute the score of $v'$ in this round, we get 
-$$l_{v'} = \frac{1+\sum_{n\in N_{v'} } l_n\cdot b_n}{\sum_{n\in N_{v'}} b_n}\leq 
-\frac{1+\sum_{n\in N'} l_n\cdot b_n}{\sum_{n\in N'} b_n},$$
+<script type="math/tex; mode=display">l_{v'} = \frac{1+\sum_{n\in N_{v'} } l_n\cdot b_n}{\sum_{n\in N_{v'}} b_n}\leq 
+\frac{1+\sum_{n\in N'} l_n\cdot b_n}{\sum_{n\in N'} b_n},</script>
 where we used the fact that $N'\subseteq N_{v'}$, and that reducing the set of nominators over which the unit support for $v'$ is split can only increase the nominator scores. Using the known upper bound on the nominator, and the known lower bound on the denominator, we obtain 
-$$l_{v'}\leq \frac{1+\sum_{n\in N'} l_n\cdot b_n}{\sum_{n\in N'} b_n}
-\leq \frac{1 + (t-1)}{\frac{t}{m} \sum_{n\in N} b_n} = \frac{m}{\sum_{n\in N} b_n} &lt; l_{v_m}.$$
+<script type="math/tex; mode=display">l_{v'}\leq \frac{1+\sum_{n\in N'} l_n\cdot b_n}{\sum_{n\in N'} b_n}
+\leq \frac{1 + (t-1)}{\frac{t}{m} \sum_{n\in N} b_n} = \frac{m}{\sum_{n\in N} b_n} < l_{v_m}.</script>
 This implies that $l_{v_m} &gt; l_{v'} \geq l_{v_{m+1}}$, which contradicts Lemma 1.
 $\square$</p>
 <h3 id="section-4-post-computation-for-edge-weights">Section 4. Post-computation for edge weights</h3>
@@ -146,17 +147,23 @@ $\square$</p>
 <p>In particular, we can find the weight vector that maximizes the minimum support over the elected set $S$, up to a factor of $(1-\varepsilon)$, in time $O(m|E|\log(\log (k)/\varepsilon))$, following the algorithm described in our <a href="https://hackmd.io/ICl8_NuHQNyH6hO-cU39Bg">hackmd note on the max-support problem</a>, with the only difference that we do not need to perform the inner loop which selects different tentative committees. </p>
 <h3 id="section-5-alistairs-analysis">Section 5. Alistair's analysis.</h3>
 <p>We now describe a round of the algorithm. Let $S$ be the set of elected candidates so far. In each round we compute for every unelected candidate</p>
-<p>$$t_v = \frac{1+ \sum_{n:v \in A_n} l_n s_n}{\sum_{n:v \in A_n} s_n}$$</p>
+<p>
+<script type="math/tex; mode=display">t_v = \frac{1+ \sum_{n:v \in A_n} l_n s_n}{\sum_{n:v \in A_n} s_n}</script>
+</p>
 <p>where $l_n = \max_{v \in A_n \cap E} t_v$ and $l_n=0$ if $A_n \cap E$ is empty. (Note that this definition is not circular since the $l_n$s only depend on the $t_v$ for elected validators.)</p>
 <p>Then we elect the candidate with the least $t_v$ and store that value.</p>
 <p>After the $m$th round, when we have elected the desired number of candidates $m$, we assign the weights of nominator $n$ with non-empty $A_n \cap E$ to a validator $v \in A_n \cap E$ as follows:</p>
-<p>$$w_{n,v} = (s_n/t_{v_{last}}) (t_v - t_{v_{prev}})$$</p>
+<p>
+<script type="math/tex; mode=display">w_{n,v} = (s_n/t_{v_{last}}) (t_v - t_{v_{prev}})</script>
+</p>
 <p>where $v_{prev}$ is the validator in $A_n \cap E$ that immediately precedes $v$ in order of election and $v_{last}$ is the validator in $A_n \cap E$ that was elected last. If $v$ was elected first in $A_n \cap E$, then take $t_{v_{prev}}=0$.</p>
 <p>It is easy to show by induction that the $t_v$ of elected candidates is increasing (but not necessarily strictly). As long as it is the existing elected candidates, then $l_n$ for every nominator and  $t_v$ for unelected candidates increase with time. Since the next candidate to be elected didn't get elected in the last election, its $t_v$ was at least as high as the least elected candidate then and so is still at least as high now.</p>
 <p>Thus  $t_v - t_{v_{prev}}$ terms are all non-negative and sum to $t_{v_{last}}$. Hence the $w_{n,v}$ are all non-negative and $\sum_v w_{n,v} = s_n$ for any nominator with $A_n \cap E$ non-empty.</p>
 <h2 id="incentiving-the-nominators-to-distribute-the-stake-for-more-security">Incentiving the nominators to distribute the stake for more security</h2>
 <p>Note that any nominator who nominates any elected validator has all their stake assigned. Nothing stops most of them just voting for one candidate, in which case all stake is assigned, but the security is low. We should try to incentivize nominators to avoid this. One way of doing that would be to compute $s_v = \sum_n w_{n,v}$ for every elected validator, then compute, say, the ($m- \lfloor m/3 \rfloor$)-th highest $s_v$, $s$, then weight the nominators payments by some factor, e.g. paying nominator $n$ proportionally to</p>
-<p>$$\sum_v w_{n,v} \cdot \min {2, 1+ s/s_v},$$</p>
+<p>
+<script type="math/tex; mode=display">\sum_v w_{n,v} \cdot \min \{2, 1+ s/s_v\},</script>
+</p>
 <p>so any nominator has an incentive to vote for validators in the bottom $1/3$, which would increase security. We can replace $1/3$ with something smaller for Polkadot-style chains or be even more aggressive than a factor of two if necessary</p>
 <h2 id="implementation-and-time-complexity">Implementation and time complexity</h2>
 <p>Let $V$ be the total bit size of the votes, $c$ the number of candidates and  $m$ as before the number of validators we elect. We claim that the running time $O(V(m+\log \max_n |A_n|))$ or $O(V(m+\log c+\log \max_n |A_n|))$ or $O(V(m + \log \max_n |A_n|)\log c)$ depending on data structure choice. We note that if candidate identifiers are of fixed length then $V \geq (\log_2 c) \sum_n |A_n|$. We store the candidates state in some data structure with O(log c) addition, lookup and update and note that either
@@ -181,6 +188,7 @@ $\square$</p>
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
         <script src="../../js/base.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
         <script src="../../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
