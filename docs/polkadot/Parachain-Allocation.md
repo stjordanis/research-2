@@ -17,29 +17,49 @@ Once a parachain wants to leave Polkadot its deposited tokens are released. Ther
 
 We define two types of parachains, namely, community beta slots and commercial slots. 
 
-We want to reserve 20% slots for community beta parachain slots (“fair”, non- or limited-premine) chains that W3F will deploy or support. This includes: Edgware, Ethereum-bridge, Bitcoin-bridge, Z-cash bridge. These parachain slots will be granted for up to a 2-year period. 
-The remaining 80% of the slots can be more “publicly” or “commercially” opened.
+We want to reserve 20% slots for community beta parachain slots (“fair”, non- or limited-premine) chains that W3F will deploy or support. This includes: Edgware, Ethereum-bridge, Bitcoin-bridge, Z-cash bridge. These parachain slots will be granted for up to a 2-year period. The remaining 80% of the slots can be more “publicly” or “commercially” opened.
 As long as at least one commercial slot is free, there is an associated price given by some sort of progressive curve, to control rapid increase of demand. If a commercial slot becomes free and no commercial slots are already free, then it is auctioned as follows.
 
 ## Auctioning Parachain Slots:
-We mainly use auctions to have a fair and transparent parachain allocation procedure. 
+To determine the parachain allocation fee we carry out auctions periodically as follows. We mainly use auctions to have a fair and transparent parachain allocation procedure.
 
-If a commercial slot becomes free and no commercial slots are already free, then it is set for auction with a 2-week window for posting blind bids for the auction.
-To participate in an auction for obtaining a slot, a parachain needs to deposit DOTs. A parachain candidate can issue additional native tokens in order to acquire DOTs. 
-If a parachain fails to obtain the slot, the returned DOTs can be used to buy back the native token and burn it.
+If a commercial slot becomes free and no commercial slots are already free, then it is set for auction with a 2-week window for posting blind bids for the auction. To participate in an auction for obtaining a slot, a parachain needs to deposit DOTs. A parachain candidate can issue additional native tokens in order to acquire DOTs. If a parachain fails to obtain the slot, the returned DOTs can be used to buy back the native token and burn it.
 
 ### Auction Scheme
+In the literature, many variations of auctions have been proposed. Two popular type of auctions are Vickery [] and English [] auctions, where the bidders submit their true value as bids. In Vickery auctions, all the bids are sealed and the winner pays the amount of the second highest bid. In English auctions, everyone openly submits bids and bidders overbid each other until the end of the auction. The winner pays the amount of his winning bid. Since sealed-bid auctions are hard to implement in a decentralized setup such as blockchains, we use an open (English) auction with some changes as follows. 
 
-Since sealed-bid auctions are hard to implement in a decentralized set up we decided to use an open (English) auction with some changes as follows. 
+Let us assume we have a number of parachain slots available at the time we start the auction. 
 
-Let us assume we have a number of parachain slots available at the time we start the auction. We divide each slot into time units of six months. A bidder can bid on a continuous range of units between 1 and 4. A bid is a tuple consisting of a unit range and bid value in DOTs. There is no distinction between individual slots that means for now everyone can bid only for one slot and bidding on overlapping units is not permitted. These open bids are added into a block that is added to the relay chain. Once this block is added to the relay chain, everyone computes the winners according to all bids that are added to the block and submits new bids to the next block to outbid those winners. This prodecure continues until the end of the epoch. In the next epoch, some randomness obtained from a VRF function is going to determine which block from the previous epoch was the last (closing) block of the auction. Hence, the auction ending time is determined retroactively. We compute the highest DOT per unit for all bids entered in blocks until and including the closing block. The winners pay the value amount of their winning bids. 
+We divide each slot into time units of six months. 
+
+A bidder can bid on a continuous range of units between 1 and 4. 
+
+A bid is a tuple consisting of a unit range and bid value in DOTs. These open bids are added into a block that is added to the relay chain.
+
+There is no distinction between individual slots that means for now everyone can bid only for one slot at anz given moment and bidding on overlapping units is not permitted.  
+
+Once the block with the bids is added to the relay chain, everyone computes the winners according to all bids that are added to the block.
+
+To determine the winner we compute the highest DOT per unit for all bids entered, bz calculating the average locked DOT per unit for a winning scenario. 
+
+For example, let us assume we have three bidders that wants to submit bids for a parachain slot. Bidder $B_1$ submits the bid (1-4,75 DOT), bidder $B_2$ submits (3-4, 90 DOTs), and bidder $B_3$ submits (1-2, 30). In this example bidder $B_1$ wins because if bidder $B_2$ and bidder $B_3$ win each unit would only be locked for 60 DOTs, while of bidder_1 wins each unit is locked for 75 DOTs. 
+
+For the next block everyone who has a higher valuation for the parachain slot submits new bids to the next block to outbid  winners from the previous blocks. This prodecure continues until the end of the epoch. 
+
+In the next epoch, some randomness obtained from a VRF function (see [BABE](BABE/Babe.md), where the VRF function is also used for more information) is going to determine which block from the previous epoch was the last (closing) block of the auction. Hence, the auction ending time is determined retroactively. 
+
+The winner of the auction if computed based all all the bid submited until and including the closing block. 
+
+The winners pay the value amount of their winning bids. 
 
 **Strategy for bidding:** 
 Bidders can bid on any consecutive range of units. However, everyone will add bids with the maximum unit range that they need and only submit bids for smaller unit ranges if they loose the bid in a given block. While in the first auction bidders with a high budget will aim at bidding first on only high ranges, in next auctions, units that are immidiately after the old range that the bidder has already obtained are of very high value for those bidders because it prevents disruption in the their parachain operation. 
 
+Example: 
+
 **Advantages of our auction scheme:**
 - bidders submit serious bids in the first block
-- we prevent overbidding and snipping (this can harm total revenue for the seller, but this is not an objective for us)
+- we prevent overbidding and sniping. Bid sniping is unfair to other bidders since they will loose the auction because they had a lower valuation for the item but because they were not given the chance to counterbid. Avoiding overbidding may harm total revenue for the seller, but this is not an objective for us.
 - weaker bidders have a chance to win in the auction, which encourages participation. However, note that we do not have a completely random auction close time and the bidder still needs to be the best bidder among all bids in an entire given block for the least. For example, if the first block is the closing block, the bidders need to be a winner among the bids in that block. Our scheme is rather a hybrid between a hard close and a random close. 
 
 By allowing for an n-sided market to determine the cost of connecting to the system, we ensure a weakly dominant Nash-equilibrium between the actors in question and allow for appropriate valuation of connecting to the system. 
