@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Keys &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Polkadot’s cryptography" href="keys/index.html" />
+    <link rel="prev" title="5. A Phragmén-like Heuristic" href="NPoS/5. A Phragmén-like Heuristic.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="keys">
+<h1>Keys<a class="headerlink" href="#keys" title="Permalink to this headline">¶</a></h1>
+<meta http-equiv="refresh" content="0; url=./keys/index.html"><div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="keys/index.html">Polkadot’s cryptography</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="keys/index.html#account-keys">Account keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys/index.html#session-keys">Session keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys/index.html#old">old</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keys/1-accounts.html">Account signatures and keys</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="keys/1-accounts.html#ristretto">Ristretto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys/1-accounts.html#additional-signature-types">Additional signature types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keys/1-accounts-more.html">Account signatures and keys in Polkadot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="keys/1-accounts-more.html#schnorr-signatures">Schnorr signatures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys/1-accounts-more.html#curves">Curves</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="keys/1-accounts-more.html#how-much-secp256k1-support-">How much secp256k1 support?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keys/1-accounts-more.html#is-secp256k1-risky-">Is secp256k1 risky?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keys/1-accounts-more.html#is-ed25519-risky---aka-use-ristretto">Is Ed25519 risky?  Aka use Ristretto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keys/1-accounts-more.html#zero-knowledge-proofs-in-the-dalek-ecosystem">Zero-knowledge proofs in the dalek ecosystem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keys/2-staking.html">Nomination</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="keys/2-staking.html#stash-account-keys">Stash account keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys/2-staking.html#stake-controller-account-keys">Stake controller account keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys/2-staking.html#certificate-location">Certificate location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys/2-staking.html#certificate-size">Certificate size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys/2-staking.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keys/3-session.html">Session keys</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keys/4-secio.html">Transport layer authentication - libp2p’s SECIO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keys/creation.html">Account key creation ideas for Polkadot</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS.html">NPoS</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Keys</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="keys/index.html">Polkadot’s cryptography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keys/1-accounts.html">Account signatures and keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keys/1-accounts-more.html">Account signatures and keys in Polkadot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keys/2-staking.html">Nomination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keys/3-session.html">Session keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keys/4-secio.html">Transport layer authentication - libp2p’s SECIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keys/creation.html">Account key creation ideas for Polkadot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../polkadot.html">Polkadot</a><ul>
+      <li>Previous: <a href="NPoS/5. A Phragmén-like Heuristic.html" title="previous chapter">5. A Phragmén-like Heuristic</a></li>
+      <li>Next: <a href="keys/index.html" title="next chapter">Polkadot’s cryptography</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/polkadot/keys.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

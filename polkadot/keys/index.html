@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Polkadot’s cryptography &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Account signatures and keys" href="1-accounts.html" />
+    <link rel="prev" title="Keys" href="../keys.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="polkadot-s-cryptography">
+<h1>Polkadot’s cryptography<a class="headerlink" href="#polkadot-s-cryptography" title="Permalink to this headline">¶</a></h1>
+<p>In polkadot, we necessarily distinguish among different permissions and functionalities with different keys and key types, respectively.  We roughly categories these into account keys with which users interact and session keys that nodes manage without operator intervention beyond the certification process.</p>
+<div class="section" id="account-keys">
+<h2>Account keys<a class="headerlink" href="#account-keys" title="Permalink to this headline">¶</a></h2>
+<p>Account keys have an associated balance of which portions can be <em>locked</em> to play roles in staking, resource rental, and governance, including waiting out some unlocking period.  We allow several locks of varying durations, both because these roles impose different restrictions, and for multiple unlocking periods running concurrently. </p>
+<p>We encourage active participation in all these roles, but they all require occasional signatures from accounts.  At the same time, account keys have better physical security when kept in inconvenient locations, like safety deposit boxes, which makes signing arduous.  We avoid this friction for users as follows.</p>
+<p>Accounts declare themselves to be <em>stash accounts</em> when locking funds for staking.  All stash accounts register a certificate on-chain that delegates all validator operation and nomination powers to some <em>controller account</em>, and also designates some <em>proxy key</em> for governance votes.  In this state, the controller and proxy accounts can sign for the stash account in staking and governance functions, respectively, but not transfer fund.  </p>
+<p>As a result, the stash account’s locked funds can benefit from maximum physical security, while still actively participating via signatures from their controller or proxy account keys.  At anytime the stash account can replace its controller or proxy account keys, such as if operational security mistakes might’ve compromised either.</p>
+<p>At present, we suport both ed25519 and schnorrkel/sr25519 for account keys.  These are both Schnorr-like signatures implemented using the Ed25519 curve, so both offer extremely similar security.  We recommend ed25519 keys for users who require HSM support or other external key management solution, while schnorrkel/sr25519 provides more blockchain-friendly functionality like HDKD and multi-signatures.  </p>
+<p>In particular, schnorrkel/sr25519 uses the <a class="reference external" href="https://doc.dalek.rs/curve25519_dalek/ristretto/index.html">Ristretto</a> implementation of section 7 of Mike Hamburg’s <a class="reference external" href="https://eprint.iacr.org/2015/673.pdf">Decaf</a> paper, which provide the 2-torsion free points of the Ed25519 curve as a prime order group.  Avoiding the cofactor like this means Ristretto makes implementing more complex protocols significantly safer.  We employ Blake2b for most conventional hashing in polkadot, but schnorrkel/sr25519 itself uses the <a class="reference external" href="https://doc.dalek.rs/merlin/index.html">merlin</a> limited implementation of Mike Hamberg’s <a class="reference external" href="http://strobe.sourceforge.io/">STROBE</a>, which is based on Keccak-f(1600) and provides a hashing interface well suited to signatures and NIZKs.  See https://github.com/w3f/schnorrkel/blob/master/annoucement.md for more detailed design notes.</p>
+</div>
+<div class="section" id="session-keys">
+<h2>Session keys<a class="headerlink" href="#session-keys" title="Permalink to this headline">¶</a></h2>
+<p>Session keys each fill roughly one particular role in consensus or security.  All session keys gain their authority from a session certificate that is signed by some controller key and that delegates appropriate stake.  </p>
+<p>At any time, the controller key can pause or revoke this session certificate and/or issue replacement with new session keys.  All new session keys can be registered in advance, and some must be, so validators can cleanly transition to new hardware by issuing session certificates that only become valid after some future session.  We suggest using pause for emergency maintenance and using revocation if a session key might be compromised.  </p>
+<p>We suggest session keys remain tied to one physical machine, so validator operators issue the session certificate using the RPC protocol, not handle the session secret keys themselves.   In particular, we caution against duplicating session secret keys across machines because such “high availability” designs invariably gets validator operators slashed.  Anytime new validator hardware must be started quickly the operator should first start the new node, and then certify the new session keys it creates using the RPC protocol.  </p>
+<p>We impose no prior restrictions on the cryptography employed by specific substrate modules or associated session keys types.  </p>
+<p>In BABE, validators use schnorrkel/sr25519 keys both for a verifiable random function (VRF) based on on <a class="reference external" href="https://eprint.iacr.org/2017/099.pdf">NSEC5</a>, as well as for regular Schnorr signatures.</p>
+<p>A VRF is the public-key analog of a pseudo-random function (PRF), aka cryptographic hash function with a distinguished key, such as many MACs.  We award block productions slots when the block producer scores a low enough VRF output <span class="math notranslate nohighlight">\(\mathtt{VRF}(r_e || \mathtt{slot_number} )\)</span>, so anyone with the VRF public keys can verify that blocks were produced in the correct slot, but only the block producers know their slots in advance via their VRF secret key.</p>
+<p>As in <a class="reference external" href="https://eprint.iacr.org/2017/573.pdf">Ouroboros Praos</a>, we provide a source of randomness <span class="math notranslate nohighlight">\(r_e\)</span> for the VRF inputs by hashing together all VRF outputs form the previous session, which requires that BABE keys be registered at least one full session before being used.</p>
+<p>We reduce VRF output malleability by hashing the signer’s public key along side the input, which dramatically improves security when used with HDKD.  We also hash the VRF input and output together when providing output used elsewhere, which improves compossibility in security proofs. See the 2Hash-DH construction from Theorem 2 on page 32 in appendix C of <a class="reference external" href="https://eprint.iacr.org/2017/573.pdf">“Ouroboros Praos: An adaptively-secure, semi-synchronous proof-of-stake blockchain”</a>.  </p>
+<p>In GRANDPA, validators shall vote using BLS signatures, which supports convenient signature aggregation and select ZCash’s BLS12-381 curve for performance.  There is a risk that BLS12-381 might drops significantly below 128 bits of security, due to number field sieve advancements.  If and when this happens, we expect upgrading GRANDPA to another curve to be straightforward.  See also https://mailarchive.ietf.org/arch/msg/cfrg/eAn3_8XpcG4R2VFhDtE_pomPo2Q</p>
+<p>TODO: ImOnline ..  ref. https://github.com/paritytech/substrate/issues/3546 etc.</p>
+<p>We treat libp2p’s transport keys roughly like session keys too, but they include the transport keys for sentry nodes, not just for the validator itself.  As such, the operator interacts slightly more with these.</p>
+</div>
+<div class="section" id="old">
+<h2>old<a class="headerlink" href="#old" title="Permalink to this headline">¶</a></h2>
+<p>In this post, we shall first give a high level view of the various signing keys planned for use in Polkadot.  We then turn the discussion towards the certificate chain that stretches between staked account keys and the session keys used for our proof-of-stake design.  In other words, we aim to lay out the important questions on the “glue” between keys rolls here, but first this requires introducing the full spectrum of key rolls.</p>
+<p>We have roughly four cryptographic layers in Polkadot:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="1-accounts.html"><em>Account keys</em></a> are owned by users and tied to one actual dot denominated account on Polkadot.  Accounts could be staked/bonded, unstaked/unbonded, or unstaking/unbonding, but only an unstaked/unbonded account key can transfer dots from one account to another.  (<a class="reference external" href="1-accounts-more.html">more</a>)</p></li>
+<li><p><a class="reference external" href="2-staking.html"><em>Nomination</em></a> provide a certificate chain between staked/bonded account keys and the session keys used by nodes in block production or validating.  As nominator keys cannot transfer dots, they insulate account keys, which may remain air gapped, from nodes actually running on the internet.</p></li>
+<li><p><a class="reference external" href="3-session.html"><em>Session keys</em></a> are actually several keys kept together that provide the various signing functions required by validators, including a couple types of verifiable random function (VRF) keys.</p></li>
+<li><p><a class="reference external" href="https://forum.web3.foundation/t/transport-layer-authentication-libp2ps-secio/69"><em>Transport layer static keys</em></a> are used by libp2p to authenticate connections between nodes.  We shall either certify these with the session key or perhaps include them directly in the session key.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../keys.html">Keys</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Polkadot’s cryptography</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#account-keys">Account keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#session-keys">Session keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#old">old</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="1-accounts.html">Account signatures and keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-accounts-more.html">Account signatures and keys in Polkadot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2-staking.html">Nomination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="3-session.html">Session keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-secio.html">Transport layer authentication - libp2p’s SECIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="creation.html">Account key creation ideas for Polkadot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../keys.html">Keys</a><ul>
+      <li>Previous: <a href="../keys.html" title="previous chapter">Keys</a></li>
+      <li>Next: <a href="1-accounts.html" title="next chapter">Account signatures and keys</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/keys/index.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

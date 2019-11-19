@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Parachain Allocation &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Polkadot Runtime Environment Specification" href="Polkadot-Runtime-Environment.html" />
+    <link rel="prev" title="ICMP Scheme" href="ICMP.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>====================================================================</p>
+<p><strong>Authors</strong>: Fatemeh Shirazi (design also from Gavin Wood and Alistair Stewart)</p>
+<p><strong>Last updated</strong>: 12.09.2019</p>
+<p><strong>Note</strong>: In progress</p>
+<p>====================================================================</p>
+<div class="section" id="parachain-allocation">
+<h1>Parachain Allocation<a class="headerlink" href="#parachain-allocation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>To run a parachain in Polkadot a parachain slot needs to be obtained. Parachain slots are locked on a deposit basis. We define two types of parachains, namely, community beta slots and commercial slots. We want to reserve 20% slots for community beta parachain slots (“fair”, non- or limited-premine) chains that W3F will deploy or support. The remaining 80% of the slots can be more “publicly” or “commercially” opened. Commercial slot are auctioned as follows.</p>
+</div>
+<div class="section" id="auctioning-parachain-slots">
+<h2>Auctioning Parachain Slots<a class="headerlink" href="#auctioning-parachain-slots" title="Permalink to this headline">¶</a></h2>
+<p>We use auctions to have a fair and transparent parachain allocation procedure. Since implementing seal-bid auctions are difficult and to avoid bid sniping we adopt an Candle auction with a retroactively determined close as follows.</p>
+<p>Once the auction has started within a fixed window bidders can post bids for the auction. Bids go into the block as transactions. Bidders are allowed to submit multiple bids. Bids that a bidder is submitting either should intersect with all winning bids by same bidder or be contiguous with winning bids by the same bidder. If an incoming bid is not changing the winners it is ignored.</p>
+<p>For 4 lease periods we have 10 possible ranges. We store the winner for each one of the 10 ranges in a designated data structure. We need to make sure that a new bid does not have a gap with a winning bid on another interval from the same bidder. This means that once a bidder has won a bid for a given range, say for example lease periods 1-2, then he cannot bid on 4 unless someone overbids him for 1-2.</p>
+<p>For any incoming bid the new winner is calculated by choosing the combination of bids where the average deposit for overall all 4 lease periods is most. Once a bid is added to the block, the amount of their bid gets reserved.</p>
+<p>Once a fixed number of blocks have been produced for the auction a random numbers decides which one of the previous blocks was the closing block and we return the winners and their corresponding ranges for that closing block. The reserved funds of losers are going to be released once the ending time of the auction is determined and the final winners are decided.</p>
+<p>For example, let us assume we have three bidders that want to submit bids for a parachain slot. Bidder <span class="math notranslate nohighlight">\(B_1\)</span> submits the bid (1-4,75 DOT), bidder <span class="math notranslate nohighlight">\(B_2\)</span> submits (3-4, 90 DOTs), and bidder <span class="math notranslate nohighlight">\(B_3\)</span> submits (1-2, 30). In this example bidder <span class="math notranslate nohighlight">\(B_1\)</span> wins because if bidder <span class="math notranslate nohighlight">\(B_2\)</span> and bidder <span class="math notranslate nohighlight">\(B_3\)</span> win each unit would only be locked for an average of 60 DOTs or something else equivalent to 240 DOT-intervals, while of bidder <span class="math notranslate nohighlight">\(B_1\)</span> wins each unit is locked for 75 DOTs.</p>
+</div>
+<div class="section" id="analysis">
+<h2>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h2>
+<p>Our auction design has two fundamental design differences with English auctions; 1) A retroactive random close 2) a non uniformity on having private or public valuation for the item on auction.</p>
+<p>TODO: Summarize existing results fo analyzing English auctions.</p>
+<p>For our analysis, we are interested in a number of goals such as <em>fairness</em>, <em>having a dominant strategy</em>, and <em>maximizing revenue</em>. Finally we discuss how we could keep the auction results relatively similar accross a number of auctions. We might need this to have a stable valuation for our token DOT.</p>
+<p>One of the main objectives of our action scheme is to make it <em>fair</em>. By being fair we mean that a bidder with a higher valuation than another bidder will have a higher chance of winning the auction that is relative to the difference in their valuation.</p>
+<p>Having a random retroactive close does not reduce fairness for bidders with private valuation. Hence, we want to show that the Candle auction is fair for users (bidders with private strategy profiles) and smarts contracts (bidders with public strategy profiles).</p>
+<p>We want to show that we are fair towards smart contracts such that they cannot be grieved with no costs by users who will bid above their valuation for this purpose.</p>
+<p>We want to present a strategy for smart contracts that is nearly dominant when everyone does not bid above their valuation. By nearly dominant we refer to Epsilon-equilibrium \cite{}. A strategy profile that is nearly dominant, satisfies the condition of Nash equilibrium within a factor of some well defined epsilon.</p>
+<p>We follow up by showing that bidding above ones valuation (with the intention of grieving for example) introduces risks for those bidders.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Parachain Allocation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#auctioning-parachain-slots">Auctioning Parachain Slots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#analysis">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS.html">NPoS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys.html">Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../polkadot.html">Polkadot</a><ul>
+      <li>Previous: <a href="ICMP.html" title="previous chapter">ICMP Scheme</a></li>
+      <li>Next: <a href="Polkadot-Runtime-Environment.html" title="next chapter">Polkadot Runtime Environment Specification</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/polkadot/Parachain-Allocation.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

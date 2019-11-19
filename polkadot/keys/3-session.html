@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Session keys &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Transport layer authentication - libp2p’s SECIO" href="4-secio.html" />
+    <link rel="prev" title="Nomination" href="2-staking.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="session-keys">
+<h1>Session keys<a class="headerlink" href="#session-keys" title="Permalink to this headline">¶</a></h1>
+<p>A session public key should consist of three or four public keys types: </p>
+<ul class="simple">
+<li><p>Ristretto Schnorr public key (32 bytes public keys, 64 byte signatures, 96 byte VRFs)</p></li>
+</ul>
+<p>We issue these from the nominator keys acting as validator operators.  We might use an implicit certificate but doing so either restricts us to one validator operator, or else increases code complexity and forces a primary validator operator.  Implicit certificates also make session key records impossible to authenticate without the nominator account, but this sounds desirable.  </p>
+<p>We know signers can easily batch numerous VRF outputs into a single proof with these, ala CloudFlare’s Privacy Pass.  If we employ these VRFs for block production then signers could periodically publish a “sync digest” that consolidated thousands of their past block production VRFs into a single check, which improves syncing speed.  There is also an avenue to batch verify these VRFs by multiply signers, but it requires enlarging the VRF output and proofs from from 96 to 128 bytes.</p>
+<ul class="simple">
+<li><p>Small curve of BLS12-381 (48 byte public keys, 96 byte signatures)</p></li>
+</ul>
+<p>Aggregated signatures verify can faster when using this key if the signer set for a particular message is large but irregularly composed, as in GRANDPA.  Actual signatures are slower than the opposite orientation, and non-constant time extension field arithmetic makes them even slower, or more risky.  Aggregating signatures on the same message like this incurs malleability risks too.  We also envision using this scheme in some fishermen schemes.</p>
+<p>We should consider <a class="reference external" href="https://eprint.iacr.org/2017/437">slothful reduction</a> as discussed in https://github.com/zkcrypto/pairing/issues/98 for these eventually, but initially key splitting should provide solid protection against timing attacks, but with even slower signature speed.</p>
+<ul class="simple">
+<li><p>Big curve of BLS12-381 (96 bytes public keys, 48 byte signatures) (optional)</p></li>
+</ul>
+<p>Aggregated signatures in which we verify many messages by the same signer verify considerably faster when using this key.  We might use these for block production VRFs because they aggregating over the same signer sounds useful for syncing.  Initially, we envisioned aggregation being useful for some VRF non-winner proofs designs, but our new non-winner proof design mostly avoids this requirement.  Right now, we favor the Ristretto Schnorr VRF for block production because individual instances verify faster and it provides rather extreme batching over the same signer already.</p>
+<p>We also expect faster aggregate verification from these when signer sets get repeated frequently, so conceivably these make sense for some settings in which small curve keys initially sound optimal.  We envision signature aggregation being “wild” in GRANDPA, so the small curve key still sounds best there.</p>
+<ul class="simple">
+<li><p>Authentication key for the transport layer.</p></li>
+</ul>
+<p>We might ideally include node identity form libp2p, but secio handles authentication poorly (<a class="reference external" href="https://forum.web3.foundation/t/transport-layer-authentication-libp2ps-secio/69">see the secio discussion</a>).</p>
+<p>A session public key record has a prefix consisting of the above three keys, along with a certificate from the validator operator on the Ristretto Schnorr public key and some previous block hash and height.  We follow this prefix with a first signature block consisting two BLS signatures on the prefix, one by each the BLS keys.  We close the session public key record with a second signature block consisting of a Ristretto Schnorr signature on both the prefix and first signature block.  In this way, we may rotate our BLS12-381 keys without rotating our Ristretto Schnorr public key, possibly buying us some forward security.</p>
+<p>We include the recent block hash in the certificate, so that if the chain were trusted for proofs-of-possession then attackers cannot place rogue keys that attack honestly created session keys created after their fork.  We recommend against trusting the chain for proofs-of-possession however because including some recent block hash like this only helps against longer range attacks. </p>
+<p>We still lack any wonderful aggregation strategy for block production VRFs, so they may default to Ristretto Schnorr VRFs.  In this case, the Ristretto Schnorr session key component living longer also help minimize attacks on our random beacon. </p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../keys.html">Keys</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html">Polkadot’s cryptography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-accounts.html">Account signatures and keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-accounts-more.html">Account signatures and keys in Polkadot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2-staking.html">Nomination</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Session keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-secio.html">Transport layer authentication - libp2p’s SECIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="creation.html">Account key creation ideas for Polkadot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../keys.html">Keys</a><ul>
+      <li>Previous: <a href="2-staking.html" title="previous chapter">Nomination</a></li>
+      <li>Next: <a href="4-secio.html" title="next chapter">Transport layer authentication - libp2p’s SECIO</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/keys/3-session.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

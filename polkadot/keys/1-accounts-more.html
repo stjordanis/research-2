@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Account signatures and keys in Polkadot &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Nomination" href="2-staking.html" />
+    <link rel="prev" title="Account signatures and keys" href="1-accounts.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="account-signatures-and-keys-in-polkadot">
+<h1>Account signatures and keys in Polkadot<a class="headerlink" href="#account-signatures-and-keys-in-polkadot" title="Permalink to this headline">¶</a></h1>
+<p>We believe Polkadot accounts should primarily use Schnorr signatures with both public keys and the <code class="docutils literal notranslate"><span class="pre">R</span></code> point in the signature encoded using the <a class="reference external" href="https://ristretto.group">Ristretto</a> point compression for the Ed25519 curve.  We should collaborate with the <a class="reference external" href="https://github.com/dalek-cryptography">dalek ecosystem</a> for which Ristretto was developed, but provide a simpler signature crate, for which <a class="reference external" href="https://github.com/w3f/schnorr-dalek">schnorr-dalek</a> provides a first step.</p>
+<div class="section" id="schnorr-signatures">
+<h2>Schnorr signatures<a class="headerlink" href="#schnorr-signatures" title="Permalink to this headline">¶</a></h2>
+<p>We prefer Schnorr signatures because they satisfy the <a class="reference external" href="https://github.com/sipa/bips/blob/bip-schnorr/bip-schnorr.mediawiki">Bitcoin Schnoor wishlist</a> and work fine with extremely secure curves, like the Ed25519 curve or secp256k1.  </p>
+<p>We observe the Bitcoin Schnorr wishlist oversells the promise of schnorr multi-signatures because they actually require three round trips, which works for industrial usage, but complicates.  Another scheme call mBCJ from pages 21 and 22 of https://eprint.iacr.org/2018/417.pdf provides a two round trip multi-signature, but we require a delinearized variant of mBCJ for accounts https://github.com/w3f/schnorrkel/issues/15 and mBCJ is not actually a Schnorr signatures. </p>
+<p>You could do fancier tricks, including like aggregation, with a pairing based curve like BLS12-381 and the BLS signature scheme.  These curves are slower for single verifications, and worse accounts should last decades while pairing friendly curves should be expected become less secure as number theory advances.  </p>
+<p>There is one sacrifice we make by choosing Schnorr signatures over ECDSA signatures for account keys:  Both require 64 bytes, but only <a class="reference external" href="https://crypto.stackexchange.com/questions/18105/how-does-recovering-the-public-key-from-an-ecdsa-signature-work">ECDSA signatures communicate their public key</a>.  There are obsolete Schnorr variants that <a class="reference external" href="https://crypto.stackexchange.com/questions/60825/schnorr-pubkey-recovery">support recovering the public key from a signature</a>, but 
+they break important functionality like <a class="reference external" href="https://www.deadalnix.me/2017/02/17/schnorr-signatures-for-not-so-dummies/">hierarchical deterministic key derivation</a>.  In consequence, Schnorr signatures often take an extra 32 bytes for the public key.</p>
+<p>In exchange, we gain a slightly faster signature scheme with far simpler batch verification than <a class="reference external" href="http://cse.iitkgp.ac.in/~abhij/publications/ECDSA-SP-ACNS2014.pdf">ECDSA batch verification</a> and more natural threshold and multi-signatures, as well as tricks used by payment channels.  I also foresee the presence of this public key data may improve locality in block verification, possibly openning up larger optimisations.</p>
+<p>Yet most importantly, we can protect Schnorr signatures using both the derandomization tricks of EdDSA along with a random number generator, which gives us stronger side-channel protections than conventional ECDSA schemes provide.  If we ever do want to support ECDSA as well, then we would first explore improvements in side-channel protections like <a class="reference external" href="https://tools.ietf.org/html/rfc6979">rfc6979</a>, along with concerns like batch verification, etc.</p>
+</div>
+<div class="section" id="curves">
+<h2>Curves<a class="headerlink" href="#curves" title="Permalink to this headline">¶</a></h2>
+<p>There are two normal curve choices for accounts on a blockchain system, either secp256k1 or the Ed25519 curve, so we confine our discussion to them.  If you wanted slightly more speed, you might choose FourQ, but it sounds excessive for blockchains, implementations are rare, and it appears covered by older but not quite expired patents.  Also, you might choose Zcash’s JubJub if you wanted fast signature verification in zkSNARKs, but that’s not on our roadmap for Polkadot, and Jubjub also lacks many implementations.</p>
+<div class="section" id="how-much-secp256k1-support-">
+<h3>How much secp256k1 support?<a class="headerlink" href="#how-much-secp256k1-support-" title="Permalink to this headline">¶</a></h3>
+<p>We need some minimal support for secp256k1 keys because token sale accounts are tied to secp256k1 keys on Ethereum, so some “account” type must necessarily use secp256k1 keys.  At the same time, we should not encourage using the same private keys on Ethereum and Polkadot.  We might pressure users into switching key types in numerous ways, like secp256k1 accounts need not support balance increases, or might not support anything but replacing themselves with an ed25519 key.  There are conceivable reasons for fuller secp256k1 support though, like wanting ethereum smart contracts to verify some signatures on Polkadot.  We might support secp256k1 accounts with limited functionality, but consider expanding that functionality if such use cases arise. </p>
+</div>
+<div class="section" id="is-secp256k1-risky-">
+<h3>Is secp256k1 risky?<a class="headerlink" href="#is-secp256k1-risky-" title="Permalink to this headline">¶</a></h3>
+<p>There are two theoretical reasons for preferring an twisted Edwards curve over secp256k1:  First, secp256k1 has a <a class="reference external" href="https://safecurves.cr.yp.to/disc.html">small CM field discriminant</a>, which might yield better attacks in the distant future.  Second, secp256k1 has fairly rigid paramater choices but <a class="reference external" href="https://safecurves.cr.yp.to/rigid.html">not the absolute best</a>.  I do not believe either to be serious cause for concern.  Among more practical curve weaknesses, secp256k1 does have <a class="reference external" href="https://safecurves.cr.yp.to/twist.html">twist security</a> which eliminates many attack classes.  </p>
+<p>I foresee only one substancial reason for avoiding secp256k1:  All short Weierstrass curves like secp256k1 have <a class="reference external" href="https://safecurves.cr.yp.to/complete.html">incomplete addition formulas</a>, meaning certain curve points cannot be added to other curve points.  As a result, addition code must check for failures, but these checks make writing constant time code harder.  We could examine any secp256k1 library we use in Polkadot to ensure it both does these checks and has constant-time code.  We cannot however ensure that all implementations used by third party wallet software does so.</p>
+<p>I believe incomplete addition formulas looks relatively harmless when used for simple Schnorr signatures, although forgery attacks might exist.  I’d worry more however if we began using secp256k1 for less well explored protocols, like multi-signaturtes and key derivation.   We ware about such use cases however, especially those listed in the <a class="reference external" href="https://github.com/sipa/bips/blob/bip-schnorr/bip-schnorr.mediawiki">Bitcoin Schnoor wishlist</a>.  </p>
+</div>
+<div class="section" id="is-ed25519-risky---aka-use-ristretto">
+<h3>Is Ed25519 risky?  Aka use Ristretto<a class="headerlink" href="#is-ed25519-risky---aka-use-ristretto" title="Permalink to this headline">¶</a></h3>
+<p>Any elliptic curve used in cryptography has order h*l where l is a big prime, normally close to a power of two, and h is some very small number called the cofactor.  Almost all protocol implementations are complicated by these cofactors, so implementing complex protocols is safer on curves with cofactor h=1 like secp256k1.  </p>
+<p>The Ed25519 curve has cofactor 8 but a simple convention called “clamping” that makes two particularly common protocols secure.  We must restrict or drop “clamping” for more complex protocols, like multi-signaturtes and key derivation, or anything else in the <a class="reference external" href="https://github.com/sipa/bips/blob/bip-schnorr/bip-schnorr.mediawiki">Bitcoin Schnoor wishlist</a>.  </p>
+<p>If we simple dropped “clamping” then we’d make implementing protocols harder, but luckily the <a class="reference external" href="https://ristretto.group">Ristretto</a> encoding for the Ed25519 curve ensures we avoid any curve points with 2-torsion.  I thus recommend:
+ - our secret key continue being Ed25519 “expanded” secret keys, while
+ - our on-chain encoding, aka “point compression” becomes Ristretto for both public keys and the <code class="docutils literal notranslate"><span class="pre">R</span></code> component of Schnoor signatures. </p>
+<p>In principle, we could use the usual Ed25519 “mini” secret keys for simple use cases, but not when doing key derivation.  We could thus easily verify standrad Ed25519 signatures with Ristretto encoded public keys.  We should ideally use Ristretto throughout instead of the standard Ed25519 point compression.  </p>
+<p>In fact, we can import standard Ed25519 compressed points like I do <a class="reference external" href="https://github.com/w3f/schnorr-dalek/blob/master/src/ristretto.rs#L877">here</a> but this requires the scalar exponentiation done in the <a class="reference external" href="https://doc.dalek.rs/curve25519_dalek/edwards/struct.EdwardsPoint.html#method.is_torsion_free"><code class="docutils literal notranslate"><span class="pre">is_torsion_free</span></code> method</a>, which runs slower than normal signature verification.  We might ideally do this only for key migration between PoCs.</p>
+<p>Ristretto is far simpler than the Ed25519 curve itself, so Ristretto can be added to Ed25519 implementations, but the <a class="reference external" href="https://github.com/dalek-cryptography/curve25519-dalek">curve25519-dalek</a> crate already provides a highly optimised rust implementation.</p>
+</div>
+<div class="section" id="zero-knowledge-proofs-in-the-dalek-ecosystem">
+<h3>Zero-knowledge proofs in the dalek ecosystem<a class="headerlink" href="#zero-knowledge-proofs-in-the-dalek-ecosystem" title="Permalink to this headline">¶</a></h3>
+<p>In fact, the <a class="reference external" href="https://github.com/dalek-cryptography">dalek ecosystem</a> has an remarkably well designed infrastructure for zero-knowledge proofs without pairings.  See:
+ https://medium.com/interstellar/bulletproofs-pre-release-fcb1feb36d4b
+ https://medium.com/interstellar/programmable-constraint-systems-for-bulletproofs-365b9feb92f7</p>
+<p>All these crates use Ristretto points so using Ristretto for account public keys ourselves gives us the most advanced tools for building protocols not based on pairings, meaning that use our account keys.  In principle, these tools might be abstracted for twisted Edwards curves like FourQ and Zcash’s Jubjub, but yu might loose some batching operations in abstracting them for short Weierstrass curves like secp256k1. </p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../keys.html">Keys</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html">Polkadot’s cryptography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-accounts.html">Account signatures and keys</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Account signatures and keys in Polkadot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#schnorr-signatures">Schnorr signatures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#curves">Curves</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#how-much-secp256k1-support-">How much secp256k1 support?</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#is-secp256k1-risky-">Is secp256k1 risky?</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#is-ed25519-risky---aka-use-ristretto">Is Ed25519 risky?  Aka use Ristretto</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#zero-knowledge-proofs-in-the-dalek-ecosystem">Zero-knowledge proofs in the dalek ecosystem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="2-staking.html">Nomination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="3-session.html">Session keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-secio.html">Transport layer authentication - libp2p’s SECIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="creation.html">Account key creation ideas for Polkadot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../keys.html">Keys</a><ul>
+      <li>Previous: <a href="1-accounts.html" title="previous chapter">Account signatures and keys</a></li>
+      <li>Next: <a href="2-staking.html" title="next chapter">Nomination</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/keys/1-accounts-more.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

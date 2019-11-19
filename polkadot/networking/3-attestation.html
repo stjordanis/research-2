@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Parachain networking &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ICMP" href="4-icmp.html" />
+    <link rel="prev" title="Gossiping GRANDPA communication (polite-grandpa)" href="2-polite-grandpa.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>====================================================================</p>
+<p><strong>Authors</strong>: Rob Habermeier</p>
+<p><strong>Last updated</strong>: 12.09.2019</p>
+<p>====================================================================</p>
+<div class="section" id="parachain-networking">
+<h1>Parachain networking<a class="headerlink" href="#parachain-networking" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="attestation-gossip:-gossiping-parachain-blocks">
+<h2>Attestation Gossip: gossiping parachain blocks<a class="headerlink" href="#attestation-gossip:-gossiping-parachain-blocks" title="Permalink to this headline">¶</a></h2>
+<p>We have an attestation-gossip scheme such that nodes can potentially have earliest access to see misbehavior, which means a fisherman reward is open to them. In the attestation gossip the latest block is distributed.</p>
+<p>A new attestation topic is started for each new block.
+A topic expires when the block to which it refers to is no longer a <em>viable leaf</em>: either some competing fork has finalized, or some new block has been built on top of this.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fn</span> <span class="n">topic_for</span><span class="p">(</span><span class="n">header_hash</span><span class="p">)</span> <span class="o">=</span> <span class="n">H</span><span class="p">(</span><span class="s1">&#39;parachain_attestation&#39;</span> <span class="o">++</span> <span class="n">header_hash</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Because there are going to be many blocks in the chain, and different peers will have different views of which topics are expired, we will want to limit the messages a peer can receive to only messages it perceives as <em>live</em>.</p>
+<p>We say that a topic is <em>live</em> to a node if the node is currently at a view with a viable leaf with that topic.</p>
+<p>The main means by which we limit gossip to <em>live</em> messages is the same as in GRANDPA, by view co-ordination. Nodes will periodically send their neighbors in the gossip graph a message notifying them of their latest view. It is protocol misbehavior to send messages which would not be considered <em>live</em> under the latest view received.</p>
+<p>Full nodes don’t need to see these in order to reach consensus, but it is safer for them to relay those which are recent.
+Erasure-coded availability pieces are meant to be propagated, but we are ignoring those for the moment.</p>
+<p><strong>Neighbor View Updates:</strong>
+- Chain Heads: <code class="docutils literal notranslate"><span class="pre">Vec&amp;lt;Hash&amp;gt;</span></code> up to arbitrary constant N of viable leaves according to that peer. in practice there will only be 1 or 2 but let’s say N=5. None of the chain heads may be descendants of each other or ancestors of any chain heads sent in the prior packet. Doing this check for all chain heads in all prior updates is not tractable, but it’s possible this could be left open to a “flip-flop” attack of some kind.</p>
+<p><strong>Gossip Messages:</strong>
+- <strong>Candidate:</strong>
+    - Members
+        - Parachain candidate
+        - Validator public key
+        - Signature
+        - Relay Parent
+    - This is an announcement of a parachain candidate to the network. Only one announcement may be made by each validator per relay parent hash. Receiving this message from a peer indicates that the peer is aware of the candidate. Sending this message to a peer will make the peer aware of the statement, and should be done only if there is no prior indication of awareness.
+- <strong>Valid:</strong>
+    - Members
+        - Candidate Hash
+        - Validator public key
+        - Signature
+        - Relay Chain Parent Hash
+    - This is an attestation on the candidate with given hash, that indicates the candidate is both valid and has block data available. May only be sent to peers who are aware of the <code class="docutils literal notranslate"><span class="pre">Candidate</span></code>.
+- <strong>Invalid:</strong>
+    - Members
+        - Candidate Hash
+        - Validator public key
+        - Signature
+        - Relay Chain Parent Hash
+    - This is an attestation against the candidate with given hash. May only be sent to peers who are aware of the <code class="docutils literal notranslate"><span class="pre">Candidate</span></code>.</p>
+</div>
+<div class="section" id="direct-routing:-sending--receiving-erasure-coded-pieces">
+<h2>Direct Routing: sending/ receiving erasure coded pieces<a class="headerlink" href="#direct-routing:-sending--receiving-erasure-coded-pieces" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../networking.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="1-overview.html">Networking for Polkadot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2-polite-grandpa.html">Gossiping GRANDPA communication (polite-grandpa)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Parachain networking</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#attestation-gossip:-gossiping-parachain-blocks">Attestation Gossip: gossiping parachain blocks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#direct-routing:-sending--receiving-erasure-coded-pieces">Direct Routing: sending/ receiving erasure coded pieces</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="4-icmp.html">ICMP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-icmp.html#interchain-messaging-routing-overview">Interchain Messaging Routing Overview</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../networking.html">Networking</a><ul>
+      <li>Previous: <a href="2-polite-grandpa.html" title="previous chapter">Gossiping GRANDPA communication (polite-grandpa)</a></li>
+      <li>Next: <a href="4-icmp.html" title="next chapter">ICMP</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/networking/3-attestation.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

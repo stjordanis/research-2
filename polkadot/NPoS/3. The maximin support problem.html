@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>3. The maximin support problem &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="4. Sequential Phragmén’s method." href="4. Sequential Phragmén’s method.html" />
+    <link rel="prev" title="2. The min-norm max-flow problem" href="2. The min-norm max-flow problem.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="-3.-the-maximin-support-problem">
+<h1>3. The maximin support problem<a class="headerlink" href="#-3.-the-maximin-support-problem" title="Permalink to this headline">¶</a></h1>
+<p>In NPoS we need to select a committee of validators of size <span class="math notranslate nohighlight">\(m\)</span>, and assign to them the nominators’ stake, according to some objective. In this note we consider the objective of maximizing the minimum stake support perceived by any elected validator. We call this the maximin support problem. </p>
+<p>In Section 1 we define the problem formally, and remark that it is NP-hard and APX-hard. In Section 2 we present a <span class="math notranslate nohighlight">\((2+\varepsilon)\)</span>-factor approximation algorithm for it. Finally, in Section 3 we establish a property of the maximin support objective which, informally speaking, says that in an optimal committee no pool of nominators is over-represented, thus motivating the choice of this objective for NPoS.</p>
+<p>We remark that this problem has been recently studied by <a class="reference external" href="https://arxiv.org/abs/1609.05370">Sánchez-Fernández et al. (2018)</a>, who proposed a greedy algorithm for it. We take ideas from that paper but propose a different, more efficient algorithm.</p>
+<div class="section" id="-1.-definitions-and-notation">
+<h2>1. Definitions and notation<a class="headerlink" href="#-1.-definitions-and-notation" title="Permalink to this headline">¶</a></h2>
+<p>An instance of the maximin support problem is given by a bipartite graph <span class="math notranslate nohighlight">\(G=(N\cup V, E)\)</span> of nominator-validator relations, a vector of nominator budgets <span class="math notranslate nohighlight">\(b\in \mathbb{R}_{\geq 0}^{N}\)</span>, and the target number <span class="math notranslate nohighlight">\(m\)</span> of validators to be elected. </p>
+<p>A feasible solution consists of a pair <span class="math notranslate nohighlight">\((S,w)\)</span>, where <span class="math notranslate nohighlight">\(S\subseteq V\)</span> is a committee of size <span class="math notranslate nohighlight">\(m\)</span>, and <span class="math notranslate nohighlight">\(w\in\mathbb{R}^E_{\geq 0}\)</span> is a vector of edge weights. Vector <span class="math notranslate nohighlight">\(w\)</span> must be “affordable”, meaning that it observes the budget constraints  <span class="math notranslate nohighlight">\(\sum_{v\in V: \ nv\in E} w_{nv}\leq b_n\)</span> for each <span class="math notranslate nohighlight">\(n\in N\)</span>. In this note, we do not require solutions to be maximally affordable. For each validator <span class="math notranslate nohighlight">\(v\)</span> we define its <em>support</em> relative to <span class="math notranslate nohighlight">\(w\)</span> as <span class="math notranslate nohighlight">\(supp_w(v):= \sum_{n\in N: \ nv \in E} w_{nv}\)</span>, and extend this definition to any set <span class="math notranslate nohighlight">\(V'\subseteq V\)</span> by <span class="math notranslate nohighlight">\(supp_w(V'):=\min_{v\in V'} supp_w(s)\)</span>.</p>
+<p>The objective of the maximin support problem is to find a feasible solution <span class="math notranslate nohighlight">\((S,w)\)</span> that maximizes <span class="math notranslate nohighlight">\(supp_w(S)\)</span>. It was observed by <a class="reference external" href="https://arxiv.org/abs/1609.05370">Sánchez-Fernández et al. (2018)</a> that this optimization problem is NP-hard. We prove now that, additionally, the problem cannot be approximated within a multiplicative factor smaller than 1.2.</p>
+<p><strong>Lemma.</strong> It is NP-hard to approximate the maximin support problem within a factor <span class="math notranslate nohighlight">\(\alpha:=1.2 - \varepsilon\)</span>, for any <span class="math notranslate nohighlight">\(\varepsilon&gt;0\)</span>.</p>
+<p><em>Proof.</em> We present a reduction from the <span class="math notranslate nohighlight">\(k\)</span>-independent set problem on cubic graphs, which is known to be NP-hard <a class="reference external" href="https://www.jaist.ac.jp/~uehara/pdf/triangle.pdf">Uehara (1996)</a>. In this problem, one is given a graph <span class="math notranslate nohighlight">\(G'=(V',E')\)</span> where every vertex has degree exactly 3, and a parameter <span class="math notranslate nohighlight">\(k\)</span>, and one must decide whether there is a vertex subset <span class="math notranslate nohighlight">\(T\subset V'\)</span> of size <span class="math notranslate nohighlight">\(k\)</span> such that no two vertices in <span class="math notranslate nohighlight">\(T\)</span> are adjacent (i.e. <span class="math notranslate nohighlight">\(T\)</span> is an independent set). </p>
+<p>Given such an input, we define an instance of maximin support where <span class="math notranslate nohighlight">\(V=V'\)</span> (each vertex in <span class="math notranslate nohighlight">\(V'\)</span> corresponds to a validator), <span class="math notranslate nohighlight">\(N=E'\)</span> with <span class="math notranslate nohighlight">\(b_n=1\)</span> for each <span class="math notranslate nohighlight">\(n\in N\)</span> (each edge in <span class="math notranslate nohighlight">\(E'\)</span> corresponds to a nominator with unit budget), <span class="math notranslate nohighlight">\(E=\{nv\in N\times V: \ v\in n\}\)</span> (each nominator supports the two validators on its endpoints), and we must elect <span class="math notranslate nohighlight">\(m=k\)</span> validators. Notice that in this instance, each validator is adjacent to exactly 3 nominators, and that two validators <span class="math notranslate nohighlight">\(v, v'\)</span> have an adjacent nominator in common if and only if <span class="math notranslate nohighlight">\(v\)</span> and <span class="math notranslate nohighlight">\(v'\)</span> are adjacent in <span class="math notranslate nohighlight">\(V'\)</span>. </p>
+<p>Hence, if there is an independent set <span class="math notranslate nohighlight">\(T\)</span> of size <span class="math notranslate nohighlight">\(k\)</span> in <span class="math notranslate nohighlight">\(G'\)</span>, the same set of validators in <span class="math notranslate nohighlight">\(G\)</span> can be assigned the full budget of each of its adjacent nominators, so each can receive a support of 3 units (which is clearly maximal). On the other hand, if there is no independent set of size <span class="math notranslate nohighlight">\(k\)</span> in <span class="math notranslate nohighlight">\(G'\)</span>, then for any solution <span class="math notranslate nohighlight">\((S,w)\)</span> of the maximin support problem there must be two validators <span class="math notranslate nohighlight">\(v,v'\in S\)</span> who have an adjacent nominator in common. Thus, there are at most 5 nominators who are adjacent to either of them, so for any affordable weight vector <span class="math notranslate nohighlight">\(w\)</span> we must have <span class="math notranslate nohighlight">\(supp_w(v)+supp_w(v')\leq 5\)</span>. This shows that <span class="math notranslate nohighlight">\(supp_w(S)\leq \min\{supp_w(v), supp_w(v')\}\leq 2.5\)</span>. Finally, notice that <span class="math notranslate nohighlight">\(3/2.5=1.2\)</span>, so the assumed <span class="math notranslate nohighlight">\(\alpha\)</span>-approximation algorithm for maximin support would allow us to decide whether such an independent set <span class="math notranslate nohighlight">\(T\)</span> exists.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+</div>
+<div class="section" id="-2.-the-algorithm">
+<h2>2. The algorithm<a class="headerlink" href="#-2.-the-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>For a committee <span class="math notranslate nohighlight">\(S\subseteq V\)</span> of <span class="math notranslate nohighlight">\(m\)</span> validators, we say that an affordable edge weight vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}_{\geq 0}^E\)</span> is optimal for <span class="math notranslate nohighlight">\(S\)</span> if it maximizes <span class="math notranslate nohighlight">\(supp_w(S)\)</span> over all affordable vectors. Given a committee <span class="math notranslate nohighlight">\(S\)</span>, an optimal vector <span class="math notranslate nohighlight">\(w\)</span> for it can be computed in polynomial time. In particular, in <a class="reference external" href="2. The min-norm max-flow problem.html">our note on the min-norm max-flow problem</a>, we provide two algorithms to compute this vector, which respectively run in time <span class="math notranslate nohighlight">\(O(|E|m+m^3)\)</span> and <span class="math notranslate nohighlight">\(\tilde{O}(|E|m^2)\)</span> (ignoring logarithmic terms in the latter expression). Let <span class="math notranslate nohighlight">\(F\)</span> be the running time required to compute this vector, depending on the algorithm used.</p>
+<p>Fix a constant <span class="math notranslate nohighlight">\(\varepsilon&gt;0\)</span>. Our proposed algorithm computes the optimal weight vectors of at most <span class="math notranslate nohighlight">\(O(|V|\log(\varepsilon^{-1}\log m))\)</span> committees, and returns the best one found. Therefore, the running time is clearly 
+<span class="math notranslate nohighlight">\(O(F|V|\log(\varepsilon^{-1}\log m)),\)</span></p>
+<p>and we will prove that its output <span class="math notranslate nohighlight">\((S,w)\)</span> has an objective value <span class="math notranslate nohighlight">\(supp_w(S)\)</span> that is at a multiplicative factor at most <span class="math notranslate nohighlight">\((2+\varepsilon)\)</span> away from optimal.</p>
+<p>The algorithm is performed using two nested loops:</p>
+<p><strong>Guessing the objective value</strong> (external loop): For a target support value <span class="math notranslate nohighlight">\(d\)</span>, our algorithm tries to construct an affordable solution <span class="math notranslate nohighlight">\((S,w)\)</span> with <span class="math notranslate nohighlight">\(supp_w(S)\geq d\)</span>, and declares either success or failure. We respectively raise or decrease the value of <span class="math notranslate nohighlight">\(d\)</span>, and try again. We perform binary search on <span class="math notranslate nohighlight">\(d\)</span>, and output the successfully built solution of highest support. (We provide the precise parameters of this binary search later on.)</p>
+<p><strong>Building the set</strong> (core execution): Assume a target support value <span class="math notranslate nohighlight">\(d\)</span> is fixed, and fix an arbitrary order over the candidate set <span class="math notranslate nohighlight">\(V\)</span>. We execute a lazy algorithm that inspects each validator in <span class="math notranslate nohighlight">\(V\)</span> once and decides on the spot whether to include it in the solution or discard it. Namely, we start with the empty set <span class="math notranslate nohighlight">\(S\)</span>, and then for each <span class="math notranslate nohighlight">\(v\in V\)</span> we check whether the set <span class="math notranslate nohighlight">\(S\cup\{v\}\)</span> has an affordable weight vector <span class="math notranslate nohighlight">\(w\)</span> such that <span class="math notranslate nohighlight">\(supp_w(S\cup\{v\})\geq d\)</span>. Recall that this check takes time <span class="math notranslate nohighlight">\(F\)</span>. If it does, we update <span class="math notranslate nohighlight">\(S\)</span> to <span class="math notranslate nohighlight">\(S\cup\{v\}\)</span>. As soon as <span class="math notranslate nohighlight">\(|S|=m\)</span> we stop, declare success, and store the found solution. Else, if after traversing the full validator set <span class="math notranslate nohighlight">\(V\)</span> we still have that <span class="math notranslate nohighlight">\(|S|&lt;m\)</span>, we declare failure.</p>
+<div class="section" id="analysis-of-approximation-factor">
+<h3>Analysis of approximation factor<a class="headerlink" href="#analysis-of-approximation-factor" title="Permalink to this headline">¶</a></h3>
+<p><strong>Theorem</strong>: <em>For any constant <span class="math notranslate nohighlight">\(\varepsilon&gt;0\)</span>, our algorithm provides an approximation ratio of <span class="math notranslate nohighlight">\(2+\varepsilon\)</span>.</em></p>
+<p>Fix a constant <span class="math notranslate nohighlight">\(\varepsilon&gt;0\)</span>, and assume that the external loop of our algorithm is tuned so that the binary search over the support stops when the ratio between the lowest support <span class="math notranslate nohighlight">\(d\)</span> returning failure and the highest support <span class="math notranslate nohighlight">\(d\)</span> returning success is at most <span class="math notranslate nohighlight">\((1+\varepsilon/2)\)</span>. </p>
+<p><strong>Lemma 1:</strong><em>If <span class="math notranslate nohighlight">\(d^*\)</span> is the optimal support value of the given instance, then whenever our algorithm tries to build a solution with a target support value <span class="math notranslate nohighlight">\(d\)</span> observing <span class="math notranslate nohighlight">\(d\leq d^*/2\)</span>, it is guaranteed to succeed.</em></p>
+<p>Notice that Lemma 1 and the previous stopping rule immediately imply the main theorem. </p>
+<p><strong>Lemma 2:</strong><em>If an instance <span class="math notranslate nohighlight">\((N\cup V, E, b, m)\)</span> of NPoS has two affordable solutions <span class="math notranslate nohighlight">\((S, w)\)</span> and <span class="math notranslate nohighlight">\((S^*, w^*)\)</span> with <span class="math notranslate nohighlight">\(|S_1|&lt;|S_2|\)</span>, then there is a validator <span class="math notranslate nohighlight">\(v\in S_2\setminus S_1\)</span> and an affordable solution <span class="math notranslate nohighlight">\((S\cup \{v\}, w')\)</span> with <span class="math notranslate nohighlight">\(supp_{w'}(S\cup\{v\})\geq \min\{supp_{w}(S), \frac{1}{2}supp_{w^*}(S^*)\}\)</span>.</em></p>
+<p>Before we prove Lemma 2, let’s prove that it implies Lemma 1. </p>
+<p><em>Proof of Lemma 1.</em> Let <span class="math notranslate nohighlight">\((S^*, w^*)\)</span> be the optimal solution with optimal support <span class="math notranslate nohighlight">\(supp_{w^*}(S^*)=d^*\)</span>. Assume by contradiction that for some target support value <span class="math notranslate nohighlight">\(d\)</span> with <span class="math notranslate nohighlight">\(d\leq d^*/2\)</span>, our algorithm fails. Thus, after traversing the whole validator set, the algorithm ends up with an affordable solution <span class="math notranslate nohighlight">\((S,w)\)</span> with <span class="math notranslate nohighlight">\(supp_w(S)\geq d\)</span> and <span class="math notranslate nohighlight">\(|S|&lt;m\)</span>. By Lemma 2, there is a validator <span class="math notranslate nohighlight">\(v\in S^*\setminus S\)</span> such that <span class="math notranslate nohighlight">\(S\cup \{v\}\)</span> has an affordable weight vector <span class="math notranslate nohighlight">\(w'\)</span> that provides support of at least <span class="math notranslate nohighlight">\(d\)</span>. Notice as well that <em>any subset</em> of <span class="math notranslate nohighlight">\(S\cup \{v\}\)</span> also has an affordable weight vector that provides support at least <span class="math notranslate nohighlight">\(d\)</span> - namely <span class="math notranslate nohighlight">\(w'\)</span>. But this means that at whichever point that our algorithm inspected validator <span class="math notranslate nohighlight">\(v\)</span>, it should have included it in the then-current solution, which was a subset of <span class="math notranslate nohighlight">\(S\)</span>, and thus <span class="math notranslate nohighlight">\(v\)</span> should be in <span class="math notranslate nohighlight">\(S\)</span>. We reach a contradiction.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+<p><em>Proof of Lemma 2.</em> Consider solutions <span class="math notranslate nohighlight">\((S, w)\)</span> and <span class="math notranslate nohighlight">\((S^*, w^*)\)</span> as in the statement of the lemma, with respective supports <span class="math notranslate nohighlight">\(d\)</span> and <span class="math notranslate nohighlight">\(d^*\)</span>. By replacing <span class="math notranslate nohighlight">\(d\)</span> with <span class="math notranslate nohighlight">\(\min\{d,d^*/2\}\)</span>, we can assume without loss of generality that <span class="math notranslate nohighlight">\(d\leq d^*/2\)</span>. We can also assume that these solutions give each elected validator the exact same support, respectively <span class="math notranslate nohighlight">\(d\)</span> and <span class="math notranslate nohighlight">\(d^*\)</span> (in general, vectors <span class="math notranslate nohighlight">\(w\)</span> and <span class="math notranslate nohighlight">\(w^*\)</span> are not maximally affordable). Consider vector <span class="math notranslate nohighlight">\(f:=w^*-w\in \mathbb{R}^E\)</span>, which we see as a vector of edge flows over the network induced by <span class="math notranslate nohighlight">\(N\cup S \cup S^*\)</span>. We partition the nodes into four groups: relative to <span class="math notranslate nohighlight">\(f\)</span>, we have that</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(N\)</span> has a net excess of <span class="math notranslate nohighlight">\(|S^*|\cdot d^* - |S|\cdot d\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(S\setminus S^*\)</span> has a net excess of <span class="math notranslate nohighlight">\(|S \setminus S^*|\cdot d\)</span>, </p></li>
+<li><p><span class="math notranslate nohighlight">\(S^*\setminus S\)</span> has a net demand of <span class="math notranslate nohighlight">\(|S^* \setminus S|\cdot d^*\)</span>, and</p></li>
+<li><p><span class="math notranslate nohighlight">\(S\cap S^*\)</span> has a net demand of <span class="math notranslate nohighlight">\(|S\cap S^*|\cdot (d^*-d)\)</span>.</p></li>
+</ul>
+<p>Now, using the flow decomposition theorem, we can decompose flow <span class="math notranslate nohighlight">\(f\)</span> into simple path flows, where each path starts in one of the groups with net excess and ends in one of the groups with net demand. If we eliminate all paths starting from <span class="math notranslate nohighlight">\(S\setminus S^*\)</span>, we obtain a subflow <span class="math notranslate nohighlight">\(f'\)</span>, relative to which </p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(N\)</span> has a net excess of <span class="math notranslate nohighlight">\(|S^*|\cdot d^* - |S|\cdot d\)</span>, and </p></li>
+<li><p><span class="math notranslate nohighlight">\(S\cap S^*\)</span> has a net demand of at most <span class="math notranslate nohighlight">\(|S\cap S^*|\cdot (d^*-d)\)</span>.</p></li>
+</ul>
+<p>Therefore, the net demand of <span class="math notranslate nohighlight">\(S^*\setminus S\)</span> relative to <span class="math notranslate nohighlight">\(f'\)</span> is at least </p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+|S^*|\cdot d^* - |S|\cdot d - |S\cap S^*|\cdot (d^*-d)
+&amp;= |S^*\setminus S|\cdot d^* - |S\setminus S^*|\cdot d \\
+&amp;&gt; |S^*\setminus S|\cdot (d^* - d) \\
+&amp;\geq |S^* \setminus S|\cdot d,
+\end{align}\end{split}\]</div>
+<p>where the inequalities follow respectively from <span class="math notranslate nohighlight">\(|S|&lt; |S^*|\)</span> and <span class="math notranslate nohighlight">\(d\leq d^*/2\)</span>. By an averaging argument, this implies that there is a validator <span class="math notranslate nohighlight">\(v\in S^*\setminus S\)</span> with a demand relative to <span class="math notranslate nohighlight">\(f'\)</span> of at least <span class="math notranslate nohighlight">\(d\)</span>. </p>
+<p>To conclude we notice that, from the fact that <span class="math notranslate nohighlight">\(f'\)</span> is a subflow of flow <span class="math notranslate nohighlight">\(f=w^*-w\)</span>, it follows that weight vector <span class="math notranslate nohighlight">\(w':=w+f'\)</span> is non-negative and affordable. Moreover, <span class="math notranslate nohighlight">\(w'\)</span> does not decrease the support of any validator in <span class="math notranslate nohighlight">\(S\)</span> compared to <span class="math notranslate nohighlight">\(w\)</span>, and gives a support of at least <span class="math notranslate nohighlight">\(d\)</span> to <span class="math notranslate nohighlight">\(v\)</span>. Hence, <span class="math notranslate nohighlight">\(supp_{w'}(S\cup \{v\})\geq d\)</span>, which is what we needed to show.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+</div>
+<div class="section" id="analysis-of-running-time">
+<h3>Analysis of running time<a class="headerlink" href="#analysis-of-running-time" title="Permalink to this headline">¶</a></h3>
+<p>In this section, we give further details on the implementation of the algorithm, and analyze its running time. Recall that the algorithm guesses a target support value <span class="math notranslate nohighlight">\(d\)</span> in the external loop and then tries to build a set of that value. Clearly, for a fixed value <span class="math notranslate nohighlight">\(d\)</span>, the core execution computes optimal weight vectors for at most <span class="math notranslate nohighlight">\(|V|\)</span> sets. Moreover, we show below that only <span class="math notranslate nohighlight">\(O(\log(\epsilon^{-1}\log m))\)</span> guesses of <span class="math notranslate nohighlight">\(d\)</span> are needed, and thus the total running time of the algorithm is 
+<span class="math notranslate nohighlight">\(O(F|V|\log(\varepsilon^{-1}\log m)),\)</span> 
+where <span class="math notranslate nohighlight">\(F\)</span> is the time it takes to compute the optimal weight vector of a given committee.</p>
+<p>We start by setting upper and lower bounds for the optimal support value <span class="math notranslate nohighlight">\(d^\)</span>.  For any validator <span class="math notranslate nohighlight">\(v\in V\)</span> we define its <em>potential support</em> as <span class="math notranslate nohighlight">\(p_v:=\sum_{n\in N: \ nv\in E} b_n\)</span>, and notice that <span class="math notranslate nohighlight">\(p_v\geq supp_w(v)\)</span> holds for any affordable vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}_{\geq 0}^E\)</span>. As a pre-computation, we find the potential supports of all validators in <span class="math notranslate nohighlight">\(V\)</span>, and identify the <em><span class="math notranslate nohighlight">\(m\)</span>-th highest potential support</em>, which we denote by <span class="math notranslate nohighlight">\(p_m\)</span>. It easily follows that <span class="math notranslate nohighlight">\(d^*\leq p_m\)</span>. On the other hand, we also have that <span class="math notranslate nohighlight">\(d^*\geq p_m/m\)</span>, as we show now: Consider the <span class="math notranslate nohighlight">\(m\)</span>-solution <span class="math notranslate nohighlight">\((S,w)\)</span> where <span class="math notranslate nohighlight">\(S\)</span> contains the <span class="math notranslate nohighlight">\(m\)</span> validators with highest potential support, and <span class="math notranslate nohighlight">\(w\in\mathbb{R}_{\geq 0}^E\)</span> is defined by <span class="math notranslate nohighlight">\(w_{nv}=b_n/m\)</span> for each <span class="math notranslate nohighlight">\(nv\in E\cap(N\times S)\)</span>. Vector <span class="math notranslate nohighlight">\(w\)</span> provides a support of <span class="math notranslate nohighlight">\(p_v/m\)</span> to each <span class="math notranslate nohighlight">\(v\in S\)</span>, so <span class="math notranslate nohighlight">\(supp_w(S)\geq p_m/m\)</span>. Moreover, each nominator <span class="math notranslate nohighlight">\(n\)</span> provides a support of <span class="math notranslate nohighlight">\(b_n/m\)</span> to no more than <span class="math notranslate nohighlight">\(m\)</span> validators in <span class="math notranslate nohighlight">\(S\)</span>, so <span class="math notranslate nohighlight">\(w\)</span> is affordable. Therefore, <span class="math notranslate nohighlight">\(p_m/m \leq d^* \leq p_m\)</span>. </p>
+<p>Recall that we need to estimate, within a multiplicative factor of <span class="math notranslate nohighlight">\((1+\varepsilon/2)\)</span>, a threshold value <span class="math notranslate nohighlight">\(d'\)</span> where our algorithm switches response from sucess to failure. Value <span class="math notranslate nohighlight">\(d'\)</span> must be in the range <span class="math notranslate nohighlight">\([d^*/2, d^*]\)</span>, which means that it is safe to search in the range <span class="math notranslate nohighlight">\([p_m/(2m), p_m]\)</span>. The ratio between upper and lower bounds of our search range thus starts at <span class="math notranslate nohighlight">\(2m\)</span>, and can be square-rooted at each iteration of the outer loop, by always selecting the geometric mean of the bounds. Hence in order to reach a ratio below <span class="math notranslate nohighlight">\((1+\varepsilon/2)\)</span>, only <span class="math notranslate nohighlight">\(O(\log(\varepsilon^{-1}\log m))\)</span> iterations are needed. </p>
+<p>We remark that the running time of the mentioned pre-computations will be dominated by that of the main algorithm.</p>
+</div>
+</div>
+<div class="section" id="-3.-properties-of-the-maximin-support-objective">
+<h2>3. Properties of the maximin support objective<a class="headerlink" href="#-3.-properties-of-the-maximin-support-objective" title="Permalink to this headline">¶</a></h2>
+<p>Intuitively, we want to select a set of validators that is suitably representative. In the worst case, it can’t be that representative. Suppose that there are <span class="math notranslate nohighlight">\(100m\)</span> nominators and they each nominate a different validator candidate with <span class="math notranslate nohighlight">\(1/100m\)</span> of the total stake. Then whichever set of candidates are elected, it can only be backed by <span class="math notranslate nohighlight">\(1/100\)</span> of the total stake.</p>
+<p>In the field of election theory for multiwinner elections, a common concern is ensuring that no set of voters is underrepresented. An axiom like Proportional Justified Representation (see our note on the sequential Phragmén method) says that if a set of voters is coordinated and they vote for enough of the same candidates, they are guaranteed a minimum amount of representation in the winning committee. However, for securing blockchains with proof-of-stake, we consider that some stake may be owned by adversarial entities and want to limit their power to attack the system if their stake is small. Thus for us, it is more important that no set of voters is overrepresented.</p>
+<p>To attack the system, the adversarial nominators could use their stake to elect a subset of adversarial candidates <span class="math notranslate nohighlight">\(A\)</span>, who we can assume that no honest nominator would trust with their stake. So we want to avoid having a subset <span class="math notranslate nohighlight">\(A\)</span> of the elected validators such that the total stake of the nominators backing <span class="math notranslate nohighlight">\(A\)</span> is small compared to <span class="math notranslate nohighlight">\(|A|\)</span>. In Polkadot, validators observe multiple roles, and an adversary needs to control different numbers of validators to perform different attacks, with the attacks that need more validators being worse. Hence, we do not want to maximise the stake needed to get a set <span class="math notranslate nohighlight">\(A\)</span> of a single size elected. Since we’d expect the number of votes needed to scale with the size of <span class="math notranslate nohighlight">\(A\)</span>, we are interested in the objective</p>
+<div class="math notranslate nohighlight">
+\[a :=\max_{S\subseteq V: \ |S|=m} \min_{A \subseteq S, \ A\neq \emptyset} (\sum_{n:\ \exists v \in A, \ nv \in E} b_n)/|A|\]</div>
+<p>However, it turns out that this objective is the same as the one above:</p>
+<p><strong>Lemma 3.1:</strong> The maximin support objective is equal to the maximum <span class="math notranslate nohighlight">\(a\)</span> above.</p>
+<p>This means that a multiplicative approximation of this objective ensures that a set of voters cannot be much more overrepresented than some set of voters in the set of elected candidates given by another rule.</p>
+<p>We are also interested in rewarding nominators for securing the system and punishing those who back validators who behave badly. We want to slash nominators who back malicious validators in extreme circumstances, and it is important that this costs enough stake. Note that the above characterisation of overrepresentation is enough for this, even if we do not uniquely assign stake to validators. However with uniquely assigned stake, we can slash only the nominator’s stake that is used uniquely to back badly behaving validators and still get similar guarantees, but now the relationship is clearer. We can reward nominators based on their assigned stake as this is a good indication of their contribution to the system. Nominators who back less popular validators are more likely to have all their stake assigned and so would be paid more.</p>
+<p><em>Proof of Lemma 3.1:</em> Let <span class="math notranslate nohighlight">\((S,w)\)</span> be a solution that maximises <span class="math notranslate nohighlight">\(d=supp_w(S)\)</span> over all solutions. Then, for any subset <span class="math notranslate nohighlight">\(A \subseteq S\)</span>, </p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+\sum_{n: \ \exists v \in A, \ nv \in E} b_n 
+&amp; \geq \sum_{n\in N} \sum_{v\in A: \  \ nv \in E} w_{nv} \\
+&amp;=\sum_{v\in A} \sum_{n\in N: \ nv\in E} w_{nv} = \sum_{v \in A} supp_w(v) \\
+&amp; \geq \sum_{v\in A} d = |A| d,
+\end{align*}\end{split}\]</div>
+<p>and so <span class="math notranslate nohighlight">\(a \geq d\)</span>. To show <span class="math notranslate nohighlight">\(a \leq d\)</span>, we need to show that there is a subset for which this is tight.</p>
+<p>We call a validator <span class="math notranslate nohighlight">\(v\)</span> loose in <span class="math notranslate nohighlight">\((S,w)\)</span> if there is an affordable solution <span class="math notranslate nohighlight">\(w'\)</span> with <span class="math notranslate nohighlight">\(supp_{w'}(S) \geq supp_w(S)\)</span> and <span class="math notranslate nohighlight">\(supp_{w'}(v) &gt; supp_w(v)\)</span>, and tight otherwise. Since a convex combination of affordable weight vectors is also affordable, there exists a <span class="math notranslate nohighlight">\(w'\)</span> such that all loose <span class="math notranslate nohighlight">\(v\)</span> have <span class="math notranslate nohighlight">\(supp_{w'}(v) &gt; supp_w(v)\)</span>, i.e. they are loose simultaneously. Thus, we can assume without loss of generality that <span class="math notranslate nohighlight">\((S,w)\)</span> is a solution of maximal support <span class="math notranslate nohighlight">\(d=supp_w(S)\)</span>, where <span class="math notranslate nohighlight">\(supp_w(v)&gt;d\)</span> for each loose validator. </p>
+<p>Since <span class="math notranslate nohighlight">\((S,w)\)</span> maximises <span class="math notranslate nohighlight">\(supp_w(S)\)</span>, there must be at least one tight validator. Let <span class="math notranslate nohighlight">\(A\)</span> be the set of tight validators. We claim that for each nominator <span class="math notranslate nohighlight">\(n\)</span> that supports at least one tight validator, we have <span class="math notranslate nohighlight">\(\sum_{v \in A} w_{nv} = b_n\)</span>. Suppose for a contradiction that this is not the case for some nominator <span class="math notranslate nohighlight">\(n\)</span> supporting a tight validator <span class="math notranslate nohighlight">\(v'\)</span>; then either <span class="math notranslate nohighlight">\(\sum_{v\in S} w_{nv} &lt; b_n\)</span> or there is a <span class="math notranslate nohighlight">\(v'' \in S \setminus A\)</span> with <span class="math notranslate nohighlight">\(w_{nv''} &gt; 0\)</span>. In the former case, vector <span class="math notranslate nohighlight">\(w'\)</span> with <span class="math notranslate nohighlight">\(w'_{nv'}=w_{nv'}+ (b_n - \sum_{v\in S} w_{nv})\)</span> and all other coordinates identical to <span class="math notranslate nohighlight">\(w\)</span>, would be an affordable solution with <span class="math notranslate nohighlight">\(supp_{w'}(v') &gt; supp_{w}(v) = s\)</span>, which shows that <span class="math notranslate nohighlight">\(v'\)</span> is loose, a contradiction. In the latter case, since <span class="math notranslate nohighlight">\(v''\)</span> is loose for <span class="math notranslate nohighlight">\((S,w)\)</span>, we have that <span class="math notranslate nohighlight">\(supp_w(v'')&gt;s\)</span>. If <span class="math notranslate nohighlight">\(n\)</span> shifts some load from <span class="math notranslate nohighlight">\(v''\)</span> into <span class="math notranslate nohighlight">\(v'\)</span>, we obtain a new affordable weight vector for which both <span class="math notranslate nohighlight">\(v'\)</span> and <span class="math notranslate nohighlight">\(v''\)</span> are loose, again a contradiction. This completes the proof of the claim.</p>
+<p>Now for this set <span class="math notranslate nohighlight">\(A\)</span> of tight validators the inequalities above are tight i.e. </p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+\sum_{n: \ \exists v \in A, \ nv \in E} b_n 
+&amp; = \sum_{n\in N} \sum_{v\in A: \  \ nv \in E} w_{nv} \\
+&amp;=\sum_{v\in A} \sum_{n\in N: \ nv\in E} w_{nv} = \sum_{v \in A} supp_w(v) \\
+&amp; = \sum_{v\in A} d = |A| d.
+\end{align*}\end{split}\]</div>
+<p>This completes the proof that <span class="math notranslate nohighlight">\(a=d\)</span>.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../NPoS.html">NPoS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html">Intro to Nominated Proof-of-Stake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1. Overview.html">1. Overview of results for the NPoS election problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2. The min-norm max-flow problem.html">2. The min-norm max-flow problem</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">3. The maximin support problem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#-1.-definitions-and-notation">1. Definitions and notation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#-2.-the-algorithm">2. The algorithm</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#analysis-of-approximation-factor">Analysis of approximation factor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#analysis-of-running-time">Analysis of running time</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#-3.-properties-of-the-maximin-support-objective">3. Properties of the maximin support objective</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="4. Sequential Phragmén’s method.html">4. Sequential Phragmén’s method.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5. A Phragmén-like Heuristic.html">5. A Phragmén-like Heuristic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../NPoS.html">NPoS</a><ul>
+      <li>Previous: <a href="2. The min-norm max-flow problem.html" title="previous chapter">2. The min-norm max-flow problem</a></li>
+      <li>Next: <a href="4. Sequential Phragmén’s method.html" title="next chapter">4. Sequential Phragmén’s method.</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/NPoS/3. The maximin support problem.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

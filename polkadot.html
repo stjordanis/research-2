@@ -1,0 +1,399 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Polkadot &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Polkadot" href="polkadot/index.html" />
+    <link rel="prev" title="Research at Web3 Foundation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="polkadot">
+<h1>Polkadot<a class="headerlink" href="#polkadot" title="Permalink to this headline">¶</a></h1>
+<meta http-equiv="refresh" content="0; url=./polkadot/index.html"><div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/index.html">Polkadot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/index.html#-1.-specification-of-the-polkadot-runtime-environment">1. Specification of the Polkadot Runtime Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/index.html#-2.-identifying-participants-to-run-the-network">2. Identifying participants to run the network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-2.1-keys">2.1 Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-2.2-proof-of-stake">2.2 Proof-of-Stake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-2.3-why-not-use-different-sets-for-different-tasks-">2.3 Why not use different sets for different tasks?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/index.html#-3.-ensuring-state-transition-properties">3. Ensuring state transition properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-3.1-utility">3.1 Utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-3.2-validity">3.2 Validity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-3.3-finality">3.3 Finality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-3.4-availability">3.4 Availability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-3.5-messaging-reliability">3.5 Messaging reliability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-3.6.-size">3.6. Size</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/index.html#light-client">Light client</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/index.html#-3.7-bandwidth">3.7 Bandwidth</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/index.html#-4.-desired-architectural-qualities">4. Desired architectural qualities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/ICMP.html">ICMP Scheme</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/ICMP.html#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/ICMP.html#inter-chain-messaging-scheme-assumptions">Inter-chain messaging scheme assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/ICMP.html#steps--order--of-receiving-and-sending-messages-belonging-to-a-parachain-blob:">Steps (Order) of Receiving and Sending Messages Belonging to a Parachain Blob:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/ICMP.html#compact-routing-proofs">Compact Routing Proofs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/Parachain-Allocation.html">Parachain Allocation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Parachain-Allocation.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Parachain-Allocation.html#auctioning-parachain-slots">Auctioning Parachain Slots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Parachain-Allocation.html#analysis">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/Token Economics.html">Token Economics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Token Economics.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Token Economics.html#organization">Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Token Economics.html#npos-payments-and-inflation">NPoS payments and inflation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/Token Economics.html#inflation-model">Inflation model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/Token Economics.html#payment-details">Payment details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/Token Economics.html#distribution-of-payment-within-a-validator-slot">Distribution of payment within a validator slot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Token Economics.html#relay-chain-transaction-fees-and-per-block-transaction-limits">Relay-chain transaction fees and per-block transaction limits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/Token Economics.html#limits-on-resource-usage">Limits on resource usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/Token Economics.html#setting-transaction-fees">Setting transaction fees</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/Token Economics.html#adjustment-of-fees-over-time">Adjustment of fees over time</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/Token Economics.html#-1.-fast-adjusting-mechanism">1. Fast adjusting mechanism</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/Token Economics.html#-2.-slow-adjusting-mechanism">2. Slow adjusting mechanism</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Token Economics.html#treasury">Treasury</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/BABE.html">BABE</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/BABE/Babe.html">BABE</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/BABE/Babe.html#-1.-overview">1. Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/BABE/Babe.html#-2.-babe">2. BABE</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/BABE/Babe.html#babe-with-grandpa-validators--approx-approx-ouroboros-praos">BABE with GRANDPA Validators <span class="math notranslate nohighlight">\(\approx\)</span> Ouroboros Praos</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="polkadot/BABE/Babe.html#-1.-genesis-phase">1. Genesis Phase</a></li>
+<li class="toctree-l5"><a class="reference internal" href="polkadot/BABE/Babe.html#-2.-normal-phase">2. Normal Phase</a></li>
+<li class="toctree-l5"><a class="reference internal" href="polkadot/BABE/Babe.html#-3.-epoch-update">3. Epoch Update</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/BABE/Babe.html#-3.-best-chain-selection">3. Best Chain Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/BABE/Babe.html#-4.-relative-time">4. Relative Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/BABE/Babe.html#-5.-security-analysis">5. Security Analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/BABE/Babe.html#definitions">Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/BABE/Babe.html#security-proof-of-babe">Security Proof of BABE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/BABE/Babe.html#-6.-practical-results">6. Practical Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/BABE/Babe.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/BABE/sortition.html">Sortition</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/BABE/sortition/index.html">Cryptographic sortition for constant-time block production</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/BABE/sortition/index.html#shuffles">Shuffles</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="polkadot/BABE/sortition/index.html#verifiable-shuffles">Verifiable shuffles</a></li>
+<li class="toctree-l5"><a class="reference internal" href="polkadot/BABE/sortition/index.html#accountable-shuffles">Accountable shuffles</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/BABE/sortition/index.html#cryptographic-pre-announcements">Cryptographic pre-announcements</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="polkadot/BABE/sortition/index.html#ring-vrfs">Ring VRFs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="polkadot/BABE/sortition/index.html#group-vrfs">Group VRFs</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/BABE/sortition/index.html#non-cryptographic-pre-announces">Non-cryptographic pre-announces</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="polkadot/BABE/sortition/index.html#secondary-randomness">Secondary randomness</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/NPoS.html">NPoS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/NPoS/index.html">Intro to Nominated Proof-of-Stake</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/index.html#validators-and-nominators">Validators and nominators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/index.html#the-npos-scheme">The NPoS scheme</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/index.html#the-election-process">The election process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/NPoS/1. Overview.html">1. Overview of results for the NPoS election problem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#problem-statement-and-notation">Problem statement and notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#operational-concerns">Operational concerns</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#efficient-algorithms">Efficient algorithms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#who-elects-the-committee-">Who elects the committee?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#committee-finding-algorithm--off-chain-">Committee-finding algorithm (off-chain)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#committee-comparing-algorithm--on-chain-">Committee-comparing algorithm (on-chain)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#objectives">Objectives</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#balance">Balance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#support">Support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#fair-representation">Fair representation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#overview-of-our-results">Overview of our results</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#committee-finding">Committee finding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/1. Overview.html#committee-comparing">Committee-comparing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/NPoS/2. The min-norm max-flow problem.html">2. The min-norm max-flow problem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/2. The min-norm max-flow problem.html#-1.-notation">1. Notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/2. The min-norm max-flow problem.html#-2.-the-min-norm-max-flow-problem--mnmf-">2. The min-norm max-flow problem (MNMF)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/2. The min-norm max-flow problem.html#-3.-overview-of-algorithms-for-mnmf">3. Overview of algorithms for MNMF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/2. The min-norm max-flow problem.html#-4.-technique-using-parametric-flow-algorithms">4. Technique using parametric flow algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/2. The min-norm max-flow problem.html#-5.-the-star-balancing-heuristic">5. The star balancing heuristic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/NPoS/3. The maximin support problem.html">3. The maximin support problem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/3. The maximin support problem.html#-1.-definitions-and-notation">1. Definitions and notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/3. The maximin support problem.html#-2.-the-algorithm">2. The algorithm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/3. The maximin support problem.html#analysis-of-approximation-factor">Analysis of approximation factor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/3. The maximin support problem.html#analysis-of-running-time">Analysis of running time</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/3. The maximin support problem.html#-3.-properties-of-the-maximin-support-objective">3. Properties of the maximin support objective</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/NPoS/4. Sequential Phragmén’s method.html">4. Sequential Phragmén’s method.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/4. Sequential Phragmén’s method.html#-1.-notation">1. Notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/4. Sequential Phragmén’s method.html#-2.-algorithm">2. Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/4. Sequential Phragmén’s method.html#-3.-axiomatic-properties">3. Axiomatic properties</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/NPoS/5. A Phragmén-like Heuristic.html">5. A Phragmén-like Heuristic</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/5. A Phragmén-like Heuristic.html#notation">Notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/5. A Phragmén-like Heuristic.html#the-basic-heuristic">The basic heuristic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/5. A Phragmén-like Heuristic.html#--parameterised--proportional-justified-representation.">(Parameterised) Proportional Justified Representation.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/5. A Phragmén-like Heuristic.html#local-search-for-provable-pjr">Local Search for provable PJR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/NPoS/5. A Phragmén-like Heuristic.html#factor-3.15-approximation-algorithm">Factor 3.15 approximation algorithm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/NPoS/5. A Phragmén-like Heuristic.html#analysis">Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/keys.html">Keys</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/keys/index.html">Polkadot’s cryptography</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/index.html#account-keys">Account keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/index.html#session-keys">Session keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/index.html#old">old</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/keys/1-accounts.html">Account signatures and keys</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/1-accounts.html#ristretto">Ristretto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/1-accounts.html#additional-signature-types">Additional signature types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/keys/1-accounts-more.html">Account signatures and keys in Polkadot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/1-accounts-more.html#schnorr-signatures">Schnorr signatures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/1-accounts-more.html#curves">Curves</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/keys/1-accounts-more.html#how-much-secp256k1-support-">How much secp256k1 support?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/keys/1-accounts-more.html#is-secp256k1-risky-">Is secp256k1 risky?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/keys/1-accounts-more.html#is-ed25519-risky---aka-use-ristretto">Is Ed25519 risky?  Aka use Ristretto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/keys/1-accounts-more.html#zero-knowledge-proofs-in-the-dalek-ecosystem">Zero-knowledge proofs in the dalek ecosystem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/keys/2-staking.html">Nomination</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/2-staking.html#stash-account-keys">Stash account keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/2-staking.html#stake-controller-account-keys">Stake controller account keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/2-staking.html#certificate-location">Certificate location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/2-staking.html#certificate-size">Certificate size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/keys/2-staking.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/keys/3-session.html">Session keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/keys/4-secio.html">Transport layer authentication - libp2p’s SECIO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/keys/creation.html">Account key creation ideas for Polkadot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/networking.html">Networking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/networking/1-overview.html">Networking for Polkadot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/1-overview.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/1-overview.html#message-types">Message types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/1-overview.html#message-keys-and-sizes">Message keys and sizes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/1-overview.html#peer-discovery">Peer Discovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/1-overview.html#bounded-gossip-protocols">Bounded Gossip Protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/1-overview.html#main-subprotocols">Main subprotocols</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/networking/2-polite-grandpa.html">Gossiping GRANDPA communication (polite-grandpa)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/2-polite-grandpa.html#expiration">Expiration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/2-polite-grandpa.html#validation">Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/2-polite-grandpa.html#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/2-polite-grandpa.html#dealing-with-dos">Dealing with DoS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/networking/3-attestation.html">Parachain networking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/3-attestation.html#attestation-gossip:-gossiping-parachain-blocks">Attestation Gossip: gossiping parachain blocks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/3-attestation.html#direct-routing:-sending--receiving-erasure-coded-pieces">Direct Routing: sending/ receiving erasure coded pieces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/networking/4-icmp.html">ICMP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/4-icmp.html#inter-chain-message-passing:-egress-queue-data-fetching">Inter-chain Message Passing: Egress Queue Data Fetching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/networking/4-icmp.html#simple-gossip-for-icmp-queue-routing:-topics-based-on-relay-chain-block-where-messages-are-issued">Simple Gossip for ICMP queue routing: Topics based on relay-chain block where messages are issued</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/networking/4-icmp.html#interchain-messaging-routing-overview">Interchain Messaging Routing Overview</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polkadot/slashing.html">Slashing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/slashing/amounts.html">Slashing mechanisms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/amounts.html#general-principles">General principles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/amounts.html#network-protocol">Network Protocol</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/amounts.html#unresponsiveness">Unresponsiveness</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/amounts.html#grandpa">Grandpa</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/amounts.html#unjustified-vote">Unjustified vote</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/amounts.html#rejecting-set-of-votes">Rejecting set of votes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/amounts.html#equivocation---concurrent-cases-of-unjustified-vote">Equivocation / concurrent cases of unjustified vote</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/amounts.html#invalid-vote">Invalid vote</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/amounts.html#babe">Babe</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/amounts.html#babe-equivocation">Babe Equivocation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/amounts.html#invalid-block">Invalid Block</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/amounts.html#parachain-validity-availability-protocol">Parachain validity-availability protocol</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/amounts.html#invalid-validity-statement">Invalid validity statement</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/slashing/npos.html">Slashing across eras with NPoS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/npos.html#reduced-rewards">Reduced rewards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/npos.html#slashing-within-one-era">Slashing within one era</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/npos.html#slashing-in-past-eras">Slashing in past eras</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/npos.html#slashing-spans">Slashing spans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/npos.html#actions">Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/npos.html#accounting">Accounting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/npos.html#monotonicity">Monotonicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/npos.html#suppressed-nominators-in-phragmen">Suppressed nominators in Phragmen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polkadot/slashing/npos.html#rewards-for-slashable-offense-reports">Rewards for slashable offense reports</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/npos.html#rewards-based-on-slashing-nominators">Rewards based on slashing nominators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="polkadot/slashing/npos.html#rewards-based-on-slashing-only-validators">Rewards based on slashing only validators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Polkadot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/NPoS.html">NPoS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/keys.html">Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polkadot/slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Research at Web3 Foundation</a></li>
+      <li>Next: <a href="polkadot/index.html" title="next chapter">Polkadot</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/polkadot.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

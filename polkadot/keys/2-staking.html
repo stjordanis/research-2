@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Nomination &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Session keys" href="3-session.html" />
+    <link rel="prev" title="Account signatures and keys in Polkadot" href="1-accounts-more.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="nomination">
+<h1>Nomination<a class="headerlink" href="#nomination" title="Permalink to this headline">¶</a></h1>
+<p>In some sense, all public keys derive their authority from some combination of ceremonies and certificates, with certificate root keys deriving their authority entirely from ceremonies.  As an example, trust-on-first-use schemes might be considered a pair of cerimonies, the key being associated to an identity first, and the threat of other comparing keys fingerprints.</p>
+<p>We apply this perspective to a consensus algorithm for a proof-of-stake blockchains like polkadot by regarding the chain itself as one large ceremony and treating the staked/bonded account as the root of trust.  We then have certificates issued by these staked account keys that authenticate both the session keys used by Polkadot validators and block producers, as well as the long-term transport layer authentication keys required by TLS or Noise (see concerns about libp2p’s secio).  </p>
+<div class="section" id="stash-account-keys">
+<h2>Stash account keys<a class="headerlink" href="#stash-account-keys" title="Permalink to this headline">¶</a></h2>
+<p>In polkadot, these staked or bonded account keys are called “stash account keys” to help disambiguate them from other key roles discussed below.  We currently describe <code class="docutils literal notranslate"><span class="pre">unbond</span></code>, <code class="docutils literal notranslate"><span class="pre">withdraw_unbonded</span></code>, and <code class="docutils literal notranslate"><span class="pre">bond_extra</span></code> transactions in [2].  There are several ways to implement these, or related operations, but if accounts are not too constrained in size then one extremely flexible approach goes:</p>
+<p>These stash accounts has an unstaked balance <span class="math notranslate nohighlight">\(u \ge 0\)</span> and a list of pending unstaking dates and balances <span class="math notranslate nohighlight">\(T = \{ (t,v) \}\)</span> with <span class="math notranslate nohighlight">\(v&gt;0\)</span>, one of which lack any unstaking date, meaning <span class="math notranslate nohighlight">\(t = \infty\)</span>.  An unstaking operation splits <span class="math notranslate nohighlight">\((\infini,v) \in T\)</span> into $<span class="math notranslate nohighlight">\((\infini,v - v')\)</span> and <span class="math notranslate nohighlight">\((t,v')\)</span>.  Any payment out of a staked account completes any pending unstaking operations by moving their value into the unstaked balance <span class="math notranslate nohighlight">\(u\)</span>.  In other words, at block height <span class="math notranslate nohighlight">\(h\)</span>, a payment of value <span class="math notranslate nohighlight">\(v'\)</span> with fees <span class="math notranslate nohighlight">\(f\)</span> out of a stash account is valid if</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T_1 = \{ (t,v) \in T_0 : t &gt; h \}\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(u_1 := u_0 + \sum \{ (t,v) \in T_0 : t \le h \} - h - f\)</span> remains positive.</p></li>
+</ul>
+<p>We might require additional metadata in <span class="math notranslate nohighlight">\(T\)</span> so that delayed slashing cannot impact more recently added stake, but this resembles the above discussion.  TODO:  Be more detailed?</p>
+</div>
+<div class="section" id="stake-controller-account-keys">
+<h2>Stake controller account keys<a class="headerlink" href="#stake-controller-account-keys" title="Permalink to this headline">¶</a></h2>
+<p>We must support, or may even require, that these session keys and TLS keys rotate periodically.  At the same time, we must support stash account keys being air gapped, which prevents them from signing anything regularly.  In consequence, we require another layer, called “stake controller account keys”, that lies strictly between, and control the nomination of or delegation from stash account keys to session keys. </p>
+<p>As we require small transactions associated to staking, these “stake controller account keys” are actual account keys with their own separate balance, usually much smaller than the “stash account key” for which they manage nomination/delegation. </p>
+<p>In future, we might permit the certificate from the stash account key to limit the actions of a controller keys, which improves our stakers’ security when certain functions permit less slashing.  In particular, we might admit modes for fishermen and block producers that prohibit nominating or running a validator.  </p>
+<p>At the moment however, we only support one such slashing level, so all mode transitions are functions of the controller key itself, as described in [2].</p>
+</div>
+<div class="section" id="certificate-location">
+<h2>Certificate location<a class="headerlink" href="#certificate-location" title="Permalink to this headline">¶</a></h2>
+<p>We could either store certificates with account data, or else provide certificates in protocol interactions, but almost surely the certificate delegating from the staked account to the nominator key belongs in the account data.</p>
+<p>We should take care with the certificates from the controller key to the session key because the session key requires a proof-of-possesion.  If we place them into the controller account, then there is a temptation to trust them and not check the proof-of-possesion ourselves.  We cannot necessarily trust the chain for proofs-of-possesion because doing so might provides escalation for attackers who succeed in posting any invalid data.  If we provide them in interactions then there is a temptation to check the proof-of-possesion repeatedly.  We should evaluate either attaching a self-checked flag to the staked account database vs storing session keys in some self-checked account database separate from the account database for which nodes trust the chain.  </p>
+</div>
+<div class="section" id="certificate-size">
+<h2>Certificate size<a class="headerlink" href="#certificate-size" title="Permalink to this headline">¶</a></h2>
+<p>We could save some space by using implicit certificates to issue nominator keys, but we consider our initial implementation in <a class="reference external" href="https://github.com/w3f/schnorr-dalek/blob/master/src/cert.rs#L181"><code class="docutils literal notranslate"><span class="pre">schnorr-dalek/src/cert.rs</span></code></a> insufficient, so we’d require another implicit certificate scheme for this.  In essence, an accounts nominator key could be defined by an additional 32 bytes attached to the account, along with any associated data.  Actually doing this requires understanding (a) what form this associated data should take, and (b) if the space savings are worth the complexity of an implicit certificates scheme, mostly <a class="reference external" href="https://github.com/w3f/schnorr-dalek/issues/4">reviewing the literature</a>.  We favor simplicity by avoiding implicit certificates currently.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>[1] https://github.com/paritytech/substrate/pull/1782#discussion_r260265815
+[2] https://github.com/paritytech/substrate/blob/1a2ec9eec1fe9b3cc2677bac629fd7e9b0f6cf8e/srml/staking/Staking.md aka https://github.com/paritytech/substrate/commit/1a2ec9eec1fe9b3cc2677bac629fd7e9b0f6cf8e</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../keys.html">Keys</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html">Polkadot’s cryptography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-accounts.html">Account signatures and keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-accounts-more.html">Account signatures and keys in Polkadot</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Nomination</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#stash-account-keys">Stash account keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stake-controller-account-keys">Stake controller account keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#certificate-location">Certificate location</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#certificate-size">Certificate size</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="3-session.html">Session keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-secio.html">Transport layer authentication - libp2p’s SECIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="creation.html">Account key creation ideas for Polkadot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../keys.html">Keys</a><ul>
+      <li>Previous: <a href="1-accounts-more.html" title="previous chapter">Account signatures and keys in Polkadot</a></li>
+      <li>Next: <a href="3-session.html" title="next chapter">Session keys</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/keys/2-staking.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

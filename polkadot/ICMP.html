@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>ICMP Scheme &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Parachain Allocation" href="Parachain-Allocation.html" />
+    <link rel="prev" title="GRANDPA" href="GRANDPA.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>====================================================================</p>
+<p><strong>Author</strong>: Fatemeh Shirazi</p>
+<p><strong>Last updated</strong>: 12.12.2018</p>
+<p><strong>Note</strong>: This write-up contains only notes from a ICMP workshop 15.11.18-16.11.18 in Berlin.</p>
+<p>====================================================================</p>
+<div class="section" id="icmp-scheme">
+<h1>ICMP Scheme<a class="headerlink" href="#icmp-scheme" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>We want to enable inter-chain messaging among parachains. We want a guarantee that when we send a block we are sure that we have received all the previous messages. Moreover, we want to put a limit on the size of incoming messages to avoid overflowing.</p>
+</div>
+<div class="section" id="inter-chain-messaging-scheme-assumptions">
+<h2>Inter-chain messaging scheme assumptions<a class="headerlink" href="#inter-chain-messaging-scheme-assumptions" title="Permalink to this headline">¶</a></h2>
+<p>We assume all parachains have an internal input and output queue. Moreover, there is a fixed amount of data each parachain can send to another parachain.</p>
+<p>To avoid parachains being flooded and over loaded, a parachain can block messages coming from other parachains. The bridges are notified of this blocking and convey it to the users on the corresponding parachain.</p>
+<p>PoV Block is execution proof witness data. This might include:</p>
+<ul class="simple">
+<li><p>Output Messages (as message bundle hash preimages)</p></li>
+<li><p>External data (“transactions”, “extrinsics” or any other data extrinsic to Polkadot)</p></li>
+<li><p>Witness (cryptogrpahic proof statements of data validity)</p></li>
+<li><p>New header (probably only the case for verification-only STFs like zkSTARKs or whatever)</p></li>
+</ul>
+</div>
+<div class="section" id="steps--order--of-receiving-and-sending-messages-belonging-to-a-parachain-blob:">
+<h2>Steps (Order) of Receiving and Sending Messages Belonging to a Parachain Blob:<a class="headerlink" href="#steps--order--of-receiving-and-sending-messages-belonging-to-a-parachain-blob:" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li>The collator needs to first check whether he has any incoming messages (which he might not have)<ul class="simple">
+<li><p>Collator runs relay chain light client to determine relay chain header</p></li>
+<li><p>Collator tracks parachain header and that parachain’s input queue as a set of hashes of message-bundles (which requires tracking all parachain’s output queues since the last time the parachain accepted input)</p></li>
+<li><p>Collator queries parachain validators or collators or availability guarantors (based on relay chain data) in order to get actual message data from bundles</p></li>
+</ul>
+</li>
+<li><p>Collator has a transaction pool</p></li>
+<li><p>The collator creates block candidate based on this transaction pool, previous header, and any other data (e.g. inherents), and incoming messages</p></li>
+<li><p>Collator builds a PoV block candidate for this parachain on the data from 3, this includes outgoing messages</p></li>
+<li><p>Collator distributes it to all parachain validators</p></li>
+<li><p>Parachain validator produces attestations on some subset of valid PoV candidates that it receives and redistributes to other parachain validators and block author</p></li>
+<li><p>Block author selects a set of PoV candidates, at most one for each parachain, which are fully attested by their group</p></li>
+<li><p>Block author distributes the relay chain block candidate to other validators</p></li>
+</ol>
+</div>
+<div class="section" id="compact-routing-proofs">
+<h2>Compact Routing Proofs<a class="headerlink" href="#compact-routing-proofs" title="Permalink to this headline">¶</a></h2>
+<p>It may be possible to use some sort of proof-of-knowledge to prove that the output queues have been routed to the correct input queues correctly, taking into account temporarily-offline parachains.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ICMP Scheme</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inter-chain-messaging-scheme-assumptions">Inter-chain messaging scheme assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#steps--order--of-receiving-and-sending-messages-belonging-to-a-parachain-blob:">Steps (Order) of Receiving and Sending Messages Belonging to a Parachain Blob:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compact-routing-proofs">Compact Routing Proofs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS.html">NPoS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keys.html">Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../polkadot.html">Polkadot</a><ul>
+      <li>Previous: <a href="GRANDPA.html" title="previous chapter">GRANDPA</a></li>
+      <li>Next: <a href="Parachain-Allocation.html" title="next chapter">Parachain Allocation</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/polkadot/ICMP.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

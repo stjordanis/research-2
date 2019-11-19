@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>4. Sequential Phragmén’s method. &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="5. A Phragmén-like Heuristic" href="5. A Phragmén-like Heuristic.html" />
+    <link rel="prev" title="3. The maximin support problem" href="3. The maximin support problem.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="-4.-sequential-phragm-n-s-method.">
+<h1>4. Sequential Phragmén’s method.<a class="headerlink" href="#-4.-sequential-phragm-n-s-method." title="Permalink to this headline">¶</a></h1>
+<p>This note outlines a multiwinner election method introduced by Edvard Phragmén in the 1890’s and specified as a sequential greedy algorithm by <a class="reference external" href="https://aaai.org/ocs/index.php/AAAI/AAAI17/paper/download/14757/13791">Brill et al. (2017)</a>, adapted to the problem of electing validators in Polkadot. In particular, we have adapted Brill et al.’s algorithm and proofs to the weighted case. </p>
+<p><strong>Remark.</strong> No objective function is declared in this note. In particular, this algorithm offers no constant-factor approximation guarantee for the <a class="reference external" href="3. The maximin support problem.html">maximin support objective</a>.</p>
+<p>We give needed notations in Section 1. In Section 2, we show that this algorithm runs in time 
+<span class="math notranslate nohighlight">\(O(m|E|)\)</span></p>
+<p>if each lookup and floating arithmetic operation is considered constant time, where <span class="math notranslate nohighlight">\(m\)</span> is the number of elected validators, and <span class="math notranslate nohighlight">\(|E|\)</span> is the number of edges in the nominator-validator relation graph. </p>
+<p>In Section 3, we also show that the elected commitee observes the property of Proportional Justified Representation (PJR), a popular axiom in the area of election theory establishing that an election is “fair”.</p>
+<div class="section" id="-1.-notation">
+<h2>1. Notation<a class="headerlink" href="#-1.-notation" title="Permalink to this headline">¶</a></h2>
+<p>An instance of NPoS is given by a bipartite graph <span class="math notranslate nohighlight">\((N\cup V, E)\)</span>, where <span class="math notranslate nohighlight">\(nv\in E\)</span> represents the approval by nominator <span class="math notranslate nohighlight">\(n\in E\)</span> of candidate validator <span class="math notranslate nohighlight">\(v\)</span>, a vector of nominator budgets <span class="math notranslate nohighlight">\(b\in \mathbb{R}_{\geq 0}^N\)</span>, and the number <span class="math notranslate nohighlight">\(m\)</span> of candidate validators to be elected. We also denote by <span class="math notranslate nohighlight">\(V_n\subseteq V\)</span> the  set of candidates supported by nominator <span class="math notranslate nohighlight">\(n\)</span>, and by <span class="math notranslate nohighlight">\(N_v\subseteq N\)</span> the set of nominators that support validator <span class="math notranslate nohighlight">\(v\)</span>. </p>
+<p>An election is given by the pair <span class="math notranslate nohighlight">\((S,w)\)</span> where <span class="math notranslate nohighlight">\(S\subseteq V\)</span> is a committee of <span class="math notranslate nohighlight">\(m\)</span> elected validators, and <span class="math notranslate nohighlight">\(w\in \mathbb{R}_{\geq 0}^E\)</span> is a vector of edge weights where <span class="math notranslate nohighlight">\(w_{nv}\)</span> represents the precise amount of stake that nominator <span class="math notranslate nohighlight">\(n\)</span> assigns to validator <span class="math notranslate nohighlight">\(v\)</span>. Besides non-negativity constraints, vector <span class="math notranslate nohighlight">\(w\)</span> must observe the budget constraints: <span class="math notranslate nohighlight">\(\sum_{v\in V_n} w_{nv} \leq b_n \ \forall n\in N\)</span>. Finallly, we say that vector <span class="math notranslate nohighlight">\(w\)</span> is maximally affordable if we have the equality <span class="math notranslate nohighlight">\(\sum_{v\in V_n\cap S} w_{nv}=b_n\)</span> for each nominator <span class="math notranslate nohighlight">\(n\)</span> that has at least one neighbor in <span class="math notranslate nohighlight">\(S\)</span>.</p>
+</div>
+<div class="section" id="-2.-algorithm">
+<h2>2. Algorithm<a class="headerlink" href="#-2.-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>The following algorithm finds a committee <span class="math notranslate nohighlight">\(S\subseteq V\)</span> of size <span class="math notranslate nohighlight">\(m\)</span>, together with a maximally affordable edge weight vector <span class="math notranslate nohighlight">\(w\)</span> for it. We remark that a better weight vector <span class="math notranslate nohighlight">\(w'\)</span> for <span class="math notranslate nohighlight">\(S\)</span> can be obtained by finding its min-norm max flow vector as a post-computation - see <a class="reference external" href="2. The min-norm max-flow problem.html">our note on the MNMF problem</a>. </p>
+<p><strong>Algorithm: Sequential Phragmén Method.</strong></p>
+<ol class="simple">
+<li><p>Set <span class="math notranslate nohighlight">\(S \leftarrow \emptyset, \ 
+l_n \leftarrow 0 \ \forall n\in N, \ 
+l_v \leftarrow 0 \ \forall v\in V\)</span>. </p></li>
+<li><p>For <span class="math notranslate nohighlight">\(i=1,\cdots,m\)</span>:<ul class="simple">
+<li><p>Update <span class="math notranslate nohighlight">\(l_v \leftarrow \frac{1+\sum_{n\in N_v} l_n\cdot b_n}{\sum_{n\in N_v} b_n}\)</span> for each <span class="math notranslate nohighlight">\(v\in V\setminus S\)</span> (<span class="math notranslate nohighlight">\(l_v\)</span> unchanged for <span class="math notranslate nohighlight">\(v\in S\)</span>),</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(v_i\in argmin_{v\in V\setminus S} l_v\)</span> and update <span class="math notranslate nohighlight">\(S\leftarrow S\cup \{v_i\}\)</span>,</p></li>
+<li><p>For each <span class="math notranslate nohighlight">\(n\in N_{v_i}\)</span>, store <span class="math notranslate nohighlight">\(w_{nv_i}\leftarrow (l_{v_i} - l_n)b_n\)</span>, and update  <span class="math notranslate nohighlight">\(l_n \leftarrow l_{v_i}\)</span> (<span class="math notranslate nohighlight">\(l_n\)</span> unchanged for <span class="math notranslate nohighlight">\(n\in N\setminus N_{v_i}\)</span>),</p></li>
+</ul>
+</p></li>
+<li><p>For each edge <span class="math notranslate nohighlight">\(nv\in E\)</span> having a non-zero weight, update its weight  <span class="math notranslate nohighlight">\(w_{nv}\leftarrow w_{nv}/l_{n}\)</span>.</p></li>
+<li><p>Return <span class="math notranslate nohighlight">\((S,w)\)</span>.</p></li>
+</ol>
+<p><strong>Running time</strong>: We assume that each candidate validator has at least one supporter. Each one of the <span class="math notranslate nohighlight">\(m\)</span> rounds performs <span class="math notranslate nohighlight">\(O(|E|)\)</span> arithmetic operations, because each relation <span class="math notranslate nohighlight">\(nv\in E\)</span> is inspected at most twice per round. Hence, assuming that floating operations and table lookups take constant time, the running time of the algorithm is <span class="math notranslate nohighlight">\(O(m|E|)\)</span>.</p>
+<p><strong>General idea</strong>: The algorithm elects validators sequentially. It executes <span class="math notranslate nohighlight">\(m\)</span> rounds, electing a new validator <span class="math notranslate nohighlight">\(v_i\)</span> in the <span class="math notranslate nohighlight">\(i\)</span>-th round, and adding it to set <span class="math notranslate nohighlight">\(S\)</span>. The algorithm also progressively builds an edge weight vector, defining all weights <span class="math notranslate nohighlight">\(\{w_{nv_i}: \ n\in N_{v_i}\}\)</span> of edges incident to <span class="math notranslate nohighlight">\(v_i\)</span> as soon as <span class="math notranslate nohighlight">\(v_i\)</span> is elected. Finally, in step 3. the weight vector <span class="math notranslate nohighlight">\(w\)</span> is updated to ensure that that it is maximally affordable.</p>
+<p>The algorithm keeps track of <em>scores</em> over nominators and validators. For each nominator <span class="math notranslate nohighlight">\(n\in N\)</span>, <span class="math notranslate nohighlight">\(n\)</span>’s score is the fraction of its budget <span class="math notranslate nohighlight">\(b_n\)</span> that has been used up so far; i.e., <span class="math notranslate nohighlight">\(l_n:=\frac{1}{b_n}\sum_{v\in V_n} w_{nv}\)</span>. The guiding principle of this heuristic is to <em>try to minimize the maximum score <span class="math notranslate nohighlight">\(l_n\)</span> over all nominators in each round</em>. Consider round <span class="math notranslate nohighlight">\(i\)</span>: if a new validator <span class="math notranslate nohighlight">\(v_i\)</span> is elected, we assign one unit of support to it, i.e. we define edge weights so that <span class="math notranslate nohighlight">\(\sum_{n\in N_{v_i} }w_{nv_i}=1\)</span> (this choice of constant is irrevelant, and will change when vector <span class="math notranslate nohighlight">\(w\)</span> is updated in step 3.). These edge weights are chosen so that all supporters of <span class="math notranslate nohighlight">\(v_i\)</span> end up with the same score at the end of round <span class="math notranslate nohighlight">\(i\)</span>, i.e. for all <span class="math notranslate nohighlight">\(n'\in N_{v_i}\)</span>:
+\begin{align}
+l_{n’}^{new} 
+&amp;= \frac{\sum_{n\in N_{v_i}} l_n^{new}\cdot b_n}{\sum_{n\in N_{v_i}}  b_n} 92
+&amp; = \frac{\sum_{n\in N_{v_i}} (l_n^{old}\cdot b_n +w_{nv_i})}{\sum_{n\in N_{v_i}}  b_n} 92
+&amp; = \frac{1+ \sum_{n\in N_{v_i}} l_n^{old}\cdot b_n}{\sum_{n\in N_{v_i}}  b_n} =: l_{v_i}.92
+\end{align}</p>
+<p>This common nominator score is precisely our definition of validator <span class="math notranslate nohighlight">\(v_i\)</span>’s score <span class="math notranslate nohighlight">\(l_{v_i}\)</span>, and the algorithm greedily chooses the validator with smallest score in each round (breaking ties arbitrarily). </p>
+<p><strong>Proof of correctness</strong>: It remains to show that the chosen edge weights are always non-negative, and that <span class="math notranslate nohighlight">\(w\)</span> is maximally affordable after step 3. For this, we need the following lemma, which states that scores never decrease. Let <span class="math notranslate nohighlight">\(l_n^{(i)}\)</span> and <span class="math notranslate nohighlight">\(l_v^{(i)}\)</span> represent respectively that scores of nominator <span class="math notranslate nohighlight">\(n\)</span> and validator <span class="math notranslate nohighlight">\(v\)</span> at the end of the <span class="math notranslate nohighlight">\(i\)</span>-th round. </p>
+<p><strong>Lemma 1</strong>: <span class="math notranslate nohighlight">\(l_v^{(i)}\leq l_v^{(i+1)}\)</span> and <span class="math notranslate nohighlight">\(l_n^{(i)}\leq l_n^{(i+1)}\)</span> for each <span class="math notranslate nohighlight">\(n\in N\)</span>, <span class="math notranslate nohighlight">\(v\in S\)</span> and <span class="math notranslate nohighlight">\(i&lt;m\)</span>.</p>
+<p><em>Proof</em>. We prove the inequalities by strong induction on <span class="math notranslate nohighlight">\(i\)</span>, where the base case <span class="math notranslate nohighlight">\(i=0\)</span> is trivial if we set <span class="math notranslate nohighlight">\(l_v^{(0)}=l_n^{(0)}:=0\)</span> for each <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(v\)</span>. Assume now that all the proposed inequalities hold up to <span class="math notranslate nohighlight">\(i-1\)</span>.</p>
+<p>Validator inequalities: Consider a validator <span class="math notranslate nohighlight">\(v_j\in S\)</span>. If <span class="math notranslate nohighlight">\(j\leq i\)</span>, then the identity <span class="math notranslate nohighlight">\(l_{v_j}^{(i+1)}=l_{v_j}^i\)</span> follows from the fact that a validator’s score doesn’t change anymore once it has been elected. Else, if <span class="math notranslate nohighlight">\(j&gt;i\)</span>, </p>
+<div class="math notranslate nohighlight">
+\[l_{v_j}^{(i+1)}:=\frac{1+\sum_{n\in N_{v_j} } b_n\cdot l_n^{(i)}}{\sum_{n\in N_{v_j} } b_n} 
+\geq \frac{1+\sum_{n\in N_{v_j} } b_n\cdot l_n^{(i-1)}}{\sum_{n\in N_{v_j} } b_n} =: l_{v_j}^{(i)},\]</div>
+<p>where we used the nominator inequalities <span class="math notranslate nohighlight">\(l_n^{(i-1)}\leq l_n^{(i)}\)</span> assumed by induction hypothesis. This shows the validator inequalities up to <span class="math notranslate nohighlight">\(i\)</span>.</p>
+<p>Nominator inequalities: Consider now a nominator <span class="math notranslate nohighlight">\(n\)</span>, and assume by contradiction that <span class="math notranslate nohighlight">\(l_n^{(i+1)}&lt;l_n^{(i)}\)</span>. As <span class="math notranslate nohighlight">\(n\)</span>’s score has changed in round <span class="math notranslate nohighlight">\(i+1\)</span>, <span class="math notranslate nohighlight">\(n\)</span> must support validator <span class="math notranslate nohighlight">\(v_{i+1}\)</span>, and so <span class="math notranslate nohighlight">\(l_n^{(i+1)}=l_{v_{i+1}}^{(i+1)}\)</span>. On the other hand, <span class="math notranslate nohighlight">\(l_n^{(i)}=l_n^{(j)} = l_{v_{j}}^{(j)}\)</span> for some <span class="math notranslate nohighlight">\(j\leq i\)</span>. Putting things together,</p>
+<div class="math notranslate nohighlight">
+\[l_{v_j}^{(j)} = l_n^{(i)} &gt; l_n^{(i+1)} = l_{v_{i+1}}^{(i+1)} \geq l_{v_{i+1}}^{(j)}, \]</div>
+<p>where the last inequality follows from validator inequalities up to <span class="math notranslate nohighlight">\(i\)</span>, which we just proved in the previous paragraph. We conclude that in round <span class="math notranslate nohighlight">\(j\)</span>, validator <span class="math notranslate nohighlight">\(v_{i+1}\)</span> had a strictly smaller score than <span class="math notranslate nohighlight">\(v_j\)</span>, which contradicts the choice of <span class="math notranslate nohighlight">\(v_j\)</span>.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+<p>It easily follows that all edge weights are non-negative. Moreover, using the definition of the nominator scores, before step 3. we have the equalities <span class="math notranslate nohighlight">\(l_n\cdot b_n=\sum_{v\in S\cap V_n}w_{nv}\)</span> for each nominator <span class="math notranslate nohighlight">\(n\)</span> with at least one neighbor in <span class="math notranslate nohighlight">\(S\)</span>, so after step 3. we have <span class="math notranslate nohighlight">\(b_n=\sum_{v\in S\cap V_n}w_{nv}\)</span>.</p>
+</div>
+<div class="section" id="-3.-axiomatic-properties">
+<h2>3. Axiomatic properties<a class="headerlink" href="#-3.-axiomatic-properties" title="Permalink to this headline">¶</a></h2>
+<p>In the research literature of approval-based miltiwinner elections, it is common to take an axiomatic approach and define properties of voting methods that are intuitively desirable (see our main reference <a class="reference external" href="https://aaai.org/ocs/index.php/AAAI/AAAI17/paper/download/14757/13791">Brill et al. (2017)</a>, as well as <a class="reference external" href="https://arxiv.org/abs/1609.05370">Sánchez-Fernández et al. (2018)</a>). These properties apply to the elected committee only, ignoring the edge weights.</p>
+<p>For example, a voting method is called <em>house monotonic</em> if, for any instance, the elected candidates are all still elected if the number <span class="math notranslate nohighlight">\(m\)</span> of winners is increased. As our algorithm elects validators iteratively, it is trivially house monotonic.</p>
+<p>We focus on the property of <em>proportional justified representation</em> (PJR), which establishes that if a group of nominators has sufficient budget, and their preferences are sufficiently aligned, then they must be well represented in the elected committee. More formally, a voting method satifies PJR if for any instance <span class="math notranslate nohighlight">\((N\cup V, E, b, m)\)</span> electing a committee <span class="math notranslate nohighlight">\(S\)</span>, and any integer <span class="math notranslate nohighlight">\(1\leq t\leq m\)</span>, there is no nominator subset <span class="math notranslate nohighlight">\(N'\subseteq N\)</span> such that</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\sum_{n \in N'} b_n \geq \frac{t}{m} \cdot \sum_{n \in N} b_n\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(|\cap_{n\in N'} V_n| \geq t\)</span>, and</p></li>
+<li><p><span class="math notranslate nohighlight">\(|S\cap (\cup_{n\in N'} V_n)| &lt; t\)</span>.</p></li>
+</ul>
+<p>Brill et al (2017) proved that the proposed algorithm, sequential Phragmén, satifies PJR,  making it the first known polynomial-time method with this property. We present a proof next.</p>
+<p><strong>Lemma 2:</strong> Sequential Phragmén satisfies PJR.</p>
+<p><em>Proof:</em> Assume the opposite, hence there is an instance <span class="math notranslate nohighlight">\((N\cup V, E, b, m)\)</span> with output committe <span class="math notranslate nohighlight">\(S\)</span>, an integer <span class="math notranslate nohighlight">\(1\leq t\leq m\)</span> and a nominator subset <span class="math notranslate nohighlight">\(N'\subseteq N\)</span> as in the definition above.</p>
+<p>For simplicity, we ignore the update of the weight vector performed in step 3. of the algorithm. Hence, every elected validator in <span class="math notranslate nohighlight">\(S\)</span> receives a support of one unit, and the sum of supports over <span class="math notranslate nohighlight">\(S\)</span> is <span class="math notranslate nohighlight">\(m\)</span>. Since we know that each budget constraint is violated by a multiplicative term of at most <span class="math notranslate nohighlight">\(l_{v_m}\)</span> (the score of the last added validator), we obtain the bound
+
+\begin{equation}
+l_{v_m}\geq \frac{m}{\sum_{n\in N} b_n}.
+\end{equation}
+As <span class="math notranslate nohighlight">\(l_{v_m}\)</span> is an upper bound on the nominator score <span class="math notranslate nohighlight">\(l_n\)</span> for each <span class="math notranslate nohighlight">\(n\in N\)</span> (by Lemma 1), and <span class="math notranslate nohighlight">\(l_n\)</span> is the proportion of <span class="math notranslate nohighlight">\(n\)</span>’s budget that’s used, the previous inequality is tight only if <span class="math notranslate nohighlight">\(l_n = m/\sum_{n\in N} b_n\)</span> for each <span class="math notranslate nohighlight">\(n\in N\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(S'=S\cap(\cup_{n\in N'} V_n)\)</span>, where <span class="math notranslate nohighlight">\(|S'|\leq t-1\)</span> by hypothesis. Since nominators in <span class="math notranslate nohighlight">\(N'\)</span> only need to provide support to validators in <span class="math notranslate nohighlight">\(S'\)</span>, the sum over <span class="math notranslate nohighlight">\(N'\)</span> of used budgets must be smaller than <span class="math notranslate nohighlight">\(|S'|\)</span>, i.e. 
+<span class="math notranslate nohighlight">\(\sum_{n\in N'} l_n\cdot b_n \leq |S'| \leq t-1.\)</span>
+By a (weighted) average argument, this implies that there is a nominator <span class="math notranslate nohighlight">\(n'\in N'\)</span> with score 
+<span class="math notranslate nohighlight">\(l_{n'}\leq \frac{\sum_{n\in N'} l_n\cdot b_n}{\sum_{n\in N'} b_n} &lt; \frac{t}{\sum_{n\in N'} b_n} \leq \frac{t}{\frac{t}{m} \sum_{n\in N} b_n} = \frac{m}{ \sum_{n\in N} b_n},\)</span>
+where the last inequality is by hypothesis. This implies that the inequality <span class="math notranslate nohighlight">\(l_{v_m} &gt; m/\sum_{n\in N} b_n\)</span> is not tight.</p>
+<p>Consider now running a new round (round <span class="math notranslate nohighlight">\(m+1\)</span>) on the algorithm, and fix an unelected validator <span class="math notranslate nohighlight">\(v'\in \cap_{n\in N'} V_n\)</span> (which must exist by hypothesis). If we compute the score of <span class="math notranslate nohighlight">\(v'\)</span> in this round, we get 
+<span class="math notranslate nohighlight">\(l_{v'} = \frac{1+\sum_{n\in N_{v'} } l_n\cdot b_n}{\sum_{n\in N_{v'}} b_n}\leq 
+\frac{1+\sum_{n\in N'} l_n\cdot b_n}{\sum_{n\in N'} b_n},\)</span>
+where we used the fact that <span class="math notranslate nohighlight">\(N'\subseteq N_{v'}\)</span>, and that reducing the set of nominators over which the unit support for <span class="math notranslate nohighlight">\(v'\)</span> is split can only increase the nominator scores. Using the known upper bound on the nominator, and the known lower bound on the denominator, we obtain 
+<span class="math notranslate nohighlight">\(l_{v'}\leq \frac{1+\sum_{n\in N'} l_n\cdot b_n}{\sum_{n\in N'} b_n}
+\leq \frac{1 + (t-1)}{\frac{t}{m} \sum_{n\in N} b_n} = \frac{m}{\sum_{n\in N} b_n} &lt; l_{v_m}.\)</span>
+This implies that <span class="math notranslate nohighlight">\(l_{v_m} &gt; l_{v'} \geq l_{v_{m+1}}\)</span>, which contradicts Lemma 1.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../NPoS.html">NPoS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html">Intro to Nominated Proof-of-Stake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1. Overview.html">1. Overview of results for the NPoS election problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2. The min-norm max-flow problem.html">2. The min-norm max-flow problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="3. The maximin support problem.html">3. The maximin support problem</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">4. Sequential Phragmén’s method.</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#-1.-notation">1. Notation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#-2.-algorithm">2. Algorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#-3.-axiomatic-properties">3. Axiomatic properties</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="5. A Phragmén-like Heuristic.html">5. A Phragmén-like Heuristic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../NPoS.html">NPoS</a><ul>
+      <li>Previous: <a href="3. The maximin support problem.html" title="previous chapter">3. The maximin support problem</a></li>
+      <li>Next: <a href="5. A Phragmén-like Heuristic.html" title="next chapter">5. A Phragmén-like Heuristic</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/NPoS/4. Sequential Phragmén’s method.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

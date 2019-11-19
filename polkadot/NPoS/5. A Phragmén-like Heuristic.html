@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>5. A Phragmén-like Heuristic &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Keys" href="../keys.html" />
+    <link rel="prev" title="4. Sequential Phragmén’s method." href="4. Sequential Phragmén’s method.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="-5.-a-phragm-n-like-heuristic">
+<h1>5. A Phragmén-like Heuristic<a class="headerlink" href="#-5.-a-phragm-n-like-heuristic" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference external" href="4. Sequential Phragmén’s method.html">sequential Phragmén’s method</a> is fast, seems to work well in practice, and gives a solution that satisfies the Proportional Justified Representation (PJR) axiom. However, we identify two problems with it. First, it does not give a constant factor approximation to the <a class="reference external" href="3. The maximin support problem.html">maximin support objective</a>. Second, it lacks versatility, in the sense that it cannot be used to improve upon an arbitrary solution given as input. We describe a heuristic closely related to the sequential Phragmén’s method, which takes as input an arbitrary partial solution, defines scores over the validator candidates, and uses them to add a new validator to the solution, removing another validator if necessary. </p>
+<p>Checking if a committee satisifies the PJR property is NP-hard. However, we define a stronger property called PJR(<span class="math notranslate nohighlight">\(d\)</span>), which depends on a parameter <span class="math notranslate nohighlight">\(d\)</span>. We show that it implies PJR (for an adecuate value of <span class="math notranslate nohighlight">\(d\)</span>), and that it can checked efficiently, using our heuristic. We also build from our heuristic a “PJR(<span class="math notranslate nohighlight">\(d\)</span>)-enabler”; that is, an algorithm that takes as input a solution of minimum support <span class="math notranslate nohighlight">\(d\)</span>, performs some swaps using the heuristic, and returns a solution of minimum support at least <span class="math notranslate nohighlight">\(d\)</span> and observing PJR(<span class="math notranslate nohighlight">\(d\)</span>) (and also PJR). Finally, we provide an efficient factor-3.15 approximation algorithm, which starts with an empty set and alternates between using our heuristic to elect a new validator, and running a flow balancing algorithm to improve the support distribution on the current set.</p>
+<div class="section" id="notation">
+<h2>Notation<a class="headerlink" href="#notation" title="Permalink to this headline">¶</a></h2>
+<p>Recall that an instance of the NPoS election problem is a graph <span class="math notranslate nohighlight">\((N\cup V, E)\)</span> representing the trust relations between nominators and validator candidates, a vector <span class="math notranslate nohighlight">\(b\in\mathbb{R}_{\geq 0}^N\)</span> of nominator budgets, and a target number <span class="math notranslate nohighlight">\(m\)</span> of validators to elect.</p>
+<p>A support distribution from nominators to validators is represented by a vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}_{\geq 0}^E\)</span> of edge weights. Such a vector is called <em>affordable</em> if, besides non-negativity constraints, it observes the budget constraints <span class="math notranslate nohighlight">\(\sum_{v\in V: nv\in E} w_{nv}\leq b_n\)</span> for each nominator <span class="math notranslate nohighlight">\(n\in N\)</span>. Furthermore, it is called <em>maximally affordable</em> with respect to a validator set <span class="math notranslate nohighlight">\(S\subseteq V\)</span>  if <span class="math notranslate nohighlight">\(\sum_{v\in S: \ nv\in E} w_{nv} = b_n\)</span> for each <span class="math notranslate nohighlight">\(n\in N\)</span> having at least one neighbor in <span class="math notranslate nohighlight">\(S\)</span>. By a <em>solution</em> we mean a pair <span class="math notranslate nohighlight">\((S,w)\)</span> where <span class="math notranslate nohighlight">\(S\subseteq V\)</span> with <span class="math notranslate nohighlight">\(|S|\leq m\)</span> and <span class="math notranslate nohighlight">\(w\)</span> is maximally affordable for <span class="math notranslate nohighlight">\(S\)</span>. Our algorithm will return solutions of size <span class="math notranslate nohighlight">\(m\)</span>, but we will often consider solutions of smaller sizes in intermediate steps and in the analyses.</p>
+<p>Given an edge weight vector <span class="math notranslate nohighlight">\(w\)</span> and a validator <span class="math notranslate nohighlight">\(v\in V\)</span>, the <em>support</em> of <span class="math notranslate nohighlight">\(v\)</span> relative to <span class="math notranslate nohighlight">\(w\)</span> is <span class="math notranslate nohighlight">\(supp_w(v):=\sum_{n: nv\in E} w_{nv}\)</span>. For a solution <span class="math notranslate nohighlight">\((S,w)\)</span>, we extend this definition to <span class="math notranslate nohighlight">\(supp_w(S):=\min_{v\in S} supp_w(v)\)</span>. The <em>maximin support</em> objective is maximizing <span class="math notranslate nohighlight">\(supp_w(S)\)</span> over all feasible solutions <span class="math notranslate nohighlight">\((S,w)\)</span> to the given instance.</p>
+</div>
+<div class="section" id="the-basic-heuristic">
+<h2>The basic heuristic<a class="headerlink" href="#the-basic-heuristic" title="Permalink to this headline">¶</a></h2>
+<p>Suppose that <span class="math notranslate nohighlight">\((S,w)\)</span> is a maximally affordable solution with <span class="math notranslate nohighlight">\(|S|\leq m\)</span>, and we wish to add a new candidate <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span> and give it some support <span class="math notranslate nohighlight">\(d\)</span>. To do this, in general we will need to reduce the support of any other candidate <span class="math notranslate nohighlight">\(v \in S\)</span> who has a neighbor nominator <span class="math notranslate nohighlight">\(n\)</span> in common with <span class="math notranslate nohighlight">\(v'\)</span>. When we do this, we want to ensure that we do not reduce the support of <span class="math notranslate nohighlight">\(v\)</span> below <span class="math notranslate nohighlight">\(d\)</span> (assuming it was peviously above <span class="math notranslate nohighlight">\(d\)</span>). A simple way to ensure this is to reduce the weight on edge <span class="math notranslate nohighlight">\(nv\)</span> from <span class="math notranslate nohighlight">\(w_{nv}\)</span> to <span class="math notranslate nohighlight">\(w_{nv}\cdot(d/supp_w(v))\)</span>, and assign the difference to edge <span class="math notranslate nohighlight">\(nv'\)</span>. That way, it is clear that even if all nominators <span class="math notranslate nohighlight">\(n\)</span> supporting <span class="math notranslate nohighlight">\(v\)</span> are also neighbors of <span class="math notranslate nohighlight">\(v'\)</span>, the new support of <span class="math notranslate nohighlight">\(v\)</span> does not go below <span class="math notranslate nohighlight">\(d\)</span>.</p>
+<p>Thus, if for each <span class="math notranslate nohighlight">\(n\in N\)</span> and <span class="math notranslate nohighlight">\(d\geq 0\)</span> we define the nominator’s slack as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+slack_w(n,d):= &amp; \begin{cases}
+b_n &amp; \text{if }\nexists v\in S: nv \in E\\
+\sum_{v\in S: \ nv\in E, \ supp_w(v)&gt; d} w_{n,v}(1-d/supp_w(v)) &amp; \text{otherwise } 
+\end{cases}\\
+= &amp; b_n - \sum_{v\in S: \ nv\in E} w_{nv}
+\cdot\min\Big\{1, \frac{d}{supp_w(v)}\Big\} 
+\end{align}\end{split}\]</div>
+<p>and for each <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span> and <span class="math notranslate nohighlight">\(d\geq 0\)</span> we define that candidate’s pre-score as</p>
+<div class="math notranslate nohighlight">
+\[prescore_w(v',d) := \sum_{n\in N: \ nv' \in E} slack_w(n,d)\]</div>
+<p>then we can add <span class="math notranslate nohighlight">\(v'\)</span> to the solution with support <span class="math notranslate nohighlight">\(prescore_w(v,d)\)</span>, while not making any other validator’s support decrease from over <span class="math notranslate nohighlight">\(d\)</span> to under <span class="math notranslate nohighlight">\(d\)</span>. In particular, if <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</span>, the new solution <span class="math notranslate nohighlight">\((S \cup \{v'\},w')\)</span> has <span class="math notranslate nohighlight">\(supp_{w'}(S \cup \{v'\}) \geq \min\{supp_w(S),d\}\)</span>. </p>
+<p>The resulting heuristic, which adds a new candidate to the initial solution, is formalized below.</p>
+<p><strong>Algorithm: InsertCandidate<span class="math notranslate nohighlight">\((S,w,v',d)\)</span></strong></p>
+<ol class="simple">
+<li><p>Let <span class="math notranslate nohighlight">\(S'\leftarrow S \cup \{v\}\)</span> and <span class="math notranslate nohighlight">\(w'\leftarrow w\)</span>.</p></li>
+<li><p>For all <span class="math notranslate nohighlight">\(n\)</span> with <span class="math notranslate nohighlight">\(nv' \in E\)</span>:</p>
+<ul class="simple">
+<li><p>If <span class="math notranslate nohighlight">\(\nexists v\in S\)</span> with <span class="math notranslate nohighlight">\(nv\in E\)</span>, set <span class="math notranslate nohighlight">\(w'_{nv'}\leftarrow b_n\)</span>, otherwise set <span class="math notranslate nohighlight">\(w'_{nv'}\leftarrow 0\)</span>;</p></li>
+<li><p>For all <span class="math notranslate nohighlight">\(v\in S\)</span> with <span class="math notranslate nohighlight">\(w_{nv} &gt; 0\)</span> and <span class="math notranslate nohighlight">\(supp_w(v) &gt; d\)</span>: increase <span class="math notranslate nohighlight">\(w'_{nv'}\)</span> by <span class="math notranslate nohighlight">\(w_{nv}(1-d/supp_w(v))\)</span>, and set <span class="math notranslate nohighlight">\(w'_{nv} \leftarrow w_{nv}(d/supp_w(v))\)</span>;</p></li>
+</ul>
+</li>
+<li><p>Return <span class="math notranslate nohighlight">\((S',w')\)</span>.</p></li>
+</ol>
+<p>The next result follows from the definitions and the discussion above and its proof is skipped.</p>
+<p><strong>Lemma 1:</strong> If we run InsertCandidate(<span class="math notranslate nohighlight">\(S,w,v',d\)</span>) for some maximally affordable solution <span class="math notranslate nohighlight">\((S,w)\)</span> with <span class="math notranslate nohighlight">\(|S|\leq m\)</span>, <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span> and <span class="math notranslate nohighlight">\(d\geq 0\)</span> to get <span class="math notranslate nohighlight">\((S',w')\)</span>,  then </p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((S',w')\)</span> is maximally affordable, </p></li>
+<li><p><span class="math notranslate nohighlight">\(supp_{w'}(v')=prescore_w(v',d)\)</span>,  </p></li>
+<li><p>for all <span class="math notranslate nohighlight">\(v\in S\)</span> we have that <span class="math notranslate nohighlight">\(supp_{w'}(v)\geq \min\{d, supp_w(v)\}\)</span>, and consequently if <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</span>, we obtain </p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[supp_{w'}(S') \geq \min \{d, supp_{w}(S) \},\]</div>
+<ul class="simple">
+<li><p>the running time of the algorithm is <span class="math notranslate nohighlight">\(O(|E|\cdot |S|)=O(|E|\cdot m)\)</span>.</p></li>
+</ul>
+<p>How high can we make <span class="math notranslate nohighlight">\(d\)</span> and have the property <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</span> hold? We define <span class="math notranslate nohighlight">\(score_w(v')\)</span> to be the maximum <span class="math notranslate nohighlight">\(d\)</span> such that <span class="math notranslate nohighlight">\(prescore_w(v',d) \geq d\)</span>. Our heuristic now becomes apparent.</p>
+<p><strong>Heuristic:</strong><em>Given a maximally affordable solution <span class="math notranslate nohighlight">\((S,w)\)</span> with <span class="math notranslate nohighlight">\(|S|\leq m\)</span>, find the candidate <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span> maximizing <span class="math notranslate nohighlight">\(score_w(v')\)</span> and execute InsertCandidate(<span class="math notranslate nohighlight">\(S,w,v',score_w(v')\)</span>), so that the new solution <span class="math notranslate nohighlight">\((S',w')\)</span> observes</em></p>
+<div class="math notranslate nohighlight">
+\[supp_{w'}(S')\geq \min\{supp_w(S),\max_{v'\in V\setminus S} score_w(v')\}.\]</div>
+<p>This is the core idea of our method. In the remainder of the section we establish how to find the candidate with the largest score efficiently.</p>
+<p>Fix a candidate <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span>, and consider the function <span class="math notranslate nohighlight">\(f(d):=prescore_w(v',d)-d\)</span> in the interval <span class="math notranslate nohighlight">\([0,\infty)\)</span>. Notice that this function is continuous and strictly monotone decreasing, and that <span class="math notranslate nohighlight">\(score_w(v')\)</span> corresponds to its unique root. We can therefore approximate this root with binary search, as binary search works on any monotonic function. However, we can do better. Sort the set of support values <span class="math notranslate nohighlight">\(\{supp_w(v): \ v\in S\}=\{d_1,d_2,\cdots,d_k\}\)</span> so that <span class="math notranslate nohighlight">\(d_1&lt;d_2&lt;\cdots&lt;d_k\)</span>, for some <span class="math notranslate nohighlight">\(k\leq |S|\)</span>, and note that <span class="math notranslate nohighlight">\(prescore_w(v',d)\)</span> is piecewise linear with respect to <span class="math notranslate nohighlight">\(d\)</span>, namely it is linear in each of the intervals <span class="math notranslate nohighlight">\([0,d_1), \ [d_1, d_2), \cdots, [d_k, \infty)\)</span>. By treating <span class="math notranslate nohighlight">\(prescore_w(v',d)\)</span> as a linear function in the neighborhood of <span class="math notranslate nohighlight">\(d^*:=score_w(v')\)</span>, and solving for <span class="math notranslate nohighlight">\(f(d^*)=0\)</span>, we obtain  </p>
+<div class="math notranslate nohighlight">
+\[score_w(v')
+=\frac{\sum_{n: \ nv'\in E} (b_n - \sum_{v \in S:  \ supp_w(v) \leq d^*} w_{nv})}
+{1+\sum_{n: \ nv' \in E} \sum_{v \in S: \ supp_w(v) &gt; d^*} w_{nv} /supp_w(v) }.\]</div>
+<p>The interesting thing about the previous identity is that the right-hand side stays constant if we replace <span class="math notranslate nohighlight">\(d^*=score_w(v')\)</span> by any other value <span class="math notranslate nohighlight">\(d\)</span> within the same interval, among the above-defined intervals. This motivates us to define the following score function, for any <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span> and <span class="math notranslate nohighlight">\(d\geq 0\)</span>: 
+<span class="math notranslate nohighlight">\(score_w(v',d)
+:=\frac{\sum_{n: \ nv'\in E} (b_n - \sum_{v \in S:  \ supp_w(v) \leq d} w_{nv})}
+{1+\sum_{n: \ nv' \in E} \sum_{v \in S: \ supp_w(v) &gt; d} w_{nv} /supp_w(v) }.\)</span></p>
+<p>Function <span class="math notranslate nohighlight">\(score(v',d)\)</span> is very similar to, but algorithmically more convenient than function <span class="math notranslate nohighlight">\(prescore(v',d)\)</span>. We remark that for <span class="math notranslate nohighlight">\(d=0\)</span>, the expression for <span class="math notranslate nohighlight">\(1/score_w(v',0)\)</span> corresponds to the notion of score in sequential Phragmén’s method. Hence, the latter can be seen as a special case of our approach.</p>
+<p><strong>Lemma 2.</strong> Fix a maximally affordable solution <span class="math notranslate nohighlight">\((S,w)\)</span> and a candidate <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span>:</p>
+<p>(i) Function <span class="math notranslate nohighlight">\(score_w(v',d)\)</span> is piece-wise constant with respect to <span class="math notranslate nohighlight">\(d\)</span>, namely it is constant in each of the intervals <span class="math notranslate nohighlight">\([0,d_1), \ [d_1, d_2), \cdots, [d_k, \infty)\)</span>, where the values <span class="math notranslate nohighlight">\(d_1&lt;d_2&lt;\cdots &lt;d_k\)</span> constitute the set <span class="math notranslate nohighlight">\(\{supp_w(v): \ v\in S\}\)</span>.</p>
+<p>(ii) <span class="math notranslate nohighlight">\(d^*:=score_w(v')\)</span> is the unique root of function <span class="math notranslate nohighlight">\(g(d):= score_w(v',d) - d\)</span>; moreover, <span class="math notranslate nohighlight">\(g(d)\)</span> is strictly positive for all <span class="math notranslate nohighlight">\(d&lt;d^*\)</span> and strictly negative for all <span class="math notranslate nohighlight">\(d&gt;d^*\)</span>.</p>
+<p>(iii) The above defined value <span class="math notranslate nohighlight">\(d^*\)</span> is equal to <span class="math notranslate nohighlight">\(\max_{d\geq 0} score_w(v',d) \)</span>.</p>
+<p><em>Proof.</em> Let <span class="math notranslate nohighlight">\(num(d)\)</span> and <span class="math notranslate nohighlight">\(denom(d)\)</span> be respectively the numerator and the denominator in the definition of <span class="math notranslate nohighlight">\(score_w(v',d)\)</span>. </p>
+<p>It is easy to check that if <span class="math notranslate nohighlight">\(d_i&lt;d_j\)</span> are two values such that <span class="math notranslate nohighlight">\(\nexists v\in S\)</span> with <span class="math notranslate nohighlight">\(d_i \leq supp_w(v)&lt; d_j\)</span>, then both <span class="math notranslate nohighlight">\(num(d)\)</span> and <span class="math notranslate nohighlight">\(denom(d)\)</span> stay constant in the interval <span class="math notranslate nohighlight">\([d_i,d_j)\)</span>. This proves point (i). </p>
+<p>Now consider function <span class="math notranslate nohighlight">\(g(d):=score_w(v',d) - d\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+g(d)&amp;:= score_w(v',d)-d \\
+&amp;=\frac{num(d) - d\cdot denom(d)}{denom(d)} \\
+&amp;= \frac{\sum_{n: \ nv'\in E}\Big(b_n -\sum_{v\in S} w_{nv}\cdot \min\{1,d/supp_w(v)\}\Big) - d}{denom(d)}\\
+&amp;= \frac{prescore_w(v',d)-d}{denom(d)} 
+= \frac{f(d)}{denom(d)}.
+\end{align}\end{split}\]</div>
+<p>As <span class="math notranslate nohighlight">\(denom(d)\)</span> is always strictly positive for <span class="math notranslate nohighlight">\(d\geq 0\)</span>, we have that functions <span class="math notranslate nohighlight">\(g(d)\)</span> and <span class="math notranslate nohighlight">\(f(d)\)</span> have the same roots and the same signs, and we already argued that function <span class="math notranslate nohighlight">\(f(d):=prescore_w(v'd)-d\)</span> is strictly monotone decreasing and has <span class="math notranslate nohighlight">\(d^*=score_w(v')\)</span> as its only root. This proves point (ii).</p>
+<p>To prove point <span class="math notranslate nohighlight">\((iii)\)</span>, let <span class="math notranslate nohighlight">\(d^*:=score_w(v')=score_w(v',d^*)\)</span>, and consider first a value <span class="math notranslate nohighlight">\(d&lt;d^*\)</span>. If <span class="math notranslate nohighlight">\(score_w(v',d)=d^*\)</span> then there is nothing to prove. Otherwise, we have that </p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\frac{num(d) - num(d^*)}{denom(d) - denom(d^*)} 
+= \frac{\sum_{n: \ nv'\in E} \sum_{v\in S: \ d&lt;supp_w(v) \leq d^*} w_{nv}}{\sum_{n: \ nv'\in E} \sum_{v\in S: \ d&lt;supp_w(v) \leq d^*} \frac{w_{nv}}{supp_w(v)}}\leq d^*.
+\end{align}\]</div>
+<p>Therefore,</p>
+<div class="math notranslate nohighlight">
+\[num(d) - num(d^*) \leq d^*( denom(d) - denom(d^*)) = d^*\cdot denom(d) - num(d^*),\]</div>
+<p>where we used the fact that <span class="math notranslate nohighlight">\(d^*\cdot denom(d^*)=num(d^*)\)</span> because <span class="math notranslate nohighlight">\(d^*=score_w(v',d^*)=num(d^*)/denom(d^*)\)</span>. From the previous inequality, we conclude that <span class="math notranslate nohighlight">\(d^* \geq num(d)/denom(d) = score(v',d)\)</span>, as desired.</p>
+<p>Similarly, if <span class="math notranslate nohighlight">\(d&gt;d^*\)</span> and <span class="math notranslate nohighlight">\(score_w(v',d)\neq d^*\)</span>, then</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\frac{num(d^*) - num(d)}{denom(d^*) - denom(d)} 
+= \frac{\sum_{n: \ nv'\in E} \sum_{v\in S: \ d^*&lt;supp_w(v) \leq d} w_{nv}}{\sum_{n: \ nv'\in E} \sum_{v\in S: \ d^*&lt;supp_w(v) \leq d} \frac{w_{nv}}{supp_w(v)}}&gt; d^*.
+\end{align}\]</div>
+<p>Therefore, </p>
+<div class="math notranslate nohighlight">
+\[num(d^*) - num(d) &gt; d^*( denom(d^*) - denom(d)) = num(d^*) - d^*\cdot denom(d),\]</div>
+<p>and thus we conclude that <span class="math notranslate nohighlight">\(d^* &gt; num(d)/denom(d) = score(v',d)\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(\square\)</span></p>
+<p><strong>Corollary 3.</strong> Fix a maximally affordable solution <span class="math notranslate nohighlight">\((S,w)\)</span>. Then, </p>
+<p>(i) Function <span class="math notranslate nohighlight">\(\max_{v'\in V\setminus S} score_w(v',d)\)</span> is constant in each of the above-defined intervals <span class="math notranslate nohighlight">\([0,d_1), \ [d_1, d_2), \cdots, [d_k, \infty)\)</span>.</p>
+<p>(ii) <span class="math notranslate nohighlight">\(d^*:= \max_{v'\in V\setminus S} score_w(v')\)</span> is the unique root of function <span class="math notranslate nohighlight">\(h(d):=\max_{v'\in V\setminus S} score_w(v',d) - d\)</span>; moreover, <span class="math notranslate nohighlight">\(h(d)\)</span> is strictly positive for each <span class="math notranslate nohighlight">\(d&lt;d^*\)</span> and strictly negative for each <span class="math notranslate nohighlight">\(d&gt;d^*\)</span>.</p>
+<p>(iii) The above defined point <span class="math notranslate nohighlight">\(d^*\)</span> is equal to <span class="math notranslate nohighlight">\( \max_{d\geq 0} \max_{v'\in V\setminus S} score_w(v',d)\)</span>.</p>
+<p>This corollary easily follows from the previous lemma, and its proof is skipped. Notice that the value <span class="math notranslate nohighlight">\(d^*\)</span> is precisely what we need to find in our heuristic, and point (ii) establishes that we can find it with binary search. We define the explicit algorithm next.</p>
+<p><strong>Algorithm. CalculateMaxScore<span class="math notranslate nohighlight">\((S,w)\)</span></strong></p>
+<ol class="simple">
+<li><p>Compute the values <span class="math notranslate nohighlight">\(0=d_0&lt;d_1&lt;d_2&lt;\cdots&lt;d_k\)</span>, where <span class="math notranslate nohighlight">\(\{d_1,\cdots, d_k\} = \{supp_w(v): \ v\in S\}\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(i_{lo}=0\)</span>, <span class="math notranslate nohighlight">\(i_{hi}=k\)</span>, <span class="math notranslate nohighlight">\(i=0\)</span>.</p></li>
+<li><p>For each <span class="math notranslate nohighlight">\(n\in N\)</span>, compute <span class="math notranslate nohighlight">\(b_n - \sum_{v \in S: \ supp_w(v) \leq d_i} w_{nv}\)</span>, and <span class="math notranslate nohighlight">\(\sum_{v \in S: \ supp_w(v) &gt; d_i} w_{nv} /supp_w(v)\)</span>.</p></li>
+<li><p>For each <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span>, compute <span class="math notranslate nohighlight">\(score_w(v',d_i)= \frac{\sum_{n\in N: \ nv'\in E} (b_n - \sum_{v \in S: \ supp_w(v) \leq d_i} w_{nv})}{1+\sum_{n\in N: \ nv'\in E} \sum_{v \in S: \ supp_w(v) &gt; d_i} w_{nv} /supp_w(v) }.\)</span></p></li>
+<li><p>Let <span class="math notranslate nohighlight">\((d_{\max}, v_{\max})=(\max, \arg\max)_{v'\in V\setminus S} score_w(v',d_i)\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(i'\)</span> be the highest value such that <span class="math notranslate nohighlight">\(d_{max}\geq d_{i'}\)</span>, and set <span class="math notranslate nohighlight">\(i_{\lo}\leftarrow \max\{i_{lo}, i'\}\)</span>. If <span class="math notranslate nohighlight">\(d_{\max &lt; d_i}\)</span>, set <span class="math notranslate nohighlight">\(i_{\hi}\leftarrow i-1\)</span>.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(i_{lo}&lt; i_{hi}\)</span>, set <span class="math notranslate nohighlight">\(i\leftarrow \lceil (i_{lo}+i_{hi})/2 \rceil\)</span> and go back to 3.; else, return <span class="math notranslate nohighlight">\((d_{\max}, v_{\max})\)</span>.</p></li>
+</ol>
+<p><strong>Lemma 4:</strong> CalculateMaxScore<span class="math notranslate nohighlight">\((S,w)\)</span> returns <span class="math notranslate nohighlight">\(\max_{v'\in V\setminus S} score_w(v')\)</span> and a <span class="math notranslate nohighlight">\(v'\)</span> that attains that score, in <span class="math notranslate nohighlight">\(O(\log |S|)=O(\log m)\)</span> iterations, where each iteration takes time <span class="math notranslate nohighlight">\(O(|E|)\)</span>.</p>
+<p><em>Proof:</em> 
+It is easy to verify that each iteration of the algorithm above executes in time <span class="math notranslate nohighlight">\(O(|E|)\)</span>. Let <span class="math notranslate nohighlight">\(d^*:=\max_{v'\in V\setminus S} score_w(v')=\max_{d\geq 0} \max_{v'\in V\setminus S} score_w(v',d)\)</span>. From point (i) in the corollary, we can reduce our search for <span class="math notranslate nohighlight">\(d^*\)</span> to only the evaluations of function <span class="math notranslate nohighlight">\(\max_{v'\in V\setminus S} score_w(v',d)\)</span> over the <span class="math notranslate nohighlight">\(O(m)\)</span> points <span class="math notranslate nohighlight">\(d_i\)</span>. Moreover, by point (ii), we can perform binary search, so that if <span class="math notranslate nohighlight">\(d_{\max}:=\max_{v'\in V\setminus S} score_w(v',d_i)\)</span> is larger than <span class="math notranslate nohighlight">\(d_i\)</span> then we can restrict our search to values <span class="math notranslate nohighlight">\(d\)</span> larger than the current <span class="math notranslate nohighlight">\(d_i\)</span>, and otherwise we can restrict our search to values smaller than the current <span class="math notranslate nohighlight">\(d_i\)</span>. This shows that only <span class="math notranslate nohighlight">\(O(\log m)\)</span> iterations are performed. Finally, by point (iii) we can also restrict our search to values <span class="math notranslate nohighlight">\(d\)</span> larger than the current <span class="math notranslate nohighlight">\(d_{\max}\)</span>, thus speeding up our search even more. To finish the proof, we remark that we choose to initialize the index <span class="math notranslate nohighlight">\(i\)</span> to zero because it seems to speed up the search in many implementations, but it can be initialized to any other value between <span class="math notranslate nohighlight">\(i_{lo}\)</span> and <span class="math notranslate nohighlight">\(i_{hi}\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(\square\)</span></p>
+<p>When we have the score, we can insert candidate <span class="math notranslate nohighlight">\(v_{\max}\)</span> to the current solution <span class="math notranslate nohighlight">\((S,w)\)</span> using InsertCandidate(<span class="math notranslate nohighlight">\(S,w,v_{\max},d_{\max}\)</span>), thus obtaining a new solution <span class="math notranslate nohighlight">\((S',w')\)</span> with <span class="math notranslate nohighlight">\(supp_{w'}(S')\geq \min\{supp_w(S), \max_{v'\in V\setminus S} score_w(v')\}\)</span>, as desired.</p>
+</div>
+<div class="section" id="--parameterised--proportional-justified-representation.">
+<h2>(Parameterised) Proportional Justified Representation.<a class="headerlink" href="#--parameterised--proportional-justified-representation." title="Permalink to this headline">¶</a></h2>
+<p>We can generalise the PJR property to our weighted votes setting and consider adding a parameter. For each nominator <span class="math notranslate nohighlight">\(n\in N\)</span>, let <span class="math notranslate nohighlight">\(V_n\subseteq V\)</span> be the subset of candidates that are trusted by <span class="math notranslate nohighlight">\(n\)</span>, i.e. <span class="math notranslate nohighlight">\(V_n:=\{v\in V: \ nv\in E\}\)</span>.</p>
+<p><strong>Definition:</strong> A committee <span class="math notranslate nohighlight">\(S\)</span> (of any size) satisfies Proportional Justified Representation with parameter <span class="math notranslate nohighlight">\(d\)</span> (PJR(<span class="math notranslate nohighlight">\(d\)</span>) for short) if there is no subset <span class="math notranslate nohighlight">\(N'\subseteq N\)</span> of nominators and integer <span class="math notranslate nohighlight">\(t&gt;0\)</span> such that:</p>
+<p>a) <span class="math notranslate nohighlight">\(\sum_{n\in N'} b_n \geq t\cdot d\)</span>,</p>
+<p>b) <span class="math notranslate nohighlight">\(|\cap_{n\in N'} V_n|\geq t\)</span>, and</p>
+<p>c) <span class="math notranslate nohighlight">\(|S\cap (\cup_{n\in N'} V_n)|&lt;t\)</span>.</p>
+<p>In other words, if there is a set <span class="math notranslate nohighlight">\(N'\)</span> of nominators who can “afford” to provide a support of <span class="math notranslate nohighlight">\(d\)</span> to each one of <span class="math notranslate nohighlight">\(t\)</span> commonly trusted candidates, they will indeed be represented by at least <span class="math notranslate nohighlight">\(t\)</span> candidates in <span class="math notranslate nohighlight">\(S\)</span> (though not necessarily commonly trusted). Notice that if a committee satisfies PJR(<span class="math notranslate nohighlight">\(d\)</span>), then it also satisfies PJR(<span class="math notranslate nohighlight">\(d'\)</span>) for each <span class="math notranslate nohighlight">\(d'\geq d\)</span>, so the property gets stronger as <span class="math notranslate nohighlight">\(d\)</span> decreases. Notice also that a committee <span class="math notranslate nohighlight">\(S\)</span> satisfies the standard version of PJR if and only if it satisfies PJR(<span class="math notranslate nohighlight">\(d\)</span>) for <span class="math notranslate nohighlight">\(d=\sum_{n\in N}b_n / |S|\)</span>.</p>
+<p>Checking whether a committee <span class="math notranslate nohighlight">\((S,w)\)</span> satisfies standard PJR is known to be NP-hard. However, for any <span class="math notranslate nohighlight">\(d\geq 0\)</span> we can efficiently check whether <span class="math notranslate nohighlight">\(\max_{v'\in V\setminus S} score_w(v')&lt;d\)</span>, and this in turn implies PJR(<span class="math notranslate nohighlight">\(d\)</span>).</p>
+<p><strong>Lemma 5:</strong> If a set <span class="math notranslate nohighlight">\(S\)</span> (of any size) does not satisfy PJR(<span class="math notranslate nohighlight">\(d\)</span>) for some parameter <span class="math notranslate nohighlight">\(d\)</span> then, for any maximally affordable edge weight vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}^E_{\geq 0}\)</span>, there must be a candidate <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span> with <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</span>, and consequently <span class="math notranslate nohighlight">\(score_w(v')\geq d\)</span>.</p>
+<p><strong>Proof:</strong> If <span class="math notranslate nohighlight">\(S\)</span> does not satisfy PJR(<span class="math notranslate nohighlight">\(d\)</span>), there must be a subset <span class="math notranslate nohighlight">\(N'\subseteq N\)</span> of nominators with a) <span class="math notranslate nohighlight">\(\sum_{n\in N'}b_n \geq  t\cdot d\)</span>, b) <span class="math notranslate nohighlight">\(|\cap_{n\in N'} V_n|\geq t\)</span>, and c) <span class="math notranslate nohighlight">\(|S\cap (\cup_{n\in N'} V_n)| \leq t-1\)</span>. Therefore, the set <span class="math notranslate nohighlight">\((\cap_{n\in N'} V_n)\setminus S\)</span> must be non-empty; let <span class="math notranslate nohighlight">\(v'\)</span> be a candidate in it. Fix a maximally affordable weight vector <span class="math notranslate nohighlight">\(w\)</span>; we claim that <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</span>. We have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+prescore_w(v',d) 
+&amp;= \sum_{n\in N: \ v'\in V_n} slack_w(n,d)\\
+&amp;\geq \sum_{n\in N'} slack_w(n,d)\\
+&amp;= \sum_{n\in N'} \Big(b_n - \sum_{v\in S\cap V_n} w_{nv}\cdot \min\{1, d/supp_w(v)\}\Big) \\
+&amp;\geq \sum_{n\in N'}b_n - \sum_{v\in S\cap(\cup_{n\in N'} V_n)}\min\{1,d/supp_w(v)\} \cdot \sum_{n\in N'} w_{nv}\\
+&amp;\geq t\cdot d - \sum_{v\in S\cap(\cup_{n\in N'} V_n)}\min\{1,d/supp_w(v)\} \cdot supp_w(v)\\
+&amp;\geq t\cdot d - \sum_{v\in S\cap(\cup_{n\in N'} V_n)}d\\
+&amp; \geq d\cdot (t - |S\cap(\cup_{n\in N'} V_n)|) \\
+&amp; \geq d,
+\end{align}\end{split}\]</div>
+<p>where we used fact a) on the fifth line, and fact c) on the last line. This proves that <span class="math notranslate nohighlight">\(prescore_w(v,d) \geq d\)</span>. The fact that <span class="math notranslate nohighlight">\(score_w(v) \geq d\)</span> follows from the definition of score.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+<p><strong>Algorithm.</strong> TestThatImpliesPJR(<span class="math notranslate nohighlight">\(S,w,d\)</span>)</p>
+<ol class="simple">
+<li><p>For each <span class="math notranslate nohighlight">\(v \in S\)</span> compute <span class="math notranslate nohighlight">\(supp_w(v)\)</span>.</p></li>
+<li><p>For each <span class="math notranslate nohighlight">\(n\in N\)</span>, compute
+<span class="math notranslate nohighlight">\(slack(n,d)=b_n - \sum_{v\in S\cap V_n} w_{n,v}\cdot \min\{1,d/supp_w(v)\}.\)</span></p></li>
+<li><p>For each <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span>, compute
+<span class="math notranslate nohighlight">\(prescore_w(v',d)= \sum_{n\in N: \ v'\in V_n} slack(n,d) \; ,\)</span>
+and if <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</span>, return false.</p></li>
+<li><p>Return true.</p></li>
+</ol>
+<p><strong>Lemma 6:</strong> Algorithm TestThatImpliesPJR(<span class="math notranslate nohighlight">\(S,w,d\)</span>) runs in time <span class="math notranslate nohighlight">\(O(|E|)\)</span>, and if it returns true for a given solution <span class="math notranslate nohighlight">\((S,w)\)</span>, then <span class="math notranslate nohighlight">\(S\)</span> satisfies PJR(<span class="math notranslate nohighlight">\(d\)</span>).</p>
+</div>
+<div class="section" id="local-search-for-provable-pjr">
+<h2>Local Search for provable PJR<a class="headerlink" href="#local-search-for-provable-pjr" title="Permalink to this headline">¶</a></h2>
+<p>From the previous lemma, it follows that for a maximally affordable solution <span class="math notranslate nohighlight">\((S,w)\)</span> and for any <span class="math notranslate nohighlight">\(d\geq 0\)</span>, either the solution satisfies PJR(<span class="math notranslate nohighlight">\(d\)</span>), or there is a new candidate which can be inserted with support at least <span class="math notranslate nohighlight">\(d\)</span>, and can be used to replace another candidate with low support. This observation naturally gives rise to the following local search procedure, for which we fix a small constant <span class="math notranslate nohighlight">\(\varepsilon&gt;0\)</span>.</p>
+<p><strong>Algorithm.</strong> LocalSearchForPJR(<span class="math notranslate nohighlight">\(S,w, \varepsilon\)</span>)</p>
+<ol class="simple">
+<li><p>Let <span class="math notranslate nohighlight">\((d_{current}, v) \leftarrow (\min, \arg\min)_{v\in S} supp_w(v)\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(d_{next}\leftarrow \min\{(1+\varepsilon)\cdot d_{current}, \sum_{n\in N} b_n / m\}\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\((v_{\max}, d_{\max})\leftarrow CalculateMaxScore(S,w)\)</span>.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(d_{\max}&lt;d_{next}\)</span>, return <span class="math notranslate nohighlight">\((S,w)\)</span>.</p></li>
+<li><p>Remove <span class="math notranslate nohighlight">\(v\)</span> from <span class="math notranslate nohighlight">\(S\)</span>, and set <span class="math notranslate nohighlight">\(w_{nv}\leftarrow 0\)</span> for each <span class="math notranslate nohighlight">\(n\in N\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\((S,w)\leftarrow InsertCandidate(S,w,v_{\max}, d_{\max})\)</span>, to add <span class="math notranslate nohighlight">\(v_{\max}\)</span> to <span class="math notranslate nohighlight">\((S,w)\)</span>.</p></li>
+<li><p>Go to 1.</p></li>
+</ol>
+<p><strong>Theorem 7.</strong> If we run LocalSearchForPJR(<span class="math notranslate nohighlight">\(S,w,\varepsilon\)</span>) on any maximally affordable solution <span class="math notranslate nohighlight">\((S,w)\)</span> of size <span class="math notranslate nohighlight">\(m\)</span> and support <span class="math notranslate nohighlight">\(d:=supp_w(S)\)</span>, then it returns a maximally affordable solution <span class="math notranslate nohighlight">\((S',w')\)</span> of size <span class="math notranslate nohighlight">\(m\)</span>:</p>
+<p>i) with <span class="math notranslate nohighlight">\(d':=supp_{w'}(S')\geq d\)</span>, and </p>
+<p>ii) satisfying PRJ(<span class="math notranslate nohighlight">\(d''\)</span>), where <span class="math notranslate nohighlight">\(d'':=\min\{(1+\varepsilon)\cdot d', \sum_{n\in N} b_n / m\}\)</span>, and so also satisfying standard PJR.</p>
+<p>Moreover, if the input has a <span class="math notranslate nohighlight">\(c\)</span>-factor approximation guarantee for the maximin support objective, for some parameter <span class="math notranslate nohighlight">\(c&gt;1\)</span>, then the algorithm performs <span class="math notranslate nohighlight">\(m\cdot O(1+ varepsilon^{-1}\log c)\)</span> iterations, where each iteration executes in time <span class="math notranslate nohighlight">\(O(|E|\cdot m)\)</span>.</p>
+<p><em>Proof.</em> By the correctness of algorithm InsertCandidate(<span class="math notranslate nohighlight">\(S,w,v_{\max}, d_{\max}\)</span>), at the beginning of each iteration we have a maximally affordable solution of size <span class="math notranslate nohighlight">\(m\)</span>, where the new <span class="math notranslate nohighlight">\(d_{current}\)</span> is larger than the minimum between <span class="math notranslate nohighlight">\(d_{current}\)</span> and <span class="math notranslate nohighlight">\(d_{next}\)</span> in the previous iteration. Now, notice that <span class="math notranslate nohighlight">\(d_{current}\)</span> can never be greater than <span class="math notranslate nohighlight">\(\sum_{n\in N} b_n/m\)</span>, as the sum of supports cannot exceed the sum of budgets, and thus it is always the case that <span class="math notranslate nohighlight">\(d_{next}\geq d_{current}\)</span>. This shows that the minimum support of the current solution never decreases throughout the iterations, and proves point i). </p>
+<p>Next, if the algorithm eventually finalizes and outputs a solution <span class="math notranslate nohighlight">\((S',w')\)</span> at step 4. with minimum support <span class="math notranslate nohighlight">\(d'\)</span>, then the current value of <span class="math notranslate nohighlight">\(d_{next}\)</span> is <span class="math notranslate nohighlight">\(d''\)</span> as defined in ii). By correctness of the algorithm CalculateMaxScore(<span class="math notranslate nohighlight">\(S,w\)</span>) we know that <span class="math notranslate nohighlight">\(\max_{v'\in V\setminus S'} score_{w'}(v')&lt;d''\)</span>, and so by Lemma 5 it must satisfy PJR(<span class="math notranslate nohighlight">\(d'\)</span>), and since <span class="math notranslate nohighlight">\(d'\leq \sum_{n\in N} b_n/m\)</span> then it also satisfies standard PJR.</p>
+<p>It is easy to see that the complexity of each iteration is dominated by the execution of algorithm InsertCandidate(<span class="math notranslate nohighlight">\(S,w,v_{\max}, d_{\max}\)</span>) at step 6., with a running time of <span class="math notranslate nohighlight">\(O(|E|\cdot m)\)</span>. So, it only remains to prove that the algorithm terminates after only <span class="math notranslate nohighlight">\(O(m\varepsilon^{-1}\log c)\)</span> iterations. To do that, we analyze the evolution of the parameter <span class="math notranslate nohighlight">\(d_{current}\)</span>: First, we argue that if <span class="math notranslate nohighlight">\(d_{current}=\sum_{n\in N}b_n/m\)</span>, then the algorithm terminates in the current iteration. This is because all nominators have zero slack, so all candidates in <span class="math notranslate nohighlight">\(V\setminus S'\)</span> have zero score as well, and <span class="math notranslate nohighlight">\(d_{\max}=0\)</span> so the condition at step 4. is fulfilled.</p>
+<p>Next, we claim that if the value of <span class="math notranslate nohighlight">\(d_{current}\)</span> at iteration <span class="math notranslate nohighlight">\(i\)</span> is <span class="math notranslate nohighlight">\(d^i_{current}\)</span>, then either the algorithm terminates at iteration <span class="math notranslate nohighlight">\(i+m\)</span> at the latest, or <span class="math notranslate nohighlight">\(d^{i+m}_{current}\geq (1+\varepsilon)\cdot d^i_{current}\)</span>. This is because <span class="math notranslate nohighlight">\(d^i_{next}=\min\{(1+\varepsilon)\cdot d^i_{current}, \sum_{n\in N} b_n/m\}\)</span>, and in each iteration after <span class="math notranslate nohighlight">\(i\)</span> we are removing one candidate of least support while not adding any candidate with support under <span class="math notranslate nohighlight">\(d^i_{next}\)</span>. As there are only <span class="math notranslate nohighlight">\(m\)</span> candidates, we can do this at most <span class="math notranslate nohighlight">\(m\)</span> times before the minimum support reaches the value <span class="math notranslate nohighlight">\(d^i_{next}\)</span>. This value is either at least <span class="math notranslate nohighlight">\((1+\varepsilon)\cdot d^i_{current}\)</span>, or it is <span class="math notranslate nohighlight">\(\sum_{n\in N} b_n/m\)</span> and in the latter case we terminate immediately.</p>
+<p>Finally, if the algorithm executes a total of <span class="math notranslate nohighlight">\(t\)</span> iterations before returning a solution with minimum support <span class="math notranslate nohighlight">\(d'\)</span>, and the minimum support <span class="math notranslate nohighlight">\(d\)</span> of the input is <span class="math notranslate nohighlight">\(c\)</span>-approximation to the maximin support problem, then</p>
+<div class="math notranslate nohighlight">
+\[c\cdot d \geq d'=d_{current}^t\geq (1+\varepsilon)^{\lfloor \frac{t-1}{m}\rfloor} \cdot d_{current}^1= (1+\varepsilon)^{\lfloor \frac{t-1}{m}\rfloor} \cdot d.\]</div>
+<p>We conclude that <span class="math notranslate nohighlight">\(\lfloor\frac{t-1}{m}\rfloor \log_{1+\varepsilon} c\)</span>, and so <span class="math notranslate nohighlight">\(t \leq m(1+\log_{1+\varepsilon} c)=m\cdot O(1+ \varepsilon^{-1} \log c)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\square\)</span></p>
+</div>
+<div class="section" id="factor-3.15-approximation-algorithm">
+<h2>Factor 3.15 approximation algorithm<a class="headerlink" href="#factor-3.15-approximation-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>We propose a greedy algorithm that starts with an empty set and runs <span class="math notranslate nohighlight">\(m\)</span> iterations, where each iteration uses our heuristic to insert a new validator and then runs a weight redistribution algorithm over the current set.</p>
+<p>In particular, for a given solution <span class="math notranslate nohighlight">\((S,w)\)</span> with <span class="math notranslate nohighlight">\(|S|\leq m\)</span>, we run a weight rebalancing algorithm that computes an <span class="math notranslate nohighlight">\(\varepsilon\)</span>-approximation of the <a class="reference external" href="2. The min-norm max-flow problem.html">min-norm max-flow (MNMF) weight vector</a> for set <span class="math notranslate nohighlight">\(S\)</span>. We formalize this definition below.</p>
+<p><strong>Definition:</strong> For a non-empty validator set <span class="math notranslate nohighlight">\(S\subseteq V\)</span> and a constant <span class="math notranslate nohighlight">\(\varepsilon&gt;0\)</span>, an edge weight vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}_{\geq 0}^E\)</span> is an <span class="math notranslate nohighlight">\(\varepsilon\)</span>-MNMF for <span class="math notranslate nohighlight">\(S\)</span> if</p>
+<p>(i) <span class="math notranslate nohighlight">\(w\)</span> is maximally affordable, i.e. <span class="math notranslate nohighlight">\(\sum_{v\in S: \ nv\in E} w_{nv}=b_n\)</span> for each <span class="math notranslate nohighlight">\(n\in N\)</span> having at least one neightbor in <span class="math notranslate nohighlight">\(S\)</span>,</p>
+<p>(ii) for any <span class="math notranslate nohighlight">\(n\in N\)</span> and any two neighbors <span class="math notranslate nohighlight">\(v,v'\in S\)</span> of it, if <span class="math notranslate nohighlight">\(w_{nv}&gt;0\)</span> then <span class="math notranslate nohighlight">\(supp_w(v)\leq (1+\frac{\varepsilon}{5\cdot|S|})supp_{w}(v')\)</span>, and</p>
+<p>(iii) For all affordable <span class="math notranslate nohighlight">\(w'\)</span>, <span class="math notranslate nohighlight">\(supp_{w'}(S)\leq (1+\epsilon)supp_w(S)\)</span>.</p>
+<p>In our note on <a class="reference external" href="2. The min-norm max-flow problem.html">the min-norm max-flow problem</a>, we provide more information about <span class="math notranslate nohighlight">\(\varepsilon\)</span>-MNMF vectors and present an algorithm MNMF(<span class="math notranslate nohighlight">\(S,w,\varepsilon\)</span>) that returns an <span class="math notranslate nohighlight">\(\varepsilon\)</span>-MNMF for <span class="math notranslate nohighlight">\(S\)</span> in polynomial time, and where the input vector <span class="math notranslate nohighlight">\(w\)</span> is optional. </p>
+<p>Consider the following algorithm.</p>
+<p><strong>Algorithm.</strong> BalanceBetweenHeuristic()</p>
+<ol class="simple">
+<li><p>Initialise <span class="math notranslate nohighlight">\(S\)</span> to the empty set and <span class="math notranslate nohighlight">\(w\)</span> to the empty vector;</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(i\)</span> from <span class="math notranslate nohighlight">\(1\)</span> to <span class="math notranslate nohighlight">\(m\)</span>:</p>
+<ul class="simple">
+<li><p>Let <span class="math notranslate nohighlight">\((v,d)\leftarrow CalculateMaxScore(S,w)\)</span>;</p></li>
+<li><p>Update <span class="math notranslate nohighlight">\((S,w)\leftarrow InsertCandidate(S,w,v,d)\)</span>;</p></li>
+<li><p>Update <span class="math notranslate nohighlight">\(w \leftarrow MNMF(S,w,\varepsilon)\)</span>;</p></li>
+</ul>
+</li>
+<li><p>Return <span class="math notranslate nohighlight">\((S,w)\)</span>.</p></li>
+</ol>
+<div class="section" id="analysis">
+<h3>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
+<p>The main result of the section is showing that the previous algorithm offers a <span class="math notranslate nohighlight">\(3.15\cdot (1+\varepsilon)\)</span>-factor approximation, and satisfies PJR.</p>
+<p><strong>Theorem 8:</strong>  The procedure <span class="math notranslate nohighlight">\(BalanceBetweenHeuristic()\)</span> returns a solution <span class="math notranslate nohighlight">\((S, w)\)</span> for which <span class="math notranslate nohighlight">\(supp_{w}(S) \geq d^*/(3.15\cdot (1+\varepsilon))\)</span>, where <span class="math notranslate nohighlight">\(d^*\)</span> is the maximin support across all solutions of the given NPoS election instance. Moreover, the solution satisfies PJR(<span class="math notranslate nohighlight">\((1+\varepsilon)\cdot supp_{w}(S)\)</span>) and, if <span class="math notranslate nohighlight">\(\varepsilon \leq 1/m\)</span>, PJR.</p>
+<p>We begin with a couple of needed technical result.</p>
+<p><strong>Observation.</strong> For any <span class="math notranslate nohighlight">\(0\leq \varepsilon\leq 1\)</span> and any <span class="math notranslate nohighlight">\(m\geq 1\)</span>, we have the inequality</p>
+<div class="math notranslate nohighlight">
+\[\Big(1+\frac{\varepsilon}{5m}\Big)^{m} \leq 1+\frac{\varepsilon}{4}.\]</div>
+<p><strong>Proof:</strong> The inequality <span class="math notranslate nohighlight">\(1+x\leq e^x\)</span> holds for any real <span class="math notranslate nohighlight">\(x\)</span>. Replacing <span class="math notranslate nohighlight">\(x\)</span> by <span class="math notranslate nohighlight">\(\varepsilon/(5m)\)</span> and raising both sides to the power <span class="math notranslate nohighlight">\(m\)</span>, we obtain</p>
+<div class="math notranslate nohighlight">
+\[\Big(1+\frac{\varepsilon}{5m}\Big)^m \leq (e^{\frac{\varepsilon}{5m}})^m = e^{\frac{\varepsilon}{5}}.\]</div>
+<p>Finally, since the function <span class="math notranslate nohighlight">\(f(\varepsilon):=e^{\varepsilon/5}\)</span> on the right-hand side is convex, within the range <span class="math notranslate nohighlight">\(0\leq \varepsilon \leq 1\)</span> it can be upper bounded by the linearization <span class="math notranslate nohighlight">\(1+(e^{1/5} -1)\varepsilon\)</span>. It can be checked that <span class="math notranslate nohighlight">\(e^{1/5} - 1 \leq 1/4\)</span>, and the claim follows.</p>
+<p><span class="math notranslate nohighlight">\(\square\)</span></p>
+<p><strong>Proposition 9:</strong> Let <span class="math notranslate nohighlight">\((S,w)\)</span> be a solution where <span class="math notranslate nohighlight">\(|S|&lt; m\)</span> and <span class="math notranslate nohighlight">\(w\)</span> is an <span class="math notranslate nohighlight">\(\epsilon\)</span>-MNMF of <span class="math notranslate nohighlight">\(S\)</span> for some <span class="math notranslate nohighlight">\(0\leq \varepsilon \leq 1\)</span>, and let <span class="math notranslate nohighlight">\(d^*\)</span> be as in Theorem 8. Then, there exists a non-empty set <span class="math notranslate nohighlight">\(T\subseteq V\setminus S\)</span> with the property that for each <span class="math notranslate nohighlight">\(0\leq a\leq 1\)</span>, there is a set of nominators <span class="math notranslate nohighlight">\(N_a\subseteq N\)</span> such that</p>
+<p>a) each <span class="math notranslate nohighlight">\(n\in N_a\)</span> has a neighbor in <span class="math notranslate nohighlight">\(T\)</span>,</p>
+<p>b) <span class="math notranslate nohighlight">\(\sum_{n\in N_a}\geq (1-a)\cdot |T|\cdot d^*\)</span>, and</p>
+<p>c) For each <span class="math notranslate nohighlight">\(v\in S\)</span> such that <span class="math notranslate nohighlight">\(w_{nv}&gt;0\)</span> for some <span class="math notranslate nohighlight">\(n\in N_a\)</span>, we have that <span class="math notranslate nohighlight">\(supp_{w}(v)\geq \frac{a\cdot d^*}{1+\varepsilon/4}\)</span>.</p>
+<p><em>Proof.</em> Let <span class="math notranslate nohighlight">\(m':=|S|\)</span>, where <span class="math notranslate nohighlight">\(m'&lt;m\)</span>. Let <span class="math notranslate nohighlight">\((S^*, w^*)\)</span> be an optimal size-<span class="math notranslate nohighlight">\(m\)</span> solution to the maximin support problem, so that <span class="math notranslate nohighlight">\(supp_{w^*}(S^*)=d^*\)</span>. We define set <span class="math notranslate nohighlight">\(T\)</span> as <span class="math notranslate nohighlight">\(T:=S^*\setminus S\)</span>, which is clearly non-empty. Fix a parameter <span class="math notranslate nohighlight">\(0\leq a\leq 1\)</span>. </p>
+<p>We have by the previous observation that <span class="math notranslate nohighlight">\((1+\frac{\varepsilon}{5m'})^{m'} \leq 1+ \frac{\varepsilon}{4}\)</span>. By the pigeonhole principle, there must be an integer <span class="math notranslate nohighlight">\(0\leq i\leq m'\)</span> such that <span class="math notranslate nohighlight">\(\nexists v\in S\)</span> with</p>
+<div class="math notranslate nohighlight">
+\[a\cdot d^*\Big(1+\frac{\varepsilon}{5m'}\Big)^{i}\Big(1+\frac{\varepsilon}{4}\Big)^{-1}
+\leq supp_w(v)
+&lt;a\cdot d^*\Big(1+\frac{\varepsilon}{5m'}\Big)^{i+1}\Big(1+\frac{\varepsilon}{4}\Big)^{-1}.\]</div>
+<p>Let <span class="math notranslate nohighlight">\(d_l\)</span> and <span class="math notranslate nohighlight">\(d_u\)</span> be respectively the lower and upper bounds above, and notice that <span class="math notranslate nohighlight">\(a\cdot d^*/(1+ \varepsilon/4) \leq d_l\leq a\cdot d^*\)</span> . Define the sets <span class="math notranslate nohighlight">\(S_l\)</span> and <span class="math notranslate nohighlight">\(S_u\)</span> as containing the validators <span class="math notranslate nohighlight">\(v\)</span> such that <span class="math notranslate nohighlight">\(supp_w(v)&lt; d_l\)</span> and <span class="math notranslate nohighlight">\(supp_w(v)\geq d_u\)</span>, respectively. By the definition of <span class="math notranslate nohighlight">\(d_l\)</span> and <span class="math notranslate nohighlight">\(d_u\)</span>, we know that <span class="math notranslate nohighlight">\(S_l\)</span> and <span class="math notranslate nohighlight">\(S_u\)</span> partition the set <span class="math notranslate nohighlight">\(S\)</span>. </p>
+<p>Going forward, partition the set <span class="math notranslate nohighlight">\(N=N_l \cup N_u\)</span>, where <span class="math notranslate nohighlight">\(N_l\)</span> contains the <span class="math notranslate nohighlight">\(n\in N\)</span> that have a neighbor in <span class="math notranslate nohighlight">\(S_l\)</span>, and <span class="math notranslate nohighlight">\(N_u\)</span> contains those that do not. We highlight some properties of these sets. </p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* $\nexists n\in N_l, v\in S_u$ such that $w_{n,v}&amp;gt;0$: Assuming otherwise that there is such a pair, the fact that $n$ is in $N_l$ implies that it has a neighbor $v&#39;\in S_l$. But then we can apply the definition of $\varepsilon$-MNMF to obtain $supp_w(v)/supp_w(v&#39;)\leq 1+\epsilon/(5m&#39;)=d_u/d_l$, which contradicts the definitions of $S_l$ and $S_u$.
+
+* By the fact that $w$ is maximally affordable, and that each nominator in $N_l$ has neighbors in $S_l$ but gives no support to $S_u$, we have
+</pre></div>
+</div>
+<p><span class="math notranslate nohighlight">\(\sum_{n\in N_l} b_n \leq \sum_{v\in S_l} supp_w(v)&lt; |S_l|\cdot d_l.\)</span></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* If we define $N_a\subseteq N_u$ as those $n\in N_u$ that have a neighbor in $T$, then claim a) becomes evident, and claim c) follows from the fact that $N_a$ has no neighbors in $S_l$ (by def. of $N_u$) and all of its neighbors in $S_u$ have a support of at least $d_u&amp;gt;d_l\geq ad^*/(1+\epsilon/4)$. Hence, it only remains to prove claim b).
+</pre></div>
+</div>
+<p>Assume without loss of generality that <span class="math notranslate nohighlight">\(w^*\)</span> provides a support of exactly <span class="math notranslate nohighlight">\(d^*\)</span> to each <span class="math notranslate nohighlight">\(v\in S^*\)</span>, by possibly capping its edge weights, and define the edge weight vector <span class="math notranslate nohighlight">\(w'\)</span> by capping <span class="math notranslate nohighlight">\(w\)</span> arbitrarily such that <span class="math notranslate nohighlight">\(supp_{w'}(v)=d_l\)</span> if <span class="math notranslate nohighlight">\(v\in S_u\)</span>, and <span class="math notranslate nohighlight">\(0\)</span> otherwise (these vectors are affordable but in general not maximally affordable). Define <span class="math notranslate nohighlight">\(f:=w^*-w'\in\mathbb{R}^E\)</span>, which we consider as a flow over the network induced by <span class="math notranslate nohighlight">\(N\cup S\cup S^*\)</span>.</p>
+<p>Clearly, the net excess of set <span class="math notranslate nohighlight">\(N\)</span> relative to <span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(md^* - |S_u|d_l\\), the net excess of set $N_l$ is at most $\sum_{n\in N_l} b_n &lt; |S_l|d_l$, and the net demand of set $S_u$ is \(|S^*\cap S_u|(d^*-d_l)\)</span>. By subtracting the last two terms from the first one, we obtain that the flow going from <span class="math notranslate nohighlight">\(N_u\)</span> to <span class="math notranslate nohighlight">\(S^*\setminus S_u\)</span> is at least</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+&amp;md^* - |S_u|d_l - |S_l|d_l - |S^*\cap S_u|(d^*-d_l) \\
+&amp;=md^* - m'd_l - |S^*\cap S_u|(d^*-d_l) \\
+&amp; \geq m(d^*-d_l) - |S^*\cap S_u|(d^*-d_l) \\
+&amp;\geq |S^* \setminus S|(d^*-d_l) \\
+&amp;\geq |T|d^*(1-a).
+\end{align}\end{split}\]</div>
+<p>A key observation now is that none of the flow originating at <span class="math notranslate nohighlight">\(N_u\)</span> can pass by, or end in, <span class="math notranslate nohighlight">\(S_l \cup N_l\)</span>. This is because there are no edges between <span class="math notranslate nohighlight">\(N_u\)</span> and <span class="math notranslate nohighlight">\(S_l \cup N_l\)</span>, by definition of <span class="math notranslate nohighlight">\(N_u\)</span>; and even though the flow can pass by <span class="math notranslate nohighlight">\(S_u\)</span>, there is no flow from <span class="math notranslate nohighlight">\(S_u\)</span> to <span class="math notranslate nohighlight">\(S_l\cup N_l\)</span> in <span class="math notranslate nohighlight">\(f=w^*-w'\)</span> because <span class="math notranslate nohighlight">\(w'\)</span> provides no flow from <span class="math notranslate nohighlight">\(S_l\cup N_l\)</span> to <span class="math notranslate nohighlight">\(S_u\)</span>. Therefore, the formula above is actually a lower bound on the flow going from <span class="math notranslate nohighlight">\(N_u\)</span> to <span class="math notranslate nohighlight">\(T=S^*\setminus S\)</span>. Finally, we notice that if we decompose flow <span class="math notranslate nohighlight">\(f\)</span> into simple paths, any path from <span class="math notranslate nohighlight">\(N_u\)</span> to <span class="math notranslate nohighlight">\(T\)</span> must have the last edge originating in <span class="math notranslate nohighlight">\(N_u\)</span>, or more specifically in <span class="math notranslate nohighlight">\(N_a\)</span>. This proves that <span class="math notranslate nohighlight">\(\sum_{n\in N_a} b_n \geq |T|d^*(1-a)\)</span>, which is claim b), and concludes the proof of the proposition. </p>
+<p><span class="math notranslate nohighlight">\(\square\)</span></p>
+<p><strong>Lemma 6:</strong> Given a solution <span class="math notranslate nohighlight">\((S,w)\)</span> with <span class="math notranslate nohighlight">\(|S| \leq m\)</span> that satisfies Condition 1, there exists a <span class="math notranslate nohighlight">\(v \notin S\)</span> with <span class="math notranslate nohighlight">\(score_w(v) \geq d^*/4(1+\epsilon/2)\)</span>.</p>
+<p><strong>Proof:</strong> Apply Proposition 1 and set <span class="math notranslate nohighlight">\(a=1/2\)</span>, then by using that for any <span class="math notranslate nohighlight">\(a_1,\dots, a_n\)</span>, there exists an <span class="math notranslate nohighlight">\(a_i\)</span> with <span class="math notranslate nohighlight">\(a_i \geq \sum_i a_i/n\)</span>, there is a <span class="math notranslate nohighlight">\(v \in T\)</span> such that the set 
+<span class="math notranslate nohighlight">\(A_{v,d^*/2}:=\Big\{n\in N \ | \ n,v \in E 
+\text{ and }\forall v'\in V, w_{n,v'} &gt; 0 
+\Rightarrow supp_{w}(v') \geq 
+\frac{d^*}{2(1+\epsilon/2)} \Big\}\)</span></p>
+<p>has <span class="math notranslate nohighlight">\(\sum_{n \in A_{v,d^*/2}} b_n \geq d^*/2\)</span>. Now for any <span class="math notranslate nohighlight">\(n \in A_{v,d^*/2}\)</span>, <span class="math notranslate nohighlight">\(slack(n,d^*/4(1+\epsilon/2))= \sum_{v:(n,v) \in E} w_n,v (1-d^*/4(1+\epsilon/2) supp_w(v)) \geq b_n/2\)</span> and so <span class="math notranslate nohighlight">\(prescore(v,d^*/4(1+\epsilon/2)) \geq \sum_{n \in A_{v,d^*/2}} slack(n, d^*/4(1+\epsilon/2)) \geq d^*/4 &gt; d^*/4(1+\epsilon/2)\)</span>. Thus <span class="math notranslate nohighlight">\(score_w(v) \geq d^*/4(1+\epsilon/2)\)</span>.</p>
+<p>We can do better than this by using different <span class="math notranslate nohighlight">\(a\)</span>.</p>
+<p><strong>Lemma 7</strong> Given a solution <span class="math notranslate nohighlight">\((S,w)\)</span> with <span class="math notranslate nohighlight">\(|S| \leq m\)</span> that satisfis Condition 1, there exists a <span class="math notranslate nohighlight">\(v \notin S\)</span> with <span class="math notranslate nohighlight">\(score_w(v) \geq d^*/3.15(1+epsilon/4)\)</span>.</p>
+<p><strong>Proof:</strong> The following will be crucial:</p>
+<p><strong>Lemma 8</strong> Consider a finite sum $ \sum_i f(x_i) a_i$, where <span class="math notranslate nohighlight">\(f\)</span> is strictly increasing with derivative <span class="math notranslate nohighlight">\(f'(x)\)</span>, <span class="math notranslate nohighlight">\(a_i \geq 0\)</span> for all <span class="math notranslate nohighlight">\(i\)</span> and for some <span class="math notranslate nohighlight">\(y \leq \min_i x_i\)</span>, <span class="math notranslate nohighlight">\(f(y) = 0\)</span>, then
+<span class="math notranslate nohighlight">\(\sum_i f(x_i) a_i = \int_{y}^infty f'(x) (\sum_{i:x_i \geq x} a_i) dx\)</span></p>
+<p><strong>Proof:</strong> We can write the sum as a Lebesgue integral over the measure with weights <span class="math notranslate nohighlight">\(a_i\)</span>, obtaining that:
+<span class="math notranslate nohighlight">\(\sum_i f(x_i) a_i = \int_0^\infty (\sum_{i:f(x_i) &gt;t} a_i ) dt\)</span>
+The conditions on <span class="math notranslate nohighlight">\(f\)</span> are enough for it to be invertible with derivative <span class="math notranslate nohighlight">\(df^{-1}/dt=1/f'(f^{-1}(t))\)</span> and <span class="math notranslate nohighlight">\(f^{-1}(0)=y\)</span>, so we can substiture <span class="math notranslate nohighlight">\(x=f^{-1} t\)</span> into the above to obtain:
+\begin{align<em>} 
+\sum_i f(x_i) a_i &amp; = \int_0^\infty (\sum_{i:f(x_i)} &gt;t a_i ) dt 92
+&amp;= \int_y^\infty f’(x) (\sum_{i:f(x_i) &gt;f(x)} a_i ) dx 92
+&amp;= \int_y^\infty f’(x) (\sum_{i:x_i &gt; x} a_i ) dx 92
+&amp;= \int_y^\infty f’(x) (\sum_{i:x_i \geq x} a_i ) dx
+\end{align</em>}</p>
+<p>For sume <span class="math notranslate nohighlight">\(0 \leq b \leq 1\)</span>, to be determined later, we consider <span class="math notranslate nohighlight">\(\sum_{v \in T} prescore(w,b d^*)\)</span>, we have
+<span class="math notranslate nohighlight">\(\sum_{v \in T} prescore(w,b d^*) \geq \sum_{n: \exists v \in T, (n,v) \in E} slack(n, b d^*) \geq \sum_{n \in N_b} slack(n,b d^*) \; .\)</span></p>
+<p>Now for <span class="math notranslate nohighlight">\(n \in N_b\)</span>, let <span class="math notranslate nohighlight">\(supp(n)= \max_{v':w_{n,v'} &gt; 0} supp_w(n)\)</span> and <span class="math notranslate nohighlight">\(supp(n)=\infty\)</span> if <span class="math notranslate nohighlight">\(w_{n,v'}=0\)</span> for all <span class="math notranslate nohighlight">\(v'\)</span>. We certainly have <span class="math notranslate nohighlight">\(supp(n) \geq b d^*\)</span> from the definition of <span class="math notranslate nohighlight">\(N_b\)</span>. More generally for <span class="math notranslate nohighlight">\(n \in N_b\)</span>, <span class="math notranslate nohighlight">\(n \in N_a\)</span> if and only if <span class="math notranslate nohighlight">\(supp(n) \geq a d^*\)</span>. We have
+<span class="math notranslate nohighlight">\(slack(n, b d^*) = b_n - \sum_{v' \in S} w_n,v bd^*/ supp_w(v') \geq b_n (1- bd^*/supp(n))\)</span>
+and so using Lemma 8,
+\begin{align<em>} \sum_{v \in T} prescore(w,b d^</em>) &amp; \geq \sum_{n \in N_b} slack(n,b d^<em>) 92
+&amp; \geq \sum_{n \in N_b} b_n (1- bd^</em>/supp(n)) 92
+&amp;= \int_{b d^<em>}^{infty}  (bd^</em>/x^2) (\sum_{n \in N_{x/d^<em>}} b_n) dx 92
+&amp; \geq \int_{b}^{1}  (b/a^2) (1-a)|T| d^</em>/(1+\epsilon/2)   da  92
+&amp; = (bd^<em>|T|/(1+\epsilon/2)  \int_{b}^1 1/a^2 - 1/a da 92
+&amp;= (bd^</em>|T|/(1+\epsilon/2) (1/b-1+ln b) 92
+&amp;=  (d^<em>|T|/(1+\epsilon/3) (1-b+bln b)
+\end{align</em>}
+So for any <span class="math notranslate nohighlight">\(b\)</span> with <span class="math notranslate nohighlight">\(b(2-ln b) \leq 1\)</span>, we have that there is an <span class="math notranslate nohighlight">\(v \in T\)</span> with
+\begin{align<em>} prescore_w(b, b d^</em>/(1+\epsilon/4)) &amp; \geq prescore_w(b, b d^<em>) 92
+&amp; \geq (d^</em>/(1+\epsilon/4) (1-b+bln b) 92
+&amp; \geq b d^<em>/(1+\epsilon/4)
+\end{align</em>}
+In particular, this holds for <span class="math notranslate nohighlight">\(b=1/3.15\)</span>. Thus there exists a <span class="math notranslate nohighlight">\(v \notin S\)</span> with <span class="math notranslate nohighlight">\(score_w(v) \geq d^*/3.15(1+\epsilon/4)\)</span>.</p>
+<p>Now we can prove Theorem 1</p>
+<p><strong>Proof of Theorem 1:</strong> For a set <span class="math notranslate nohighlight">\(S\)</span>, we define <span class="math notranslate nohighlight">\(d^*_S\)</span>  to be the maximum over afforable <span class="math notranslate nohighlight">\(w\)</span> of <span class="math notranslate nohighlight">\(supp_w(S)\)</span>.In order not to lose error with condition 1 (ii), we need:</p>
+<p><strong>Lemma 9:</strong> Let <span class="math notranslate nohighlight">\((S,w)\)</span> be a solution with <span class="math notranslate nohighlight">\(|S| \leq m\)</span> that satisfies Condition 1. Let <span class="math notranslate nohighlight">\((S',w')\)</span> be a solution of any size with <span class="math notranslate nohighlight">\(S \subseteq S'\)</span> and for all <span class="math notranslate nohighlight">\(v \in S\)</span> with <span class="math notranslate nohighlight">\(supp_{w'}(v) &lt; sepp_w(v)\)</span>, we have <span class="math notranslate nohighlight">\(supp_{w'}(v) \geq d\)</span> for some <span class="math notranslate nohighlight">\(d\)</span>. Then <span class="math notranslate nohighlight">\(d^*_{S'}\)</span> defined similarly has <span class="math notranslate nohighlight">\(d^*_{S'} \geq \min \{d^*_S, d/(1+\epsilon/4)\}\)</span>.</p>
+<p><strong>Proof:</strong> Note that <span class="math notranslate nohighlight">\((1+\epsilon/12m)^{m+1}\)</span> \leq (1+\epsilon/4)$. Since there are at most <span class="math notranslate nohighlight">\(m\)</span> values of <span class="math notranslate nohighlight">\(supp_w(v)\)</span> for <span class="math notranslate nohighlight">\(v \in S\)</span>, by the pidgeon hole principle, there must be an <span class="math notranslate nohighlight">\(x=d/(1+\epsilon/12m)^i\)</span> for <span class="math notranslate nohighlight">\(1 \leq i \leq m\)</span> such that no <span class="math notranslate nohighlight">\(v \in S\)</span> has <span class="math notranslate nohighlight">\(x &lt; supp_w(v) \leq  x(1+\epsilon/12m)\)</span>. Let <span class="math notranslate nohighlight">\(X \subseteq S\)</span> be the set of <span class="math notranslate nohighlight">\(v \in S\)</span> with <span class="math notranslate nohighlight">\(supp_v(w) \leq x\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(N_X=\{n:\exists v \in X, (n,v) \in E\}\)</span>. By condition 1, any <span class="math notranslate nohighlight">\(n \in N_X\)</span> has <span class="math notranslate nohighlight">\(w_{n,v'}=0\)</span> for <span class="math notranslate nohighlight">\(v' \notin X\)</span>. 
+ By our construction, we also have <span class="math notranslate nohighlight">\(w'_{n,v'} =0\)</span> for <span class="math notranslate nohighlight">\(v \notin X\)</span>.</p>
+<p>If <span class="math notranslate nohighlight">\(X\)</span> is empty, then <span class="math notranslate nohighlight">\(d^*_S \geq supp_w(S) \geq x \geq  d/(1+\epsilon/3)\)</span> and the construction gives a <span class="math notranslate nohighlight">\(w'\)</span> with <span class="math notranslate nohighlight">\(d^*_{S'} \geq supp_{w'}(S') \geq d/(1+\epsilon/3)=\min \{d^*_S, d/(1+\epsilon/3)\}\)</span> and we are done.</p>
+<p>If <span class="math notranslate nohighlight">\(X\)</span> is non-empty, then we claim that <span class="math notranslate nohighlight">\(d^*_S=d^*_{S'}=d^*_X\)</span>. Let <span class="math notranslate nohighlight">\(w^*_S\)</span>,<span class="math notranslate nohighlight">\(w^*_{S'}\)</span> and <span class="math notranslate nohighlight">\(w^*_X\)</span> be affordable assignments that achieve these. Then by optimality of <span class="math notranslate nohighlight">\(d^*_X\)</span>, <span class="math notranslate nohighlight">\(d^*_S \leq supp_{w^*_S}(X) \leq d^*_X\)</span> and  similarly <span class="math notranslate nohighlight">\(d^*_{S'} \leq d^*_X\)</span>. On the other hand, we have that 
+ <span class="math notranslate nohighlight">\(|X| d^*_X \leq \sum_{v \in X} supp_{w^*_X} \leq  \sum_{n \in N_X} b_n = \sum_{v \in X} supp_{w} (X) \leq |X| x\)</span>
+ Now consider modifying <span class="math notranslate nohighlight">\(w\)</span> or <span class="math notranslate nohighlight">\(w'\)</span> by setting <span class="math notranslate nohighlight">\(w_{n,v}\)</span> for $v \in X, <span class="math notranslate nohighlight">\(n \in N_X\)</span> to be <span class="math notranslate nohighlight">\((w^*_X)_{n,v}\)</span>. Since <span class="math notranslate nohighlight">\(n \in n_X\)</span> had <span class="math notranslate nohighlight">\(w_{n,v}=w'_{n,v} =0\)</span> for <span class="math notranslate nohighlight">\(v \notin X\)</span>, this is still affordable and the supports for <span class="math notranslate nohighlight">\(v \notin X\)</span> remain the same, that is <span class="math notranslate nohighlight">\(&gt; x\)</span>. So these have minimum support <span class="math notranslate nohighlight">\(d^*_X\)</span>, and we have <span class="math notranslate nohighlight">\(d^*_{S'}=d^*_S\)</span>, which gives the the lemma.</p>
+<p>Now we claim inductively that <span class="math notranslate nohighlight">\(d^*_{S_i} \geq d^*/3.15(1+\epsilon/4)^2\)</span>. Lemma 7 implies that there is a <span class="math notranslate nohighlight">\(v \notin S_{i-1}\)</span> with <span class="math notranslate nohighlight">\(score_w(v) \geq d^*/3.15(1+\epsilon/4)\)</span>. We add this to <span class="math notranslate nohighlight">\(w\)</span>, while not reducing the support of any <span class="math notranslate nohighlight">\(v\)</span> to below <span class="math notranslate nohighlight">\(d^*/3.15(1+\epsilon/4)\)</span>. Lemma 9 gives that <span class="math notranslate nohighlight">\(d_{S_i} \geq d^*/3.15(1+\epsilon/4)^2\)</span>
+ The induction gives that <span class="math notranslate nohighlight">\(d^*_{S_m} \geq d^*/3.15(1+\epsilon/4)^2\)</span>. Stare balances gives a <span class="math notranslate nohighlight">\(w_m\)</span> that satiusfies condtion 1 (ii) and so <span class="math notranslate nohighlight">\(supp_{w_m}(S_m) \geq d^*_{S_m}/(1+\epsilon/4) \geq d^*/3.15(1+\epsilon/4)^3 \geq d^*/3.15(1+\epsilon)\)</span>.</p>
+<p>For the PJR claim, suppose that <span class="math notranslate nohighlight">\(S_m\)</span> does not satify PJR(<span class="math notranslate nohighlight">\(d\)</span>) for some <span class="math notranslate nohighlight">\(d\)</span>. Then nor do any <span class="math notranslate nohighlight">\(S_i\)</span>, since they are subsets of <span class="math notranslate nohighlight">\(S_m\)</span>. So by Lemma 5, for every <span class="math notranslate nohighlight">\(0 \leq i \leq m-1\)</span>, there is a <span class="math notranslate nohighlight">\(v_i \notin S_i\)</span> with <span class="math notranslate nohighlight">\(score_{w_i}(v_i) \geq d\)</span>. The same argument as above gives that <span class="math notranslate nohighlight">\(supp_{w_m}(S_m) \geq d/(1+\epsilon/4)^2 &lt; d/(1+\epsilon)\)</span>. It follows that <span class="math notranslate nohighlight">\(S_m\)</span> does satisfy PJR(<span class="math notranslate nohighlight">\(supp_{w_m}(S_m)(1+epsilon)\)</span>).</p>
+<p>Suppose that <span class="math notranslate nohighlight">\(S_m\)</span> does not satisfy PJR but <span class="math notranslate nohighlight">\(\epsilon \leq 1/m\)</span>. Then by Lemma 5, there exists a <span class="math notranslate nohighlight">\(v \notin S\)</span> with <span class="math notranslate nohighlight">\(score_{w_n}(v) \geq \sum_n b_n/m\)</span>. By Lemmas 2 and 1, we can run InsertNewCandidate(<span class="math notranslate nohighlight">\(w_n, score_{w_n}(v)\)</span>), to obatian a <span class="math notranslate nohighlight">\(w'\)</span> such that <span class="math notranslate nohighlight">\(\supp_{w'}(S_m \cup \{v\}) = \min \{ score_{w_n}(v), supp_{w_m}(S_m) \}\)</span>. But since <span class="math notranslate nohighlight">\(|S_m \cup \{v\}|=m+1\)</span>, we must have <span class="math notranslate nohighlight">\(\supp_{w'}(S_m \cup \{v\}) \leq \sum_n b_n/(m+1)\)</span>. Thus we get that <span class="math notranslate nohighlight">\(supp_{w_m}(S_m) \leq \sum_n b_n/(m+1)\)</span>. So if <span class="math notranslate nohighlight">\(\epsilon \leq 1/m\)</span>, then <span class="math notranslate nohighlight">\(supp_{w_m}(S_m) (1+\epsilon) \leq supp_{w_m(S_m) (m+1)/m \leq sum_n bn /m\)</span> and since PJR
+(<span class="math notranslate nohighlight">\(d\)</span>) implies PJR(<span class="math notranslate nohighlight">\(d'\)</span>) for <span class="math notranslate nohighlight">\(d' &gt; d\)</span>, we have PJR. This means that <span class="math notranslate nohighlight">\(\epsilon \leq 1/m\)</span> implies PJR.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../NPoS.html">NPoS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html">Intro to Nominated Proof-of-Stake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1. Overview.html">1. Overview of results for the NPoS election problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2. The min-norm max-flow problem.html">2. The min-norm max-flow problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="3. The maximin support problem.html">3. The maximin support problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4. Sequential Phragmén’s method.html">4. Sequential Phragmén’s method.</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">5. A Phragmén-like Heuristic</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#notation">Notation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-basic-heuristic">The basic heuristic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#--parameterised--proportional-justified-representation.">(Parameterised) Proportional Justified Representation.</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#local-search-for-provable-pjr">Local Search for provable PJR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#factor-3.15-approximation-algorithm">Factor 3.15 approximation algorithm</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#analysis">Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../NPoS.html">NPoS</a><ul>
+      <li>Previous: <a href="4. Sequential Phragmén’s method.html" title="previous chapter">4. Sequential Phragmén’s method.</a></li>
+      <li>Next: <a href="../keys.html" title="next chapter">Keys</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/NPoS/5. A Phragmén-like Heuristic.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

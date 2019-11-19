@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Account key creation ideas for Polkadot &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Networking" href="../networking.html" />
+    <link rel="prev" title="Transport layer authentication - libp2p’s SECIO" href="4-secio.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>https://forum.web3.foundation/t/account-key-creation-ideas-for-polkadot/68</p>
+<div class="section" id="account-key-creation-ideas-for-polkadot">
+<h1>Account key creation ideas for Polkadot<a class="headerlink" href="#account-key-creation-ideas-for-polkadot" title="Permalink to this headline">¶</a></h1>
+<p>We found a trick for using Ed25519 “mini” private keys in <a class="reference external" href="https://github.com/w3f/schnorr-dalek/blob/master/src/keys.rs">schnorr-dalek</a>, meaning users’ “mini” private key consists of 32 bytes of unstructured entropy.  </p>
+<p>There are no serious problems with <a class="reference external" href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki">BIP39</a> so we suggest a similar strategy for deriving secret keys in Polkadot.  We could however modernize BIP39 in a couple small but straightforward ways: </p>
+<ul class="simple">
+<li><p><em>Argon2id should replace PBKDF2.</em>  Adam Langely sugests <a class="reference external" href="https://github.com/golang/crypto/commit/d9133f5469342136e669e85192a26056b587f503">using time=2 and 64mb of memopry</a> for interactive scenarios like this.  In principle, one might question if this scenario should truly be considered interactive, but conversely one could imagine running this on relatively constrained devices. We might also improve the <a class="reference external" href="https://github.com/bryant/argon2rs/issues">argone2rs</a> crate too, especially to <a class="reference external" href="https://crypto.stackexchange.com/a/40000">ensure we use at least v1.3 since v1.2.1 got weaker</a>.</p></li>
+<li><p><em>Rejection sampling to support larger wordlists.</em>  We could employ rejection sampling from the initial entropy stream to avoid tying ourselves to the list size being a power of two, as BIP39 seemingly requires.  We can provide roughly the existing error correction from BIP32, even working in a ring of this order.</p></li>
+<li><p><em>Actually provide a larger wordlist.</em>  We’re discussing enough entropy that users might benefit form using diceware-like word lists with 12.9 bits of entropy per word, as opposed to BIP32’s 11 bits of entropy per word.  It’s possible some diceware word lists contained confusable words, but reviews exists at least for English.  We might worry that larger wordlists might simply not exist for some languges.  It’s also easier to quickly curate shorter lists.</p></li>
+</ul>
+<p>There are also more speculative directions for possible improvements: </p>
+<ul class="simple">
+<li><p><em>Improve error correction.</em>  Right now BIP39 has only a basic checksum for error correction.  We could design schemes that corrected errors by choosing the words using Reed-Solomon, meaning non-systematic word list creation with code words, except naively this limits our word list sizes to finite field sizes, meaning prime powers.  We would instead likely run Reed-Solomon separately on each prime power divisor of the word list’s order.  We should however evaluate alternatives like other <a class="reference external" href="https://hal.inria.fr/hal-00670004/file/article.pdf">generalisations of Reed-Solomon codes to rings</a>, or even working in a field of slightly larger order and reject choices that fall outside the wordlist.</p></li>
+<li><p><em>Support multiple Argon2id configurations.</em>  We might conceivably support multiple argon2id configurations, if small device constraints become a serious concern.  We could select among a few argon2id configuration options using yet another output from the Reed-Solomon code.  We’d simply use rejection sampling to choose the user’s desired configuration.</p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../keys.html">Keys</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html">Polkadot’s cryptography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-accounts.html">Account signatures and keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-accounts-more.html">Account signatures and keys in Polkadot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2-staking.html">Nomination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="3-session.html">Session keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-secio.html">Transport layer authentication - libp2p’s SECIO</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Account key creation ideas for Polkadot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../keys.html">Keys</a><ul>
+      <li>Previous: <a href="4-secio.html" title="previous chapter">Transport layer authentication - libp2p’s SECIO</a></li>
+      <li>Next: <a href="../networking.html" title="next chapter">Networking</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/keys/creation.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

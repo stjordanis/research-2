@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>NPoS &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Intro to Nominated Proof-of-Stake" href="NPoS/index.html" />
+    <link rel="prev" title="Cryptographic sortition for constant-time block production" href="BABE/sortition/index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="npos">
+<h1>NPoS<a class="headerlink" href="#npos" title="Permalink to this headline">¶</a></h1>
+<meta http-equiv="refresh" content="0; url=./NPoS/index.html"><div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="NPoS/index.html">Intro to Nominated Proof-of-Stake</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/index.html#validators-and-nominators">Validators and nominators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/index.html#the-npos-scheme">The NPoS scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/index.html#the-election-process">The election process</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NPoS/1. Overview.html">1. Overview of results for the NPoS election problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/1. Overview.html#problem-statement-and-notation">Problem statement and notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/1. Overview.html#operational-concerns">Operational concerns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html#efficient-algorithms">Efficient algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html#who-elects-the-committee-">Who elects the committee?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html#committee-finding-algorithm--off-chain-">Committee-finding algorithm (off-chain)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html#committee-comparing-algorithm--on-chain-">Committee-comparing algorithm (on-chain)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/1. Overview.html#objectives">Objectives</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html#balance">Balance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html#support">Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html#fair-representation">Fair representation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/1. Overview.html#overview-of-our-results">Overview of our results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html#committee-finding">Committee finding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html#committee-comparing">Committee-comparing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NPoS/2. The min-norm max-flow problem.html">2. The min-norm max-flow problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/2. The min-norm max-flow problem.html#-1.-notation">1. Notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/2. The min-norm max-flow problem.html#-2.-the-min-norm-max-flow-problem--mnmf-">2. The min-norm max-flow problem (MNMF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/2. The min-norm max-flow problem.html#-3.-overview-of-algorithms-for-mnmf">3. Overview of algorithms for MNMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/2. The min-norm max-flow problem.html#-4.-technique-using-parametric-flow-algorithms">4. Technique using parametric flow algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/2. The min-norm max-flow problem.html#-5.-the-star-balancing-heuristic">5. The star balancing heuristic</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NPoS/3. The maximin support problem.html">3. The maximin support problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/3. The maximin support problem.html#-1.-definitions-and-notation">1. Definitions and notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/3. The maximin support problem.html#-2.-the-algorithm">2. The algorithm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/3. The maximin support problem.html#analysis-of-approximation-factor">Analysis of approximation factor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/3. The maximin support problem.html#analysis-of-running-time">Analysis of running time</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/3. The maximin support problem.html#-3.-properties-of-the-maximin-support-objective">3. Properties of the maximin support objective</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NPoS/4. Sequential Phragmén’s method.html">4. Sequential Phragmén’s method.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/4. Sequential Phragmén’s method.html#-1.-notation">1. Notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/4. Sequential Phragmén’s method.html#-2.-algorithm">2. Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/4. Sequential Phragmén’s method.html#-3.-axiomatic-properties">3. Axiomatic properties</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NPoS/5. A Phragmén-like Heuristic.html">5. A Phragmén-like Heuristic</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/5. A Phragmén-like Heuristic.html#notation">Notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/5. A Phragmén-like Heuristic.html#the-basic-heuristic">The basic heuristic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/5. A Phragmén-like Heuristic.html#--parameterised--proportional-justified-representation.">(Parameterised) Proportional Justified Representation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/5. A Phragmén-like Heuristic.html#local-search-for-provable-pjr">Local Search for provable PJR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NPoS/5. A Phragmén-like Heuristic.html#factor-3.15-approximation-algorithm">Factor 3.15 approximation algorithm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/5. A Phragmén-like Heuristic.html#analysis">Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BABE.html">BABE</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">NPoS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/index.html">Intro to Nominated Proof-of-Stake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/1. Overview.html">1. Overview of results for the NPoS election problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/2. The min-norm max-flow problem.html">2. The min-norm max-flow problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/3. The maximin support problem.html">3. The maximin support problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/4. Sequential Phragmén’s method.html">4. Sequential Phragmén’s method.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NPoS/5. A Phragmén-like Heuristic.html">5. A Phragmén-like Heuristic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keys.html">Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../polkadot.html">Polkadot</a><ul>
+      <li>Previous: <a href="BABE/sortition/index.html" title="previous chapter">Cryptographic sortition for constant-time block production</a></li>
+      <li>Next: <a href="NPoS/index.html" title="next chapter">Intro to Nominated Proof-of-Stake</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/polkadot/NPoS.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

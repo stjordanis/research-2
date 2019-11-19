@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>ICMP &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Slashing" href="../slashing.html" />
+    <link rel="prev" title="Parachain networking" href="3-attestation.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>====================================================================</p>
+<p><strong>Authors</strong>: Rob Habermeier, Fatemeh Shirazi</p>
+<p><strong>Last updated</strong>: 24.09.2019</p>
+<p>====================================================================</p>
+<div class="section" id="icmp">
+<h1>ICMP<a class="headerlink" href="#icmp" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="inter-chain-message-passing:-egress-queue-data-fetching">
+<h2>Inter-chain Message Passing: Egress Queue Data Fetching<a class="headerlink" href="#inter-chain-message-passing:-egress-queue-data-fetching" title="Permalink to this headline">¶</a></h2>
+<p>Every parachain block in Polkadot produces a possible-empty list of messages to route to every other block.
+These are known as “egress queues”. <span class="math notranslate nohighlight">\(E^B_{x,y}\)</span> is the egress queue from chain <span class="math notranslate nohighlight">\(x\)</span> to <span class="math notranslate nohighlight">\(y\)</span> at block <span class="math notranslate nohighlight">\(B\)</span>.</p>
+<p>There is also <span class="math notranslate nohighlight">\(R(E^B_{x, y})\)</span>, which is the root hash of the Merkle-Patricia trie [] formed from mapping the index of each message in <span class="math notranslate nohighlight">\(E^B_{x,y}\)</span> to the message data.</p>
+<p>The pending messages to a chain should be processed in the next block for that chain.
+If there are no blocks for a chain in some time, the messages can begin to pile up.</p>
+<p>Collators and full nodes of a parachain <span class="math notranslate nohighlight">\(p\)</span> have executed all blocks of that parachain and should have knowledge of <span class="math notranslate nohighlight">\(E^B_{p, x}\)</span> for all <span class="math notranslate nohighlight">\(B,x\)</span>.</p>
+<p>The <em>block ingress</em> of a parachain <span class="math notranslate nohighlight">\(p\)</span> at block <span class="math notranslate nohighlight">\(B\)</span> is the set <span class="math notranslate nohighlight">\(Ingress_{B,p} = \{\forall y\neq p,  E^B_{y,p} \}\)</span>.</p>
+<p>The <em>block ingress roots</em> are <span class="math notranslate nohighlight">\(R(Ingress_{B,p}) = \{\forall y\neq p,  R(E^B_{y,p}) \}\)</span></p>
+<p>The <em>total accumulated ingress</em> of a parachain <span class="math notranslate nohighlight">\(p\)</span> at block <span class="math notranslate nohighlight">\(B\)</span> is defined by the recursive function</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}T_{Ingress}(B,p) = \begin{cases}
+\emptyset, &amp; B = Genesis \\
+T_{Ingress}(parent(B),p) \cup Ingress_{B,p}, &amp; B \neq Genesis
+\end{cases}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}R(T_{Ingress}(B,p)) = \begin{cases}
+\emptyset, &amp; B = Genesis \\
+R(T_{Ingress}(parent(B),p)) \cup R(Ingress_{B,p}), &amp; B \neq Genesis
+\end{cases}\end{split}\]</div>
+<p>This is a list containing all the ingress of every parachain to <span class="math notranslate nohighlight">\(p\)</span> in every block from the genesis up to <span class="math notranslate nohighlight">\(B\)</span>.</p>
+<p>Parachains must process <span class="math notranslate nohighlight">\(Ingress_{B,p}\)</span> after <span class="math notranslate nohighlight">\(Ingress_{parent(B),p}\)</span>. Additionally, if any message from <span class="math notranslate nohighlight">\(Ingress_{B,p}\)</span> is processed, they all must be.</p>
+<p>Every parachain has a value <span class="math notranslate nohighlight">\(watermark_p\)</span> which is the relay chain block hash for which it has most recently processed any ingress.
+This is initially set to <span class="math notranslate nohighlight">\(Genesis\)</span>.
+To define a structure containing all un-processed messages to a parachain, we introduce the <em>pending</em> ingress, which is defined by the recursive function.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P_{Ingress}(B,p) = \begin{cases}
+\emptyset, &amp; Hash(B) = watermark_p \\
+P_{Ingress}(parent(B),p) \cup Ingress_{B,p}, &amp; Hash(B) \neq watermark_p
+\end{cases}\end{split}\]</div>
+<p>The <em>pending ingress roots</em><span class="math notranslate nohighlight">\(R(P_{Ingress}(B,p))\)</span> can be computed by a similar process to <span class="math notranslate nohighlight">\(R(T_{Ingress}(B,p))\)</span>.</p>
+<p>A parachain candidate for <span class="math notranslate nohighlight">\(p\)</span> building on top of relay-chain block <span class="math notranslate nohighlight">\(B\)</span> is allowed to process any prefix of <span class="math notranslate nohighlight">\(P_{Ingress}(B,p)\)</span>.</p>
+<p>All information the runtime has about parachains is from <code class="docutils literal notranslate"><span class="pre">CandidateReceipt</span></code>s produced by validating a parachain candidate block and included in a relay-chain block. The candidate has a number of fields. Here are some relevant ones:</p>
+<ul class="simple">
+<li><p>Egress Roots: <code class="docutils literal notranslate"><span class="pre">Vec&amp;lt;(ParaId,</span> <span class="pre">Hash)&amp;gt;</span></code>. When included in a relay chain block <span class="math notranslate nohighlight">\(B\)</span> for parachain <span class="math notranslate nohighlight">\(p\)</span>, each hash, paired with unique parachain <span class="math notranslate nohighlight">\(y\)</span> is <span class="math notranslate nohighlight">\(R(E^B_{p,y})\)</span></p></li>
+<li><p>a new value for <span class="math notranslate nohighlight">\(watermark_p\)</span> when the receipt is for parachain <span class="math notranslate nohighlight">\(p\)</span>.
+  The runtime considers the value from the most recent parachain candidate it has received as current.
+  It must be at least as high as the previous value of <span class="math notranslate nohighlight">\(watermark_p\)</span><em>and</em> be in the ancestry of any block <span class="math notranslate nohighlight">\(B\)</span> the candidate is included in.</p></li>
+</ul>
+<p>(<strong>rob</strong>: disallow empty list where pending egress non-empty?)</p>
+<p>A collator or validator seeking to collect egress queues at a block <span class="math notranslate nohighlight">\(B\)</span> and parachain <span class="math notranslate nohighlight">\(p\)</span> simply invokes <code class="docutils literal notranslate"><span class="pre">ingress(B,p)</span></code> and searches the propagation pool for the relevant messages, waiting for any which have not been gossiped yet. The goal of a collator on <span class="math notranslate nohighlight">\(p\)</span> building on relay chain parent <span class="math notranslate nohighlight">\(B\)</span> is to acquire as long of a prefix of <span class="math notranslate nohighlight">\(P_{Ingress}(B, p)\)</span> as it can.</p>
+<p>The simplest way to do this is with a gossip protocol.
+Messages are gossiped from one parachain network to another parachain network.
+If there are nodes in common between these two networks gossiping the message will lead to the receiving parachain to receive its messages. .
+However, if the destination parachain validators realize that the message has not been gossiped in the recipient parachain, they request the message from the parachain validator of the sending parachain and then gossip it themselves in the recipient parachain network.</p>
+<p>At every block <span class="math notranslate nohighlight">\(B\)</span> and parachain <span class="math notranslate nohighlight">\(p\)</span><span class="math notranslate nohighlight">\(R(P_{Ingress}(B, p))\)</span> is available from the runtime.</p>
+<p>What the runtime makes available for every parachain and block <span class="math notranslate nohighlight">\(p,B\)</span> is a list of ingress-lists pending ingress roots at that block, each list paired with the block number the root was first meant to be routed.
+<span class="math notranslate nohighlight">\(R(\emptyset)\)</span> is omitted from ingress-lists and empty lists are omitted.
+Sorted ascending by block number. All block numbers are less than <code class="docutils literal notranslate"><span class="pre">num(B)</span></code> and refer to the block in the same chain.</p>
+<p>In Rust pseudo-code (TODO: transcribe to LaTeX)
+<code class="docutils literal notranslate"><span class="pre">fn</span> <span class="pre">ingress(B,</span> <span class="pre">p)</span> <span class="pre">-&amp;gt;</span> <span class="pre">Vec&amp;lt;(BlockNumber,</span> <span class="pre">Vec&amp;lt;(ParaId,</span> <span class="pre">Hash)&amp;gt;)&amp;gt;</span></code></p>
+<p>The runtime also makes available the pending <em>egress</em> from a given <span class="math notranslate nohighlight">\(B,p\)</span>. This follows the same constraints as the ingress list w.r.t. ordering and omission of empty lists. The <code class="docutils literal notranslate"><span class="pre">ParaId</span></code> here is the recipient chain, while in the <code class="docutils literal notranslate"><span class="pre">ingress</span></code> function it is the sending chain.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fn</span> <span class="n">egress</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">Vec</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;(</span><span class="n">BlockNumber</span><span class="p">,</span> <span class="n">Vec</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;(</span><span class="n">ParaId</span><span class="p">,</span> <span class="n">Hash</span><span class="p">)</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;)</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span>
+</pre></div>
+</div>
+.<p>Let us assume leaves blocks are the latest parachain blocks that have been finalized in the relay chain. (Fateme: correct?)</p>
+<p>We make the following assumptions about nodes:
+  1. The block-state of leaves is available but no guarantees are made about older blocks’ states.
+  2. The collators and full nodes of a parachain can be expected to hold onto all egress of all parachain blocks they have executed.
+  3. Validators are not required to hold onto egress of any blocks. Note that the messages could be recovered from erasure coded pieces that the validators are holding.</p>
+<p>Assuming we build on top of the attestation-gossip system, peers communicate the leaves they believe best to each other.</p>
+</div>
+<div class="section" id="simple-gossip-for-icmp-queue-routing:-topics-based-on-relay-chain-block-where-messages-are-issued">
+<h2>Simple Gossip for ICMP queue routing: Topics based on relay-chain block where messages are issued<a class="headerlink" href="#simple-gossip-for-icmp-queue-routing:-topics-based-on-relay-chain-block-where-messages-are-issued" title="Permalink to this headline">¶</a></h2>
+<p>This section describes a <em>bounded</em> gossip protocol (see overview for definition) for the circulation of ICMP message queues.</p>
+<p>Recall</p>
+<p><code class="docutils literal notranslate"><span class="pre">fn</span> <span class="pre">ingress(B,</span> <span class="pre">p)</span> <span class="pre">-&amp;gt;</span> <span class="pre">Vec&amp;lt;(BlockNumber,</span> <span class="pre">Vec&amp;lt;(ParaId,</span> <span class="pre">Hash)&amp;gt;)&amp;gt;</span></code>
+and
+<code class="docutils literal notranslate"><span class="pre">fn</span> <span class="pre">egress(B,</span> <span class="pre">p)</span> <span class="pre">-&amp;gt;</span> <span class="pre">Vec&amp;lt;(BlockNumber,</span> <span class="pre">Vec&amp;lt;(ParaId,</span> <span class="pre">Hash)&amp;gt;)&amp;gt;</span></code></p>
+<p>Since <code class="docutils literal notranslate"><span class="pre">ingress</span></code> is invoked at a given block <span class="math notranslate nohighlight">\(B\)</span> we can easily transform <code class="docutils literal notranslate"><span class="pre">BlockNumber</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">BlockHash</span></code>.</p>
+<p>Messages start un-routed and end up being routed.</p>
+<p>We propose a gossip system where we define</p>
+<p><span class="math notranslate nohighlight">\(queueTopic(block\_hash: H) \rightarrow H\)</span>
+Messages on this topic have the format</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="nc">Queue</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">root</span>: <span class="nc">Hash</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="n">messages</span>: <span class="nb">Vec</span><span class="kp">&amp;</span><span class="nc">lt</span><span class="p">;</span><span class="n">Message</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;,</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>We maintain our local information:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(leaves\)</span>, a list of our best up to <code class="docutils literal notranslate"><span class="pre">MAX_CHAIN_HEADS</span></code> leaf-hashes of the block DAG</p></li>
+<li><p><span class="math notranslate nohighlight">\(leaves_k\)</span>, for each peer <span class="math notranslate nohighlight">\(k\)</span> the latest list of their best up to <code class="docutils literal notranslate"><span class="pre">MAX_CHAIN_HEADS</span></code> leaf-hashes of the block DAG (based on what they have sent us).</p></li>
+<li><p><span class="math notranslate nohighlight">\(leafTopics(l) \rightarrow \{queueTopic(h)\}\)</span> for each unrouted root <span class="math notranslate nohighlight">\(h\)</span> for all parachains for a leaf <span class="math notranslate nohighlight">\(l\)</span> in <span class="math notranslate nohighlight">\(leaves\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(expectedQueues(t) \rightarrow H\)</span>: a map from topics to root hashes. Has entries for all <span class="math notranslate nohighlight">\(t\in\cup_{l \in leaves}leafTopics(l)\)</span></p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>On new leaf <span class="math notranslate nohighlight">\(B\)</span></strong></p>
+<ol class="simple">
+<li><p>Update <span class="math notranslate nohighlight">\(leaves\)</span>, <span class="math notranslate nohighlight">\(leafTopics\)</span>, and <span class="math notranslate nohighlight">\(expectedQueues\)</span>. (haven’t benchmarked but i would conservatively estimate 100ms operation)</p></li>
+<li><p>Send peers new <span class="math notranslate nohighlight">\(leaves\)</span>.</p></li>
+<li><p>If a collator on <span class="math notranslate nohighlight">\(p\)</span>, execute <code class="docutils literal notranslate"><span class="pre">egress(B,p)</span></code>.
+For any message queue roots that are known and have not been propagated yet, put corresponding <code class="docutils literal notranslate"><span class="pre">Queue</span></code> message in the propagation pool.</p></li>
+</ol>
+<hr class="docutils" />
+<p><strong>On new chain heads declaration from peer <span class="math notranslate nohighlight">\(k\)</span></strong></p>
+<ol class="simple">
+<li><p>Update <span class="math notranslate nohighlight">\(leaves_k\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\forall H \in leaves\ \cap\ leaves_k\)</span> do <span class="math notranslate nohighlight">\(broadcastTopic(k,t)\)</span> for each <span class="math notranslate nohighlight">\(t\)</span> in <span class="math notranslate nohighlight">\(leafTopics(H)\)</span>.</p></li>
+</ol>
+<hr class="docutils" />
+<p><strong>On <code class="docutils literal notranslate"><span class="pre">Queue</span></code> message <span class="math notranslate nohighlight">\(m\)</span> from <span class="math notranslate nohighlight">\(k\)</span> on topic <span class="math notranslate nohighlight">\(t\)</span></strong></p>
+<p>We define <code class="docutils literal notranslate"><span class="pre">good(m)</span></code> to be a local acceptance criterion:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">root</span></code> hash of the message is in <span class="math notranslate nohighlight">\(expectedQueues(t)\)</span>.</p></li>
+<li><p>The trie root of given messages equals <code class="docutils literal notranslate"><span class="pre">root</span></code>.</p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">good(m)</span></code>, note <span class="math notranslate nohighlight">\(k\)</span> as beneficial and place <span class="math notranslate nohighlight">\(m\)</span> in propagation pool. Otherwise, note <span class="math notranslate nohighlight">\(k\)</span> as wasteful.
+This is useful for peer-set cultivation.</p>
+<p>(<strong>rob</strong>: if <span class="math notranslate nohighlight">\(leaves_k\)</span> doesn’t imply knowledge of <span class="math notranslate nohighlight">\(t\)</span>, should we note mistrust of the peer?)</p>
+<hr class="docutils" />
+<p><strong>Definition of <span class="math notranslate nohighlight">\(allowed_k(m)\)</span> for a peer <span class="math notranslate nohighlight">\(k\)</span> and <code class="docutils literal notranslate"><span class="pre">Queue</span></code> message <span class="math notranslate nohighlight">\(m\)</span> on topic <span class="math notranslate nohighlight">\(t\)</span></strong></p>
+<p>A message is disallowed if <span class="math notranslate nohighlight">\(k\)</span> has sent it to us before or we have sent it to them.</p>
+<p>Otherwise, a message is allowed if <span class="math notranslate nohighlight">\(\exists l \in leaves \cap leaves_k\ |\ t \in leafTopics(l)\)</span> and disallowed otherwise.</p>
+<hr class="docutils" />
+<p><strong>Periodically</strong></p>
+<p>Mark all topics without entries in <span class="math notranslate nohighlight">\(expectedQueues\)</span> as expired and purge them from the propagation pool.</p>
+<p>Practically, once every couple of seconds. This prevents our pool from growing indefinitely.</p>
+<hr class="docutils" />
+<p>The decision to only propagate unrouted messages to peers who share the same view of which leaves are current may be a bit controversial, but it is well-justified by some of the prior conditions we set out.</p>
+<p>First, we don’t want nodes to have to process an unbounded number of messages.
+That means that messages for <span class="math notranslate nohighlight">\(queueTopic(H)\)</span> where <span class="math notranslate nohighlight">\(H\)</span> is <em>unknown</em> to the node are unreasonable since there is an unbounded number of such <span class="math notranslate nohighlight">\(H\)</span>.</p>
+<p>Secondly, nodes shouldn’t have to do a lot of work to figure out whether to propagate a message to a specific peer or not.
+Assume that <span class="math notranslate nohighlight">\(leaves \cap leaves_k = \emptyset\)</span><em>but</em> that some entries of <span class="math notranslate nohighlight">\(leaves_k\)</span> are ancestors of entries of <span class="math notranslate nohighlight">\(leaves\)</span>.
+We have to do <span class="math notranslate nohighlight">\(O(n)\)</span> work for each <span class="math notranslate nohighlight">\(l \in leaves_k\)</span> to figure that out, though.
+Then, we have to figure out if a given message is unrouted at that prior block.
+Naïvely we would assume that if a message is still unrouted at a later block in the same chain that it was not routed earlier, but with chain-state reversions from fishermen this may not be true.</p>
+<p>Since chain-state is not assumed available from prior blocks, we have no good way of determining if egress actually should be sent to peers on that earlier block. A relaxation of this by extending to a constant number of ancestors is discussed in the future improvements section.</p>
+<p>Still, only propagating to peers that are synchronized to the same chain head is reasonable with the following assumptions (some empirical but reasonable and probably overestimated values):</p>
+<ol class="simple">
+<li><p>New valid blocks are issued on average at least 5 seconds apart (we are aiming for more like 10-15 seconds actually)</p></li>
+<li><p>Block propagation time is within 2 seconds over the “useful” portion of the gossip graph.</p></li>
+<li><p>Neighbors in the gossip graph have &lt;=500ms latency.</p></li>
+<li><p>Meaningfully propagating messages before synchronizing to the heads of the DAG is probably not worthwhile</p></li>
+</ol>
+<p>If we assume that no nodes broadcast updated <span class="math notranslate nohighlight">\(leaves\)</span> until after the block has fully propagated (this is clearly not going to be the case in practice), then that leaves time after updating <span class="math notranslate nohighlight">\(leaves\)</span> for a full 2.5 hops at 500ms latency to gossip <code class="docutils literal notranslate"><span class="pre">Queue</span></code>s until the next block.
+Real values are almost certainly better.
+And the good news is that not all egress has to be propagated within one block-time – over time it is more and more likely that participants obtain earlier messages.</p>
+<p>This is a scheme which results in all participants seeing all messages.
+It almost certainly will not scale beyond a small number of initial chains but will serve functionally as a starting protocol.</p>
+</div>
+</div>
+<div class="section" id="interchain-messaging-routing-overview">
+<h1>Interchain Messaging Routing Overview<a class="headerlink" href="#interchain-messaging-routing-overview" title="Permalink to this headline">¶</a></h1>
+<p>To send messages from one parachain (sending parachain) to another parachain (receiving parachain) depending on the setup the following steps will be carried out.</p>
+<ol class="simple">
+<li><p>When full nodes of the sending parachain are also part of the domain of the receiving parachain, gossiping the message suffices</p></li>
+<li><p>A relay chain full node is in the domain of both the sending and receiving parachain, gossiping the message suffices</p></li>
+<li><p>Parachain validator of receiving parachain does not see the message being gossiped, then it request the message directly from the parachain validator of the sending parachain (PV at the moment of sending).
+ The PV of the sending parachain are responsible to keep the messages available.
+ The parachain validators of the sending parachain directly send the messages to the receiving parachain PoV’s.
+ Finally, the PV’s of the receiving parachain gossip the messages in the receiving parachain network.</p></li>
+</ol>
+<p><strong>Future Improvements (roughly, from sooner to later)</strong>:</p>
+<ol class="simple">
+<li><p>A section above describes why propagating egress to peers who are <em>arbitrarily</em> far back is a bad idea, but we can reasonably keep track of the last <span class="math notranslate nohighlight">\(a\)</span> ancestors of all of our leaves once we’re synced and just following normal block production.
+ The first reasonable choice for <span class="math notranslate nohighlight">\(a\)</span> is 1 (keep parents). This probably gets us 90% of the gains we need, simply because there is a “stutter” when requiring leaf-sets to intersect and two peers need to update each other about the new child before sending any more messages.</p></li>
+<li><p>Extend the definition of <span class="math notranslate nohighlight">\(E^B_{x,y}\)</span> to allow chains to censor each other. For instance, by saying that parachain <span class="math notranslate nohighlight">\(y\)</span> can inform the relay chain not to route messages from <span class="math notranslate nohighlight">\(x\)</span> at block <span class="math notranslate nohighlight">\(B\)</span> (and later inform it to start routing again at block <span class="math notranslate nohighlight">\(B'\)</span>).
+ Then for any block <span class="math notranslate nohighlight">\(b\)</span> between <span class="math notranslate nohighlight">\(B\)</span> and <span class="math notranslate nohighlight">\(B'\)</span>, we would have the runtime consider <span class="math notranslate nohighlight">\(E^b_{x,y} = \emptyset\)</span> regardless of what the <code class="docutils literal notranslate"><span class="pre">CandidateReceipt</span></code> for <span class="math notranslate nohighlight">\(x\)</span> at <span class="math notranslate nohighlight">\(b\)</span> said. Actually, since the runtime deals only in trie root hashes, it would really just ignore <span class="math notranslate nohighlight">\(R(E^b_{x,y})\)</span> from the candidate receipt and set it to <span class="math notranslate nohighlight">\(R(\emptyset)\)</span>.</p></li>
+<li><p>Extend to support a smarter topology where not everyone sees everything. Perhaps two kinds of topics, those based on <span class="math notranslate nohighlight">\((B, Chain_{from})\)</span> and those based on <span class="math notranslate nohighlight">\((B, Chain_{to})\)</span> would make this more viable.</p></li>
+<li><p>Use some kind of smart set reconciliation (e.g. https://github.com/sipa/minisketch) to minimize gossip bandwidth.</p></li>
+<li><p>Incentivize distribution with something like Probabilistic Micropayments.</p></li>
+<li><p>The parachain validators hold the egress queues until it is confirmed that the messages have been included. This is a fall back for when the two parachain network do not have full nodes in common and the messages do not arrive by gossiping. The parachain validators at the receiving parachain will notice the missing messages and ask the parachain validator of the sending chain for the messages. Once they receive them the gossip them in the receiving parachain network.</p></li>
+</ol>
+<hr class="docutils" />
+<p>All information that the runtime has is in the form of <code class="docutils literal notranslate"><span class="pre">CandidateReceipt</span></code>s.
+ The author of a block may submit up to one <code class="docutils literal notranslate"><span class="pre">CandidateReceipt</span></code> from each parachain in the block (in practice, only those which are attested by a number of validators, although this detail is not relevant here).</p>
+<hr class="docutils" />
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../networking.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="1-overview.html">Networking for Polkadot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2-polite-grandpa.html">Gossiping GRANDPA communication (polite-grandpa)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="3-attestation.html">Parachain networking</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ICMP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#inter-chain-message-passing:-egress-queue-data-fetching">Inter-chain Message Passing: Egress Queue Data Fetching</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#simple-gossip-for-icmp-queue-routing:-topics-based-on-relay-chain-block-where-messages-are-issued">Simple Gossip for ICMP queue routing: Topics based on relay-chain block where messages are issued</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#interchain-messaging-routing-overview">Interchain Messaging Routing Overview</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../networking.html">Networking</a><ul>
+      <li>Previous: <a href="3-attestation.html" title="previous chapter">Parachain networking</a></li>
+      <li>Next: <a href="../slashing.html" title="next chapter">Slashing</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/networking/4-icmp.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

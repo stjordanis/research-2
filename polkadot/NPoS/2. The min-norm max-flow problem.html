@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>2. The min-norm max-flow problem &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="3. The maximin support problem" href="3. The maximin support problem.html" />
+    <link rel="prev" title="1. Overview of results for the NPoS election problem" href="1. Overview.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="-2.-the-min-norm-max-flow-problem">
+<h1>2. The min-norm max-flow problem<a class="headerlink" href="#-2.-the-min-norm-max-flow-problem" title="Permalink to this headline">¶</a></h1>
+<p>Recall that the NPoS problem consists on selecting a committee of validators of size <span class="math notranslate nohighlight">\(m\)</span>, and then assigning stake from the nominators to the validators. In this note, we assume we already picked a committee <span class="math notranslate nohighlight">\(S\)</span> of <span class="math notranslate nohighlight">\(m\)</span> validators, and explore the best way to assign stake. </p>
+<p>After establishing some notation, we introduce the <em>min-norm max-flow problem</em> (MNMF) and explain why this is exactly the problem we need to solve. We then establish two algorithmic ways to solve MNMF, namely 1) using parametric flow algorithms, and 2) using a heuristic called star balancing, and we compare them. </p>
+<div class="section" id="-1.-notation">
+<h2>1. Notation<a class="headerlink" href="#-1.-notation" title="Permalink to this headline">¶</a></h2>
+<p>We consider an instance of NPoS consisting of a bipartite graph <span class="math notranslate nohighlight">\((N\cup S, E)\)</span>, where <span class="math notranslate nohighlight">\(m:=|S|\ll |N|\)</span> and an edge <span class="math notranslate nohighlight">\(nv\in E\)</span> represents the approval of nominator <span class="math notranslate nohighlight">\(n\in N\)</span> to the elected validator <span class="math notranslate nohighlight">\(v\in S\)</span>. We are also given a vector <span class="math notranslate nohighlight">\(b\in\mathbb{R}^N_{\geq 0}\)</span> of nominator budgets. An edge weight vector <span class="math notranslate nohighlight">\(w\in \mathbb{R}^E_{\geq 0}\)</span> is <em>affordable</em> if it is component-wise non-negative and observes the budget constraints: <span class="math notranslate nohighlight">\(\sum_{v\in V: \ nv\in E} w_{nv} \leq b_n\)</span> for each nominator <span class="math notranslate nohighlight">\(n\in N\)</span>. It is called maximally affordable if <span class="math notranslate nohighlight">\(\sum_{v\in S: \ nv\in E} w_{nv} = b_n\)</span> for any <span class="math notranslate nohighlight">\(n\in N\)</span> having at least one neighbor in <span class="math notranslate nohighlight">\(S\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(B\in \{0,1\}^{S\times E}\)</span> be the node-edge incidence matrix for the set <span class="math notranslate nohighlight">\(S\)</span>. For any <span class="math notranslate nohighlight">\(w\in \mathbb{R}_{\geq 0}^E\)</span>, the total support that <span class="math notranslate nohighlight">\(w\)</span> assigns to each validator in <span class="math notranslate nohighlight">\(S\)</span> is given by the vector <span class="math notranslate nohighlight">\(supp_w :=Bw\in \mathbb{R}^S\)</span>, so that for any validator <span class="math notranslate nohighlight">\(v\in S\)</span>, its support 
+<span class="math notranslate nohighlight">\(supp_w(v)=(Bw)_v = \sum_{n: \ nv\in E} w_{nv}\)</span>
+is the total amount of stake that <span class="math notranslate nohighlight">\(w\)</span> assigns to <span class="math notranslate nohighlight">\(v\)</span> from the nominators. </p>
+</div>
+<div class="section" id="-2.-the-min-norm-max-flow-problem--mnmf-">
+<h2>2. The min-norm max-flow problem (MNMF)<a class="headerlink" href="#-2.-the-min-norm-max-flow-problem--mnmf-" title="Permalink to this headline">¶</a></h2>
+<p>Given an instance <span class="math notranslate nohighlight">\((N\cup S, b)\)</span> of NPoS, the min-norm max-flow problem consists of finding a maximally affordable vector <span class="math notranslate nohighlight">\(w\)</span> that minimizes the squared <span class="math notranslate nohighlight">\(\ell_2\)</span> norm of the support vector, i.e. minimize</p>
+<div class="math notranslate nohighlight">
+\[val(w):= \|supp_w\|^2 = \|Bw\|^2.\]</div>
+<p>Now let’s see how MNMF is relevant to NPoS. For an instance <span class="math notranslate nohighlight">\((N\cup S, E, b)\)</span>, we need to choose an affordable weight vector <span class="math notranslate nohighlight">\(w\)</span> according to some sensible objective, which intuitively maximizes the validators’ supports. The two objective functions that first come to mind are maximizing </p>
+<ul class="simple">
+<li><p>the support of any validator: 
+ <span class="math notranslate nohighlight">\(\min_{v\in S} supp_w(v),\)</span></p></li>
+<li><p>the total support of any group of <span class="math notranslate nohighlight">\(\lfloor m/3 \rfloor\)</span> validators:
+<span class="math notranslate nohighlight">\(\min_{A\subseteq S, \ |A|=\lfloor m/3 \rfloor} \sum_{v\in A} supp_w(v).\)</span></p></li>
+</ul>
+<p>We show now that an optimal solution <span class="math notranslate nohighlight">\(w^*\)</span> to MNMF is <em>simultaneously maximal</em> with respect to both of these objective functions. In fact, it is simultaneously maximal with respect to the family of objective functions </p>
+<div class="math notranslate nohighlight">
+\[F_{k}(w) := \min_{A\subseteq S, \ |A|=k} \sum_{v\in A} supp_w(v),\]</div>
+<p>parameterized by <span class="math notranslate nohighlight">\(k=1,\cdots,m\)</span>. </p>
+<p>Furthermore, if we want to maximize objective <span class="math notranslate nohighlight">\(F_k\)</span>, but subordinate to that we also want to minimize the total amount of stake used, we show that we achieve this by a simple truncation of vector <span class="math notranslate nohighlight">\(w^*\)</span> into a vector <span class="math notranslate nohighlight">\(w^k\)</span>, defined as follows. </p>
+<p><strong>Algorithm 2.1:</strong> Definition of <span class="math notranslate nohighlight">\(w^k\)</span> for a fixed parameter <span class="math notranslate nohighlight">\(k\in\{1,\cdots,m\}\)</span>.</p>
+<ol class="simple">
+<li><p>Find an optimal (maximally affordable) vector <span class="math notranslate nohighlight">\(w^{*}\)</span> for MNMF.</p></li>
+<li><p>Order the validators <span class="math notranslate nohighlight">\(S=\{ v_1, \cdots, v_m \}\)</span> by support, so that 
+<span class="math notranslate nohighlight">\(supp_{w^{*}}(v_1)\leq \cdots \leq supp_{w^{*}}(v_m).\)</span></p></li>
+<li><p>Define <span class="math notranslate nohighlight">\(w^k\)</span> from <span class="math notranslate nohighlight">\(w^*\)</span> by setting, for each <span class="math notranslate nohighlight">\(n\in N\)</span> and <span class="math notranslate nohighlight">\(i\in\{1,\cdots m\}\)</span>, 
+<span class="math notranslate nohighlight">\(w^k_{nv_i }=w^*_{nv_i}\cdot\min\Big\{1,\frac{supp_{w^*}(v_i)}{supp_{w^*}(v_k)}\Big\}.\)</span></p></li>
+<li><p>Output <span class="math notranslate nohighlight">\(w^k\)</span>. </p></li>
+</ol>
+<p><strong>Theorem 2.2:</strong> For a given instance <span class="math notranslate nohighlight">\((N\cup S, b)\)</span> and a given parameter <span class="math notranslate nohighlight">\(k\)</span>, consider the weight vectors <span class="math notranslate nohighlight">\(w^{*}\)</span> and <span class="math notranslate nohighlight">\(w^k\)</span> defined above. Then:</p>
+<ol class="simple">
+<li><p><span class="math notranslate nohighlight">\(F_k(w^*)\geq F_k(w)\)</span> for any affordable weight vector <span class="math notranslate nohighlight">\(w\)</span> (i.e. <span class="math notranslate nohighlight">\(w^{*}\)</span> is optimal for <span class="math notranslate nohighlight">\(F_k),\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(F_k(w^k)=F_k(w^{*})\)</span> (i.e. <span class="math notranslate nohighlight">\(w^k\)</span> is still optimal for <span class="math notranslate nohighlight">\(F_k\)</span>), and </p></li>
+<li><p><span class="math notranslate nohighlight">\(\|supp_{w^k}\|_1 \leq \|supp_w\|_1\)</span> for any affordable weight vector <span class="math notranslate nohighlight">\(w\)</span> with <span class="math notranslate nohighlight">\(F_k(w^k)=F_k(w)\)</span> (i.e. <span class="math notranslate nohighlight">\(w^k\)</span> is budget-minimal).</p></li>
+</ol>
+<p><em>Proof:</em> We start with the second claim. We use the same ordering of the validators <span class="math notranslate nohighlight">\(S=\{v_1, \cdots, v_m\}\)</span> as defined in the algorithm above. Notice that <span class="math notranslate nohighlight">\({supp_{w^k}(v_i) = supp_{w^{*}}(v_i)}\)</span> whenever <span class="math notranslate nohighlight">\(i\leq k\)</span>, and <span class="math notranslate nohighlight">\(supp_{w^k}(v_i)=supp_{w^{*}}(v_k)\)</span> otherwise.  Clearly, function <span class="math notranslate nohighlight">\(F_k(w)\)</span> is the sum of the supports of the <span class="math notranslate nohighlight">\(k\)</span> validators with smallest support. For both <span class="math notranslate nohighlight">\(w^{*}\)</span> and <span class="math notranslate nohighlight">\(w^k\)</span>, this set of <span class="math notranslate nohighlight">\(k\)</span> validators is the same, namely <span class="math notranslate nohighlight">\(\{v_1, \cdots, v_k\}\)</span>, and their supports are the same. Hence,</p>
+<div class="math notranslate nohighlight">
+\[F_k(w^k) = F_k(w^*)=\sum_{i=1}^k supp_{w^*}(v_i).\]</div>
+<p>This proves the second claim.</p>
+<p>We continue with the first claim, which we prove by contradiction. We assume that there is an affordable vector <span class="math notranslate nohighlight">\(w\)</span> with <span class="math notranslate nohighlight">\(F_k(w)&gt;F_k(w^{*})\)</span>. We also assume without loss of generality that</p>
+<p>a. <span class="math notranslate nohighlight">\(w\)</span> is maximally affordable like <span class="math notranslate nohighlight">\(w^{*}\)</span>, i.e. <span class="math notranslate nohighlight">\(\|supp_{w^{*}}\|_1= \|supp_w\|_1\)</span>, and 
+b. the ordering of the validator set <span class="math notranslate nohighlight">\(S=\{v_1,\cdots,v_m\}\)</span> is such that whenever there is a tie <span class="math notranslate nohighlight">\(supp_{w^{*}}(v_i) = supp_{w^{*}}(v_j)\)</span> with <span class="math notranslate nohighlight">\(i&lt;j\)</span> then <span class="math notranslate nohighlight">\(supp_w(v_i)\leq supp_w(v_j)\)</span>.</p>
+<p>We have the inequalities </p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^k supp_{w}(v_i) \geq F_k(w)&gt;F_k(w^*) =\sum_{i=1}^k supp_{w^*}(v_i),\]</div>
+<p>and </p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\sum_{i=k+1}^m supp_{w}(v_i) 
+&amp;= \|supp_w\|_1 - \sum_{i=1}^k supp_{w}(v_i) \\
+&amp;&lt; \|supp_{w^*}\|_1 - \sum_{i=1}^k supp_{w^*}(v_i) \\
+&amp;=\sum_{i=k+1}^m supp_{w^*}(v_i).
+\end{align}\end{split}\]</div>
+<p>Now define the vector <span class="math notranslate nohighlight">\(f=w-w^{*}\in\mathbb{R}^E\)</span> and consider it as a flow over the network <span class="math notranslate nohighlight">\((N\cup S, E)\)</span>. All nodes in <span class="math notranslate nohighlight">\(N\)</span> preserve flow (by assumption a.), and the previous two inequalities show that <span class="math notranslate nohighlight">\(f\)</span> has a net demand in set <span class="math notranslate nohighlight">\(\{v_1, \cdots, v_k\}\)</span> and a net excess in set <span class="math notranslate nohighlight">\(\{v_{k+1}, \cdots, v_m\}\)</span>. Thus, if we decompose <span class="math notranslate nohighlight">\(f\)</span> into paths, there must be a simple path carrying some <span class="math notranslate nohighlight">\(\delta&gt;0\)</span> units of flow from <span class="math notranslate nohighlight">\(v_j\)</span> to <span class="math notranslate nohighlight">\(v_i\)</span> for some <span class="math notranslate nohighlight">\(1\leq i\leq k &lt; j \leq m\)</span>. Moreover, by assumption b., it must be the case that <span class="math notranslate nohighlight">\(supp_{w^*}(v_i)&lt;supp_{w^*}(v_j)\)</span>, because in case of a tie we would have that <span class="math notranslate nohighlight">\(f\)</span> has net excess on <span class="math notranslate nohighlight">\(v_i\)</span> and net demand on <span class="math notranslate nohighlight">\(v_j\)</span>, and the previously mentioned <span class="math notranslate nohighlight">\(v_j\)</span>-<span class="math notranslate nohighlight">\(v_i\)</span> path would not exist in the flow decomposition.</p>
+<p>Now, let <span class="math notranslate nohighlight">\(f'\)</span> be a subflow of <span class="math notranslate nohighlight">\(f\)</span> that carries <span class="math notranslate nohighlight">\(\varepsilon\)</span> units of flow from <span class="math notranslate nohighlight">\(v_j\)</span> to <span class="math notranslate nohighlight">\(v_i\)</span> along this path, where <span class="math notranslate nohighlight">\(\varepsilon=\min\{\delta, \frac{1}{2}(supp_{w^*}(v_j) - supp_{w^*}(v_i)) \}\)</span>. The fact that <span class="math notranslate nohighlight">\(f'\)</span> is a feasible subflow of <span class="math notranslate nohighlight">\(f\)</span> implies that <span class="math notranslate nohighlight">\(w':=w^*+ f'\)</span> is a maximally affordable solution with </p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\|supp_{w^*}\|_2^2 - \|supp_{w'}\|_2^2 
+&amp;= supp_{w^*}^2(v_i) + supp_{w^*}^2(v_j) - (supp_{w^*}(v_i) + \varepsilon)^2 - (supp_{w^*}(v_j)-\varepsilon)^2 \\
+&amp; = 2\varepsilon[supp_{w^*}(v_j) - supp_{w^*}(v_i)] - 2\varepsilon^2\\
+&amp; \geq 2\varepsilon(2\varepsilon) - 2\varepsilon^2 
+= 2\varepsilon^2 &gt; 0,
+\end{align}\end{split}\]</div>
+<p>which contradicts the fact that <span class="math notranslate nohighlight">\(w^*\)</span> minimizes the support norm. This completes the proof of claim 1.</p>
+<p>We continue with claim 3, which we also prove by contradiction. We assume that there is an afordable vector <span class="math notranslate nohighlight">\(w\)</span> with <span class="math notranslate nohighlight">\(\|supp_w\|_1 &lt; \|supp_{w^k}\|_1\)</span> and <span class="math notranslate nohighlight">\(F_k(w)=F_k(w^k)\)</span>. Let <span class="math notranslate nohighlight">\(S=\{u_1,\cdots, u_m\}\)</span> be an ordering of the validators so that <span class="math notranslate nohighlight">\(supp_w(u_1)\leq \cdots \leq supp_w(u_m)\)</span>. Clearly, the value of objective <span class="math notranslate nohighlight">\(F_k(w)\)</span> is <span class="math notranslate nohighlight">\(F_k(w)=\sum_{i=1}^k supp_w(u_i)\)</span>. Without loss of generality, we can assume that vector <span class="math notranslate nohighlight">\(w\)</span> is “truncated”, meaning that <span class="math notranslate nohighlight">\(supp_w(u_k)=supp_w(u_{k+1})=\cdots = supp_w(u_m)\)</span>. </p>
+<p>For the case <span class="math notranslate nohighlight">\(k=1\)</span>, from this assumption we immediately obtain the equality</p>
+<div class="math notranslate nohighlight">
+\[\|supp_w\|_1 = m\cdot F_1(w) = m\cdot F_1(w^1)=\|supp_{w^1}\|,\]</div>
+<p>which contradicts our hypothesis. Now let <span class="math notranslate nohighlight">\(2\leq k\leq m\)</span>. We have the inequality </p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+0 &amp;&lt;\|supp_{w^k}\|_1 - \|supp_w\|_1 \\
+&amp;= [F_k(w^k)+ (n-k)supp_{w^k}(v_k)] - [F_k(w) + (n-k)supp_w(u_k)] \\
+&amp;= (n-k)[supp_{w^k}(v_k) - supp_w(u_k)],
+\end{align}\end{split}\]</div>
+<p>where the terms <span class="math notranslate nohighlight">\(F_k(w^k)\)</span> and <span class="math notranslate nohighlight">\(F_k(w)\)</span> cancelled out, which implies that <span class="math notranslate nohighlight">\(supp_w(u_k)&lt;supp_{w^k}(v_k)\)</span>. On the other hand, we have the equality</p>
+<div class="math notranslate nohighlight">
+\[F_{k-1}(w)+supp_w(u_k) = F_k(w) = F_k(w^k)=F_{k-1}(w^k)+supp_{w^k}(v_k),\]</div>
+<p>which together with the previous inequality implies that </p>
+<div class="math notranslate nohighlight">
+\[F_{k-1}(w)&gt;F_{k-1}(w^k)=F_{k-1}(w^*),\]</div>
+<p>which contradicts claim 1. This completes the proof of claim 3 and of the theorem.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+</div>
+<div class="section" id="-3.-overview-of-algorithms-for-mnmf">
+<h2>3. Overview of algorithms for MNMF<a class="headerlink" href="#-3.-overview-of-algorithms-for-mnmf" title="Permalink to this headline">¶</a></h2>
+<p>In the previous section we established that solving NPoS on a fixed committee reduces to solving MNMF. There are three possible ways to solve MNMF:</p>
+<ol class="simple">
+<li><p>Via convex programming: MNMF can be solved with numerical methods for convex quadratic programs, but this is too computationally expensive to consider any further.</p></li>
+<li><p>Via parametric flow algorithms: We show in Section 4 how MNMF can potentially be solved in time <span class="math notranslate nohighlight">\(O(|E|m + m^3)\)</span> using some advanced techniques for parametric flow problems. </p></li>
+<li><p>Via a simple combinatorial heuristic: In Section 5 we consider a heuristic for MNMF called <em>star balancing</em> that starts with any maximally affordable vector and converges to an optimal vector <span class="math notranslate nohighlight">\(w^*\)</span> by following a local weight-balancing rule. It executes in time <span class="math notranslate nohighlight">\(\tilde{O}(|E|m^2)\)</span>, ignoring logarithmic factors.</p></li>
+</ol>
+<p>At first look, the worst-case complexity bound is much better for technique 2 than for technique 3. However, we point out that <a class="reference external" href="https://pdfs.semanticscholar.org/6f44/e6d773cb5093e441f0370b1ec9dd047a5c24.pdf">Babenko et al. (2007)</a> studied a parametric max flow problem closely related to MNMF and performed experimental evaluations of both of these techniques, over real data for an application in revenue optimization as well as over synthetic data. They concluded that the performance of star balancing is actually comparable to that of parametric flow algorithms, except for instances with degenerate graph topologies. In fact, they conjecture that these two techniques have similar complexities whenever the underlying graph has moderately good expansion properties.</p>
+<p>In view of this and of the fact that star balancing is vastly easier to implement than the algorithm proposed in Section 4, we suggest that star balancing be used for NPoS. Still, it is good to know our options, so we give details about both of these techniques in the next two sections.</p>
+</div>
+<div class="section" id="-4.-technique-using-parametric-flow-algorithms">
+<h2>4. Technique using parametric flow algorithms<a class="headerlink" href="#-4.-technique-using-parametric-flow-algorithms" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://link.springer.com/article/10.1007/BF01585561">Hochbaum and Hong (1995, Section 6)</a> consider a network resource allocation problem which generalizes MNMF: given a network with a single source, single sink and edge capacities, maximize the sum of squared flows over the edges reaching the sink, over all maximum flows. They show that this problem is equivalent to a parametric flow problem called <em>lexicographically optimal flow problem</em>, studied by <a class="reference external" href="https://www.researchgate.net/profile/Giorgio_Gallo2/publication/220616489_A_Fast_Parametric_Maximum_Flow_Algorithm_and_Applications/links/02e7e52aec61aa1c05000000/A-Fast-Parametric-Maximum-Flow-Algorithm-and-Applications.pdf">Gallo, Gregoriadis and Tarjan (1989)</a>. In turn, in this last paper the authors show that, even though a parametric flow problem usually requires solving several consecutive max-flow instances, this particular problem can be solved running a single execution of the FIFO preflow-push algorithm proposed by <a class="reference external" href="http://akira.ruc.dk/~keld/teaching/algoritmedesign_f03/Artikler/08/Goldberg88.pdf">Goldberg and Tarjan (1988)</a>. </p>
+<p>Therefore, the complexity of MNMF is bounded by that of Goldberg and Tarjan’s algorithm, which is <span class="math notranslate nohighlight">\(O(n^3)\)</span> for a general <span class="math notranslate nohighlight">\(n\)</span>-node network. However, <a class="reference external" href="https://pdfs.semanticscholar.org/ae81/0ac01e698f7735d93fe55c5f68f4986e3e08.pdf">Ahuja et al. (1994)</a> showed how to optimize several popular network flow algorithms for the case of bipartite networks, where one of the partitions is considerably smaller than the other. If the partition sizes are <span class="math notranslate nohighlight">\(n_1\)</span> and <span class="math notranslate nohighlight">\(n_2\)</span> with <span class="math notranslate nohighlight">\(n_1\ll n_2\)</span>, they implement a <em>two-edge push rule</em> that allows one to “charge” most of the computation weight to the nodes on the small partition, and hence obtain algorithms whose running times depend on <span class="math notranslate nohighlight">\(n_1\)</span> rather than <span class="math notranslate nohighlight">\(n\)</span>. In particular, they show how to adapt Goldberg and Tarjan’s algorithm to run in time <span class="math notranslate nohighlight">\(O(n_1 e +n_1^3)\)</span>, where <span class="math notranslate nohighlight">\(e\)</span> is the number of edges. For our particular instance of MNMF where <span class="math notranslate nohighlight">\(n_1=m\)</span>, we obtain thus an algorithm that runs in time <span class="math notranslate nohighlight">\(O(|E|m+m^3)\)</span>.</p>
+</div>
+<div class="section" id="-5.-the-star-balancing-heuristic">
+<h2>5. The star balancing heuristic<a class="headerlink" href="#-5.-the-star-balancing-heuristic" title="Permalink to this headline">¶</a></h2>
+<p>We now describe the star balancing heuristic for MNMF, which is a combinatorial randomized algorithm that outputs a solution arbitrarily close to optimal with high probability (this is what is known as a polynomial-time approximation scheme, or PRAS). We remark that a different analysis to this algorithm can be found in <a class="reference external" href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.122.7945&amp;rep=rep1&amp;type=pdf">Tarjan et al. (2006)</a>. We show the following.</p>
+<p><strong>Theorem 5.1:</strong> For any fixed parameters <span class="math notranslate nohighlight">\(\varepsilon, \delta&gt;0\)</span>, the star balancing algorithm returns a feasible solution to MNMF whose value has probability at least <span class="math notranslate nohighlight">\((1 - \delta)\)</span> of being within a multiplicative factor at most <span class="math notranslate nohighlight">\((1+\varepsilon)\)</span> from optimal, and runs in time 
+<span class="math notranslate nohighlight">\(O(|E|m^2 \log (m/\varepsilon \delta)).\)</span></p>
+<p><strong>Algorithm 5.2: Star balancing.</strong></p>
+<p>Consider an instance <span class="math notranslate nohighlight">\((N\cup S, E, b)\)</span>. For each nominator <span class="math notranslate nohighlight">\(n\in N\)</span> let <span class="math notranslate nohighlight">\(V_n\subseteq V\)</span> be its set of neighbors.</p>
+<p>Fix constants <span class="math notranslate nohighlight">\(\varepsilon, \delta&gt;0\)</span>. The algorithm starts with an arbitrary maximally affordable vector <span class="math notranslate nohighlight">\(w\)</span>, and improves it iteratively by performing <span class="math notranslate nohighlight">\(r\)</span> rounds, where <span class="math notranslate nohighlight">\(r = O(|N|m^2\log(n/\varepsilon \delta))\)</span> and its precise value will be established later. </p>
+<ol class="simple">
+<li><p>Find any maximally affordable vector <span class="math notranslate nohighlight">\(w\)</span>.</p></li>
+<li><p>Repeat <span class="math notranslate nohighlight">\(r\)</span> times:
+    a. Select a nominator <span class="math notranslate nohighlight">\(n\in N\)</span> uniformly at random.
+    b. Modify the weights of the edges incident to <span class="math notranslate nohighlight">\(n\)</span>, observing the corresponding budget equality and non-negativity constraints, so that the supports of the neighboring validators are as close to each other as possible, i.e. so that
+    <span class="math notranslate nohighlight">\(\forall v,v'\in V_n, \ supp_w(v)&gt;supp_w(v') \rightarrow w_{nv}=0.\)</span></p></li>
+<li><p>Return <span class="math notranslate nohighlight">\(w\)</span>.</p></li>
+</ol>
+<p><strong>Running time:</strong> Consider a round of the algorithm. If nominator <span class="math notranslate nohighlight">\(n\)</span> is selected, the running time of the round is <span class="math notranslate nohighlight">\(O(|V_n|)\)</span><em>(explain why)</em>, assuming that floating-point arithmetic operations take constant time. Hence, the average running time per round is <span class="math notranslate nohighlight">\(\frac{1}{|N|}\sum_{n\in N} |V_n|=\frac{|E|}{|N|}\)</span>. Together with the bound on <span class="math notranslate nohighlight">\(r\)</span>, we obtain a global running time of
+<span class="math notranslate nohighlight">\(O(r|E|/|N|) = O(|E|m^2\log(m/\varepsilon \delta)).\)</span></p>
+<p><strong>Analysis:</strong> For each <span class="math notranslate nohighlight">\(i\leq r\)</span>, let <span class="math notranslate nohighlight">\(w^i\)</span> be the state of weight vector <span class="math notranslate nohighlight">\(w\)</span> at the end of the <span class="math notranslate nohighlight">\(i\)</span>-th round, and let <span class="math notranslate nohighlight">\(w^0\)</span> be the initial vector. Let <span class="math notranslate nohighlight">\(w^*\)</span> be an optimal solution. Let’s start with an easy observation.</p>
+<p><strong>Lemma 5.3:</strong><span class="math notranslate nohighlight">\(val(w^0)\leq m\cdot val(w^*)\)</span>.</p>
+<p><em>Proof:</em> Recall that the objective value to minimize is <span class="math notranslate nohighlight">\(val(w)=\|Bw\|^2_2=\|supp_w\|_2^2\)</span>. As both <span class="math notranslate nohighlight">\(w^0\)</span> and <span class="math notranslate nohighlight">\(w^*\)</span> are maximally affordable, the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm of their support vectors are equal. Hence
+<span class="math notranslate nohighlight">\(val(w^0)=\|Bw^0\|_2^2 \leq \|Bw^0\|_1^2 
+= \|Bw^*\|_1^2 \leq m\cdot \|Bw^*\|_2^2 
+= m\cdot val(w^*).\)</span><span class="math notranslate nohighlight">\(\square\)</span></p>
+<p>Next we show that, in expectation, the progress in objective value perceived in each round is proportional to the difference between the current and optimal values.</p>
+<p><strong>Lemma 5.4:</strong> For each round <span class="math notranslate nohighlight">\(i\in\{1,\cdots,r\}\)</span> that starts with vector <span class="math notranslate nohighlight">\(w^{i-1}\)</span> and ends with vector <span class="math notranslate nohighlight">\(w^i\)</span>, the expected objective value of <span class="math notranslate nohighlight">\(w^i\)</span> is such that 
+<span class="math notranslate nohighlight">\(val(w^{i-1}) - \mathbb{E}[val(w^{i})] \geq \frac{1}{m^2|N|} [val(w^{i-1}) - val(w^*)].\)</span></p>
+<p><em>Proof:</em> We fix a round <span class="math notranslate nohighlight">\(i\)</span>, and for notational convenience we drop the superscripts <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(i-1\)</span> within the scope of this proof. In particular, we let <span class="math notranslate nohighlight">\(w\)</span> be the initial vector, and let <span class="math notranslate nohighlight">\(w'^n\)</span> be the final vector in the case that nominator <span class="math notranslate nohighlight">\(n\)</span> is picked in the round. Clearly, the expected progress in objective value  equals the average progress <span class="math notranslate nohighlight">\(\frac{1}{|N|}\sum_{n\in N} [val(w) - val(w'^n)]\)</span>. To lower bound the latter, it is sufficient to exhibit a different family of weight vectors <span class="math notranslate nohighlight">\(\{w^n\}_{n\in N}\)</span> such that <span class="math notranslate nohighlight">\(val(w'^n)\leq val(w^n)\)</span> for each <span class="math notranslate nohighlight">\(n\)</span>, and then bound the average progress when moving from <span class="math notranslate nohighlight">\(w\)</span> to a member of that family. </p>
+<p>Define the vector <span class="math notranslate nohighlight">\(f:=w-w^*\in\mathbb{R}^E\)</span>. The following is a necessary technical observation whose proof we delay temporarily. </p>
+<p><strong>Lemma 5.5:</strong><span class="math notranslate nohighlight">\(\|f\|^2 \leq m^2 \|Bf\|^2.\)</span></p>
+<p>Consider the decomposition of vector <span class="math notranslate nohighlight">\(f\)</span> as <span class="math notranslate nohighlight">\(f=\sum_{n\in N} f^n\)</span>, where <span class="math notranslate nohighlight">\(f^n\)</span> is the restriction of <span class="math notranslate nohighlight">\(f\)</span> over the edges incident to nominator <span class="math notranslate nohighlight">\(n\)</span>, and define the family of weight vectors <span class="math notranslate nohighlight">\(\{w^n:= w-\frac{1}{m^2} f^n\}_{n\in N}\)</span>. We have <span class="math notranslate nohighlight">\(val(w'^n) \leq val(w^n)\)</span> for all <span class="math notranslate nohighlight">\(n\in N\)</span> as desired, because by construction (step 2.b. of the algorithm), <span class="math notranslate nohighlight">\(w'^n\)</span> is precisely the vector of minimum objective value among all maximally affordable vectors that differ from <span class="math notranslate nohighlight">\(w\)</span> only at the edges incident to <span class="math notranslate nohighlight">\(n\)</span><em>(explain further?)</em>. Hence, it only remains to bound the average progress in objective value with respect to the new family.</p>
+<p>For a fixed <span class="math notranslate nohighlight">\(n\in N\)</span>, we have 
+\begin{align}
+val(w) - val(w^n) &amp;= 124Bw124^2 - 124B(w-\frac{1}{m^2} f^n)124^2 92
+&amp; = \frac{2}{m^2} (Bw)^\intercal Bf^n - \frac{1}{m^4} 124f^n124^2. 
+\end{align}
+Thus, the average progress over all <span class="math notranslate nohighlight">\(n\in N\)</span> is
+\begin{align}
+\frac{1}{|N|}\sum_{n\in N} [val(w)-val(w^n)] 
+&amp;= \frac{2}{m^2|N|}(Bw)^\intercal B(\sum_{n\in N}f^n) - \frac{1}{m^4|N|}\sum_{n\in N}124f^n124^2 92
+&amp;= \frac{1}{m^2|N|}[2(Bw)^\intercal Bf - \frac{1}{m^2} 124f124^2] 92
+&amp;\geq \frac{1}{m^2|N|}[2(Bw)^\intercal Bf - 124Bf124^2] 92
+&amp; = \frac{1}{m^2|N|} (Bf)^\intercal B(2w-f) 92
+&amp;= \frac{1}{m^2|N|} [B(w-w^<em>)]^\intercal B(w+w^</em>) 92
+&amp;= \frac{1}{m^2|N|} [ 124Bw124^2 - 124Bw^<em>124^2] 92
+&amp;= \frac{1}{m^2|N|} [val(w) - val(w^</em>)],
+\end{align}
+where the inequality comes from Lemma 5.5. This completes the proof of Lemma 5.4.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+<p><em>Proof of Lemma 5.5:</em> We interpret <span class="math notranslate nohighlight">\(f\)</span> as a flow over the network <span class="math notranslate nohighlight">\((N\cup S, E)\)</span>. As both <span class="math notranslate nohighlight">\(w\)</span> and <span class="math notranslate nohighlight">\(w^*\)</span> observe budgets constraints with equality, there is flow preservation over all nominators. Let <span class="math notranslate nohighlight">\(S_s, S_t\subseteq S\)</span> be respectively the sets of sources and sinks, i.e. the sets of validators with net excess and net demand. By the flow decomposition theorem, there exists a decomposition <span class="math notranslate nohighlight">\(f=\sum_{v\in S_s} f^v\)</span>  into single-source subflows, where <span class="math notranslate nohighlight">\(f^v\)</span> has <span class="math notranslate nohighlight">\(v\)</span> as its single source. We can assume that this decomposition generates no cycles by adjusting the choice of the optimal solution <span class="math notranslate nohighlight">\(w^*=w-f\)</span>.</p>
+<p>Consider one of these subflows <span class="math notranslate nohighlight">\(f^v\)</span>. Its edge support looks like a directed acyclic graph (DAG) with single root <span class="math notranslate nohighlight">\(v\)</span>. We arrange the edges on this DAG by levels, where the level of an edge is the length of the longest path from <span class="math notranslate nohighlight">\(v\)</span> containing this edge. These levels start at 1 for the edges incident to <span class="math notranslate nohighlight">\(v\)</span>, up to at most <span class="math notranslate nohighlight">\(2m\)</span> because any simple path alternates between a nominator and a validator and there are only <span class="math notranslate nohighlight">\(m\)</span> validators. We now split <span class="math notranslate nohighlight">\(f^v\)</span> by levels, <span class="math notranslate nohighlight">\(f^v=\sum_{i\leq 2m} f^{v,i}\)</span>, where <span class="math notranslate nohighlight">\(f^{v,i}\)</span> is the restriction of <span class="math notranslate nohighlight">\(f^v\)</span> over the edges at level <span class="math notranslate nohighlight">\(i\)</span>. Since the excess in node <span class="math notranslate nohighlight">\(v\)</span> is <span class="math notranslate nohighlight">\(supp_w(v)-supp_{w^*}(v)=(Bf)_v\)</span> and no other node in the DAG has any excess, the sum of edge weights along each level <span class="math notranslate nohighlight">\(i\)</span> is <span class="math notranslate nohighlight">\(\|f^{v,i}\|_1 \leq (Bf)_v\)</span>. Therefore, 
+<span class="math notranslate nohighlight">\(\|f^v\|_2^2 = \sum_{i\leq 2m}\|f^{v,i}\|_2^2 
+\leq \sum_{i\leq 2m} \|f^{v,i}\|_1^2 
+\leq 2m\cdot (Bf)^2_v.\)</span></p>
+<p>Putting things together, we get
+\begin{align}
+124f124^2_2 &amp;= 124\sum_{v\in S_s} f^v124<em>2^2 92 
+&amp;\leq |S_s|\sum</em> 124f^v124<em>2^2 92
+&amp; \leq 2m|S_s|\sum</em> (Bf)_v^2 92 
+&amp;= 2m|S_s|\cdot 124Bf124_2^2, 92
+\end{align}
+where the first inequality is an application of Cauchy-Schwarz. </p>
+<p>In a similar manner, working with sinks instead of sources, we can obtain the bound <span class="math notranslate nohighlight">\(\|f\|^2 \leq 2m|S_t| \cdot \|Bf\|^2\)</span>. Summing up these two bounds and dividing by two, we get
+<span class="math notranslate nohighlight">\(\|f\|^2 \leq m(|S_s|+|S_t|) \cdot \|Bf\|^2 \leq m^2 \|Bf\|^2,\)</span>
+which proves the claim.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+<p>For each round <span class="math notranslate nohighlight">\(i\leq r\)</span>, consider the random variable <span class="math notranslate nohighlight">\(\Delta^i:= val(w^i) - val(w^*)\)</span>, which represents how far from optimal the current solution is in terms of objective value. We now use Lemma 5.4 to show that <span class="math notranslate nohighlight">\(\Delta^i\)</span> decays exponentially fast in expectation. </p>
+<p><strong>Lemma 5.6:</strong> For any <span class="math notranslate nohighlight">\(0&lt;i\leq r\)</span>, the expected value of <span class="math notranslate nohighlight">\(\Delta^i\)</span> observes
+<span class="math notranslate nohighlight">\(\mathbb{E}[\Delta^i] \leq m\cdot (1-\frac{1}{m^2|N|})^i val(w^*).\)</span></p>
+<p><em>Proof:</em> A reformulation of Lemma 5.4 gives <span class="math notranslate nohighlight">\(\mathbb{E}[\Delta^i]\leq (1-\frac{1}{m^2|N|}) \Delta^{i-1}\)</span>. By induction and linearity of expectation, this implies that <span class="math notranslate nohighlight">\(\mathbb{E}[\Delta^i]\leq (1-\frac{1}{m^2|N|})^i \Delta^0\)</span>. Finally, <span class="math notranslate nohighlight">\(\Delta^0 = val(w^0) - val(w^*) &lt; m\cdot val(w^*)\)</span> by Lemma 5.3. 
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+<p>Recall now that we want the value of the output solution <span class="math notranslate nohighlight">\(val(w^r)\)</span> to be within a factor of <span class="math notranslate nohighlight">\((1+\varepsilon)\)</span> from <span class="math notranslate nohighlight">\(val(w^*)\)</span> with probability at least <span class="math notranslate nohighlight">\((1-\delta)\)</span>. The next lemma completes the analysis of the algorithm and the proof of Theorem 5.1.</p>
+<p><strong>Lemma 5.7:</strong> If <span class="math notranslate nohighlight">\(r=\lceil |N|m^2\ln(m/\epsilon \delta) \rceil\)</span>, then <span class="math notranslate nohighlight">\(\mathbb{P}[val(w^r) &gt; (1+\varepsilon)val(w^*)]\leq \delta\)</span>.</p>
+<p><em>Proof:</em> By Lemma 5.6 and the choice of value <span class="math notranslate nohighlight">\(r\)</span>, it follows that 
+<span class="math notranslate nohighlight">\(\mathbb{E}[\Delta^r]\leq \epsilon\cdot \delta\cdot val(w^*).\)</span></p>
+<p>As the variable <span class="math notranslate nohighlight">\(\Delta^r\)</span> is non-negative, we can use Markov’s inequality:
+<span class="math notranslate nohighlight">\(\delta \geq \mathbb{P}[\Delta^r &gt; \frac{\mathbb{E}[\Delta^r]}{\delta}] 
+\geq \mathbb{P}[\Delta^r &gt; \epsilon\cdot val(w^*)] 
+= \mathbb{P}[val(w^r) &gt; (1+\epsilon)\cdot val(w^*)],\)</span>
+which is the claim.
+<span class="math notranslate nohighlight">\(\square\)</span></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../NPoS.html">NPoS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html">Intro to Nominated Proof-of-Stake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1. Overview.html">1. Overview of results for the NPoS election problem</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2. The min-norm max-flow problem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#-1.-notation">1. Notation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#-2.-the-min-norm-max-flow-problem--mnmf-">2. The min-norm max-flow problem (MNMF)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#-3.-overview-of-algorithms-for-mnmf">3. Overview of algorithms for MNMF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#-4.-technique-using-parametric-flow-algorithms">4. Technique using parametric flow algorithms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#-5.-the-star-balancing-heuristic">5. The star balancing heuristic</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="3. The maximin support problem.html">3. The maximin support problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4. Sequential Phragmén’s method.html">4. Sequential Phragmén’s method.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5. A Phragmén-like Heuristic.html">5. A Phragmén-like Heuristic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../NPoS.html">NPoS</a><ul>
+      <li>Previous: <a href="1. Overview.html" title="previous chapter">1. Overview of results for the NPoS election problem</a></li>
+      <li>Next: <a href="3. The maximin support problem.html" title="next chapter">3. The maximin support problem</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/NPoS/2. The min-norm max-flow problem.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

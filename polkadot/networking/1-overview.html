@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Networking for Polkadot &#8212; Web3 Foundation Research  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"extensions": ["tex2jax.js"], "jax": ["input/TeX", "output/HTML-CSS"], "tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "HTML-CSS": {"fonts": ["TeX"]}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Gossiping GRANDPA communication (polite-grandpa)" href="2-polite-grandpa.html" />
+    <link rel="prev" title="Networking" href="../networking.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>====================================================================</p>
+<p><strong>Authors</strong>: Fatemeh Shirazi, Rob Habermeier, Ximin Luo</p>
+<p><strong>Last updated</strong>: 24.09.2019</p>
+<p><strong>Note</strong>: This write-up contains notes from a networking workshop 05.08.19-06.08.19 at Parity Technologies.</p>
+<p>====================================================================</p>
+<div class="section" id="networking-for-polkadot">
+<h1>Networking for Polkadot<a class="headerlink" href="#networking-for-polkadot" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>In Polkadot we need to send a number of messages to a number of entities.
+First let’s recap the different entity types:</p>
+<ul class="simple">
+<li><p>User - create and submit transactions to parachains or the relay chain.</p></li>
+<li><p>Collator - these belong to a specific parachain. They collate parachain
+  transactions into blocks, generate proofs-of-validity and propose them to
+  parachain validators as candidates for the next block. The latter two tasks
+  (relating to validity) are part of Polkadot’s rules, but how collation is
+  done is chosen autonomously by the parachain.</p></li>
+<li><p>Validator - these belong to the relay chain and follow Polkadot’s rules.
+  Distinct subsets of validators are also assigned to specific parachains in
+  order to validate those chains, and then we refer to them as a “parachain
+  validator”. They also collate transactions submitted to the relay chain.</p></li>
+</ul>
+<p>Next, we have several subprotocols between these entities, each serving one
+abstract part of the process of executing transactions:</p>
+<ol class="simple">
+<li><p>Transaction submission - users find the relevant entities to contact for
+   submitting a transaction, and submit them if they are reachable.</p></li>
+<li><p>Parachain collation - parachain collators collect transactions into blocks,
+   the internals of which are outside the scope of Polkadot, chosen by each
+   parachain for themselves.</p></li>
+<li><p>Parachain block attestation: collators also generate additional proof-data
+   and pass this to the parachain validators. The ultimate aim of this is for
+   the parachain validators to efficiently check that every parachain block
+   satisfies the parachain validation function. To generate the proof-data, the
+   collators also need data from the relay chain, sent back by the parachain
+   validators in an earlier stage of this process.</p></li>
+<li><p>Relay-chain protocols: parachain validators attest to the validity of any
+   parachain blocks they have been sent, and distribute these attestations to
+   the other validators. Then all the validators collate attested blocks plus
+   relay chain transactions into a relay chain block, and finalise the block.</p></li>
+<li><p>Inter-chain messaging: after a relay chain block is finalised and this fact
+   is communicated back to the parachains, they check if these blocks contain
+   new messages from other parachains, and retrieve and react them if so.</p></li>
+<li><p>Parachain synchronisation: when a collator becomes connected for the first
+   time or after being disconnected for a long time, it must retrieve and
+   validate the latest state of the parachain, including transactions submitted
+   in the interim and information about the latest state of the relay chain.</p></li>
+<li><p>Relay-chain synchronisation: when validator becomes connected for the first
+   time or after being disconnected for a long time, it must retrieve and
+   validate the latest state of the relay chain, including transactions
+   submitted in the interim.</p></li>
+</ol>
+<p>Details have been abstracted away in the descriptions above, in an effort to
+remain valid even if those details change. At the time of writing, subprotocols
+(3-5) and 7 are, and are expected to remain, the largest and most complex
+components that the Polkadot networking layer needs to be able to serve.</p>
+</div>
+<div class="section" id="message-types">
+<h2>Message types<a class="headerlink" href="#message-types" title="Permalink to this headline">¶</a></h2>
+<p>Below we give a more precise and detailed overview of where and how each type
+of message is sent, according to the subprotocol designs as of 2019 October:</p>
+<p>TODO: convert the below into a nicer-looking table, needs conversion away from
+markdown into something more powerful like reStructuredText.</p>
+<p>Key for notation:</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head">symbol</th>
+<th class="head">meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td>--&gt;</td>
+<td>send, to specific recipient(s)</td>
+</tr>
+<tr class="row-odd"><td>-&gt;&gt;</td>
+<td>send, to non-specific recipients</td>
+</tr>
+<tr class="row-even"><td>&gt;&gt;&gt;</td>
+<td>gossip, to everyone eventually</td>
+</tr>
+<tr class="row-odd"><td>S:</td>
+<td>sender is the source of the message (this includes new messages derived from other data)</td>
+</tr>
+<tr class="row-even"><td>F:</td>
+<td>sender is forwarding the message, received from someone else</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>From users / light clients (subprotocol 1):</p>
+<ul>
+<li>Users -&gt;&gt; Collator:<ul class="simple">
+<li><p>S  : P-transactions</p></li>
+</ul>
+</li>
+<li>Users -&gt;&gt; Validators:<ul class="simple">
+<li><p>S  : R-transactions</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Within a parachain (subprotocol 2):</p>
+<ul>
+<li>Collators &gt;&gt;&gt; Collators:<ul class="simple">
+<li><p>F  : R-blocks</p></li>
+<li><p>F  : P-transactions</p></li>
+<li><p>SF : P-blocks</p></li>
+<li><p>SF : P-block-PoV</p></li>
+</ul>
+</li>
+<li><p>note: gossip protocol details chosen by the parachain, not polkadot</p></li>
+</ul>
+</li>
+<li><p>Relay chain &lt;-&gt; parachain (subprotocol 3)</p>
+<ul>
+<li>PValidators -&gt;&gt; Collator:<ul class="simple">
+<li><p>F  : R-blocks</p></li>
+</ul>
+</li>
+<li>PValidators --&gt; Validators:<ul class="simple">
+<li><p>S  : PoV block, erasure coded pieces</p></li>
+</ul>
+</li>
+<li>Collator -&gt;&gt; PValidators:<ul class="simple">
+<li><p>SF : P-blocks</p></li>
+<li><p>SF : P-block-PoV</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Within the relay chain (subprotocol 3)</p>
+<ul>
+<li>Validators &gt;&gt;&gt; Validators:<ul class="simple">
+<li><p>F  : R-transactions</p></li>
+<li><p>SF : P-block-PoV-attestation-and-other-metadata (“candidate receipt”)</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Within the relay chain (subprotocol 4)</p>
+<ul>
+<li>Validators &gt;&gt;&gt; Validators:<ul class="simple">
+<li><p>SF : R-blocks</p></li>
+<li><p>SF : GRANDPA votes</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Between different parachains (subprotocol 5)</p>
+<ul>
+<li>PValidator-1 -&gt;&gt; Collator-2:<ul class="simple">
+<li><p>F  : ICMP messages</p></li>
+</ul>
+</li>
+<li>Collator-1 -&gt;&gt; Collator-2:<ul class="simple">
+<li><p>S  : ICMP messages</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="message-keys-and-sizes">
+<h2>Message keys and sizes<a class="headerlink" href="#message-keys-and-sizes" title="Permalink to this headline">¶</a></h2>
+<p>The following message types are expected to be arbitrarily-large in size and
+not suitable to be sent directly in a single transmission:</p>
+<ul class="simple">
+<li><p>P-block? (~1 MB)</p></li>
+<li><p>P-block-PoV (~10 MB)</p></li>
+<li><p>R-block (~1 MB)</p></li>
+</ul>
+<p>All other message types are expected to be fairly small (&lt;10 KB) and are
+suitable to be sent in a single transmission (even if the physical network
+performs fragmentation).</p>
+<p>It may be beneficial to break these messages types up into chunks, or at the
+very least they must be sent down a different stream so that they do not block
+smaller message types, which tend to be more urgent.</p>
+<p>The following message types are expected to contain an arbitrary number of
+members and not be keyable to an indexable structure (e.g. blocks in a chain
+can be keyed by height, pieces of an erasure coding can be keyed by x-coord):</p>
+<ul class="simple">
+<li><p>P-transactions</p></li>
+<li><p>R-transactions</p></li>
+<li><p>ICMP messages</p></li>
+</ul>
+<p>In order to deduplicate them while gossiping, a more formal or rigorous
+set-reconciliation protocol will be needed, perhaps involving bloom filters.</p>
+<p>TODO: consider the above issues and propose something concrete</p>
+</div>
+<div class="section" id="peer-discovery">
+<h2>Peer Discovery<a class="headerlink" href="#peer-discovery" title="Permalink to this headline">¶</a></h2>
+<p>TODO: entities from different sources/groups (e.g. parachain vs relay chain)
+might need their own prefixes in the DHT.</p>
+</div>
+<div class="section" id="bounded-gossip-protocols">
+<h2>Bounded Gossip Protocols<a class="headerlink" href="#bounded-gossip-protocols" title="Permalink to this headline">¶</a></h2>
+<p>We treat the goals of our networking protocols as black-boxes. While gossip may not be the most efficient way to implement many of them, it will fulfill the black-box functionality.</p>
+<p>In some cases, we will be able to gossip only among a known set of nodes, e.g., validators.
+In the case that we are not, the design of the gossip protocol will differ from a classical gossip protocol substantially.
+For these cases, we introduce the notion of a <em>bounded</em> gossip protocol.</p>
+<p>We have the following requirements for nodes:</p>
+<ol class="simple">
+<li><p>Nodes never have to consider an unbounded number of gossip messages. The gossip messages they are willing to consider should be determined by some state sent to peers.</p></li>
+<li><p>The work a node has to do to figure out if one of its peers will accept a message should be relatively small</p></li>
+</ol>
+<p>A bounded gossip system is one where nodes have a filtration mechanism for incoming packets that can be communicated to peers.</p>
+<p>Nodes maintain a “propagation pool” of messages. When a node would like to circulate a message, it puts it into the pool until marked as expired. Every message is associated with a <em>topic</em>. Topics are used to group messages or encode metadata about them. They are not sent over the wire, but are rather determined by the contents of the message.</p>
+<p>We define a node’s peer as any other node directly connected by an edge in the gossip graph, i.e. a node with which the node has a direct connection. The node’s peers may vary over time.</p>
+<p>For every peer <span class="math notranslate nohighlight">\(k\)</span>, the node maintains a <em>filtration criterion</em><span class="math notranslate nohighlight">\(allowed_k(m) \rightarrow bool\)</span></p>
+<p>Whenever a new peer <span class="math notranslate nohighlight">\(k\)</span> connects, all messages from the pool (filtered according to <span class="math notranslate nohighlight">\(allowed_k\)</span> ) are sent to that peer.</p>
+<p>Whenever a peer places a new message <span class="math notranslate nohighlight">\(m\)</span> in its propagation pool, it sends this message to all peers <span class="math notranslate nohighlight">\(k\)</span> where <span class="math notranslate nohighlight">\(allowed_k(m) \rightarrow true\)</span>.</p>
+<p>Nodes can additionally issue a command <span class="math notranslate nohighlight">\(propagateTopic(k,t)\)</span> to propagate all messages with topic <span class="math notranslate nohighlight">\(t\)</span> to <span class="math notranslate nohighlight">\(k\)</span> which pass <span class="math notranslate nohighlight">\(allowed_k\)</span>.</p>
+<p>Multiple bounded-gossip protocols can be safely joined by a short-circuiting binary OR over each of the <span class="math notranslate nohighlight">\(allowed_k\)</span> functions, provided that they do not overlap in the topics that they claim.</p>
+<p>Note that while we cannot stop peers from sending us disallowed messages, such behavior can be detected, considered impolite, and will lead to eventual disconnection from the peer.</p>
+</div>
+<div class="section" id="main-subprotocols">
+<h2>Main subprotocols<a class="headerlink" href="#main-subprotocols" title="Permalink to this headline">¶</a></h2>
+<p>The are three main networking protocols we require for Polkadot as follows:</p>
+<p>i) GRANDPA gossiping</p>
+<p>ii) Parachain networking, which includes: gossiping parachain blocks (attestation gossip) and sending/ receiving erasure coded pieces</p>
+<p>iii) Interchain message-passing</p>
+<p>Next, the schemes will be described in detail.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../networking.html">Networking</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Networking for Polkadot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#message-types">Message types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#message-keys-and-sizes">Message keys and sizes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#peer-discovery">Peer Discovery</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bounded-gossip-protocols">Bounded Gossip Protocols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main-subprotocols">Main subprotocols</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="2-polite-grandpa.html">Gossiping GRANDPA communication (polite-grandpa)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="3-attestation.html">Parachain networking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-icmp.html">ICMP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-icmp.html#interchain-messaging-routing-overview">Interchain Messaging Routing Overview</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../polkadot.html">Polkadot</a><ul>
+  <li><a href="../networking.html">Networking</a><ul>
+      <li>Previous: <a href="../networking.html" title="previous chapter">Networking</a></li>
+      <li>Next: <a href="2-polite-grandpa.html" title="next chapter">Gossiping GRANDPA communication (polite-grandpa)</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Web3 Foundation.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/polkadot/networking/1-overview.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
