@@ -4,8 +4,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Slashing mechanisms &#8212; Web3 Foundation Research  documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Slashing mechanisms &#8212; Research at W3F</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -19,23 +61,380 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Slashing across eras with NPoS" href="npos.html" />
     <link rel="prev" title="Slashing" href="../slashing.html" />
+  
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body dir=ltr
+        data-md-color-primary=deep-orange data-md-color-accent=deep-orange>
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448"
+           id="__github">
+        <path fill="currentColor"
+              d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"></path>
+      </svg>
+    </defs>
+  </svg>
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#polkadot/slashing/amounts" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="Research at W3F"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/w3f_logo.svg" height="26"
+                   alt="Research at W3F logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Research at W3F</span>
+          <span class="md-header-nav__topic"> Slashing mechanisms </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">Research at W3F</a></li>
+          <li class="md-tabs__item"><a href="../../polkadot.html" class="md-tabs__link">Polkadot</a></li>
+          <li class="md-tabs__item"><a href="../slashing.html" class="md-tabs__link">Slashing</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="Research at W3F" class="md-nav__button md-logo">
+      
+        <img src="../../_static/w3f_logo.svg" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="Research at W3F">Research at W3F</a>
+  </label>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../polkadot.html" class="md-nav__link">Polkadot</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">Polkadot</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Availability_and_Validity.html" class="md-nav__link">Availability and Validity</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../GRANDPA.html" class="md-nav__link">GRANDPA</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../ICMP.html" class="md-nav__link">ICMP Scheme</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Parachain-Allocation.html" class="md-nav__link">Parachain Allocation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Polkadot-Runtime-Environment.html" class="md-nav__link">Polkadot Runtime Environment Specification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Token Economics.html" class="md-nav__link">Token Economics</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../BABE.html" class="md-nav__link">BABE</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../NPoS.html" class="md-nav__link">NPoS</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../keys.html" class="md-nav__link">Keys</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../networking.html" class="md-nav__link">Networking</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../slashing.html" class="md-nav__link">Slashing</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Slashing mechanisms </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Slashing mechanisms</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-slashing-amounts--page-root" class="md-nav__link">Slashing mechanisms</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#general-principles" class="md-nav__link">General principles</a>
+        </li>
+        <li class="md-nav__item"><a href="#network-protocol" class="md-nav__link">Network Protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#unresponsiveness" class="md-nav__link">Unresponsiveness</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#grandpa" class="md-nav__link">Grandpa</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#unjustified-vote" class="md-nav__link">Unjustified vote</a>
+        </li>
+        <li class="md-nav__item"><a href="#rejecting-set-of-votes" class="md-nav__link">Rejecting set of votes</a>
+        </li>
+        <li class="md-nav__item"><a href="#equivocation---concurrent-cases-of-unjustified-vote" class="md-nav__link">Equivocation / concurrent cases of unjustified vote</a>
+        </li>
+        <li class="md-nav__item"><a href="#invalid-vote" class="md-nav__link">Invalid vote</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#babe" class="md-nav__link">Babe</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#babe-equivocation" class="md-nav__link">Babe Equivocation</a>
+        </li>
+        <li class="md-nav__item"><a href="#invalid-block" class="md-nav__link">Invalid Block</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#parachain-validity-availability-protocol" class="md-nav__link">Parachain validity-availability protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#invalid-validity-statement" class="md-nav__link">Invalid validity statement</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/slashing/amounts.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav><ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#general-principles" class="md-nav__link">General principles</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#network-protocol" class="md-nav__link">Network Protocol</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#unresponsiveness" class="md-nav__link">Unresponsiveness</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#grandpa" class="md-nav__link">Grandpa</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#unjustified-vote" class="md-nav__link">Unjustified vote</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#rejecting-set-of-votes" class="md-nav__link">Rejecting set of votes</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#equivocation---concurrent-cases-of-unjustified-vote" class="md-nav__link">Equivocation / concurrent cases of unjustified vote</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#invalid-vote" class="md-nav__link">Invalid vote</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#babe" class="md-nav__link">Babe</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#babe-equivocation" class="md-nav__link">Babe Equivocation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#invalid-block" class="md-nav__link">Invalid Block</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#parachain-validity-availability-protocol" class="md-nav__link">Parachain validity-availability protocol</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#invalid-validity-statement" class="md-nav__link">Invalid validity statement</a>
+      
+    </li></ul>
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="npos.html" class="md-nav__link">Slashing across eras with NPoS</a>
+      
+    </li></ul>
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../research_team_members.html" class="md-nav__link">Research Team Members</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-slashing-amounts--page-root" class="md-nav__link">Slashing mechanisms</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#general-principles" class="md-nav__link">General principles</a>
+        </li>
+        <li class="md-nav__item"><a href="#network-protocol" class="md-nav__link">Network Protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#unresponsiveness" class="md-nav__link">Unresponsiveness</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#grandpa" class="md-nav__link">Grandpa</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#unjustified-vote" class="md-nav__link">Unjustified vote</a>
+        </li>
+        <li class="md-nav__item"><a href="#rejecting-set-of-votes" class="md-nav__link">Rejecting set of votes</a>
+        </li>
+        <li class="md-nav__item"><a href="#equivocation---concurrent-cases-of-unjustified-vote" class="md-nav__link">Equivocation / concurrent cases of unjustified vote</a>
+        </li>
+        <li class="md-nav__item"><a href="#invalid-vote" class="md-nav__link">Invalid vote</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#babe" class="md-nav__link">Babe</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#babe-equivocation" class="md-nav__link">Babe Equivocation</a>
+        </li>
+        <li class="md-nav__item"><a href="#invalid-block" class="md-nav__link">Invalid Block</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#parachain-validity-availability-protocol" class="md-nav__link">Parachain validity-availability protocol</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#invalid-validity-statement" class="md-nav__link">Invalid validity statement</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/slashing/amounts.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
             
-  <div class="section" id="slashing-mechanisms">
-<h1>Slashing mechanisms<a class="headerlink" href="#slashing-mechanisms" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="general-principles">
-<h2>General principles<a class="headerlink" href="#general-principles" title="Permalink to this headline">¶</a></h2>
+  
+<h1 id="polkadot-slashing-amounts--page-root">Slashing mechanisms<a class="headerlink" href="#polkadot-slashing-amounts--page-root" title="Permalink to this headline">¶</a></h1>
+
+<h2 id="general-principles">General principles<a class="headerlink" href="#general-principles" title="Permalink to this headline">¶</a></h2>
 <p><strong>Security threat levels.</strong> The yearly interest rate of a validator pool is between 10% and 20%. So, slashing 1% of their stake is already a strong punishment (worth many weeks of work). With this in mind, we define the following security threat levels and corresponding punishments. Besides the security risk, here we also consider factors like likelihood of the misconduct happening in good faith, level of coordination/correlation among validators, and computational costs for the system.</p>
 <ul class="simple">
 <li><p>Level 1. Misconducts that are likely to happen eventually to most validators, such as isolated cases of unresponsiveness. We slash up to 0.1% of the stake in the validator slot, or exercise non-slashing punishments only like kicking out the validator. </p></li>
@@ -82,11 +481,11 @@
 <li><p>For misconducts of levels 3 and 4 that admit a proof of misconduct, we do as above, except that we only allow for <em>validators</em> to submit reports, and we require that the reward be shared among all nominators in the corresponding validator slot. We do this to dilute the reward and not let a single actor claim it, to avoid compounding wealth to a few. There may be several culprits and several reporters involved in the same mechanism (e.g. for rejecting set of votes in Grandpa); in any case, the total rewards are no more than 10% of the total slashings, and also no more than 100% of the slashed validators’ self-stake. This last bound is to discourage an attack where a validator fails on purpose to have a personal gain at the expense of his nominators (e.g. if the same organization runs a validator A with 1% of self-stake and a validator B with 100% of sef-stake, it may be tempted to make B report A, if the reward is higher than A’s self-stake). Finally, each validator reporter gets a reward no more than 20% of her own stake (an amount equal to her yearly interest rate), as this should be a large enough incentive.</p></li>
 <li><p>For level 4 misconducts that require voting, we need <strong>fishermen</strong>. A fisherman is any staked actor which is running checks on the system anonymously, and at some point posts a <strong>report</strong> as a transaction, with some details of a suspected misconduct, but without proof. In this transaction, it also bonds some stake – the “bait”. The report starts an <strong>inspection phase</strong> which engages some of the validators, and which may or may not lead to a full blown <strong>voting phase</strong> by all validators. If there is a vote and the voting decision confirms the fisherman report, the latter gets rewarded a large amount of DOTs. Otherwise, the fisherman loses all of its bait. This last possibility discourages spamming by fisherman reports, which would lead to a lot of wasted resources. On the other hand, the reward should be large enough so that it is worth the inherent risk and the cost of constantly running checks on the system. There can be several fishermen reporting the same misconduct, and we weigh the seriousness of the threat by the total amount of bait. The higher this value, the more resources are assigned in the inspection phase. The reward is shared by all the fishermen that provided reports early on, before the start of the voting phase; thus, if a single fisherman detects a misconduct, it is in its interest to convince other fishermen or validators to join in asap to inspect it. We pay fishermen: no more than 10% of all the slashings, and no more than 100% of the slashed validators’ self-stake; and we pay each fisherman no more than 10 times its own bait.</p></li>
 </ul>
-</div>
-<div class="section" id="network-protocol">
-<h2>Network Protocol<a class="headerlink" href="#network-protocol" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="unresponsiveness">
-<h3>Unresponsiveness<a class="headerlink" href="#unresponsiveness" title="Permalink to this headline">¶</a></h3>
+
+
+<h2 id="network-protocol">Network Protocol<a class="headerlink" href="#network-protocol" title="Permalink to this headline">¶</a></h2>
+
+<h3 id="unresponsiveness">Unresponsiveness<a class="headerlink" href="#unresponsiveness" title="Permalink to this headline">¶</a></h3>
 <p>We propose two different methods to detect unresponsiveness.</p>
 <p><strong>Method 1.</strong> Validators have an “I’m online” heartbeat, which is a signed message submitted on-chain every session. If a validator takes too long to send this message, we can mark them as inactive. </p>
 <p>The advantage of this method is that we can detect unresponsive validators very quickly, and act upon this information, for instance by ending the current era early. A disadvantage is that it only detects validators that are accidentally off-line, and not those who are purposely unresponsive as part of an attack on the system.</p>
@@ -105,18 +504,18 @@
 <p>We use the following slashing mechanism, which has no reporters. If at the end of an era we find that <span class="math notranslate nohighlight">\(k\)</span> out of <span class="math notranslate nohighlight">\(n\)</span> validators are unresponsive, then we slash a fraction</p>
 <p><span class="math notranslate nohighlight">\(0.05\cdot \min\{\frac{3(k-1)}{n}, 1\}\)</span></p>
 <p>from each one of them. Notice that this fraction is zero for isolated cases, less than one third of a percent for two concurrent cases (assuming <span class="math notranslate nohighlight">\(n\geq 50\)</span>), growing to 5% for the critical case when around 1/3 of all validators are unresponsive (we don’t want to punish too harshly for concurrent unresponsiveness, as it could potentially happen in good faith. The parameter of 5% can be adjusted). We consider it a misconduct of level 2 if the slashing fraction is at most 1%, and of level 3 otherwise. However, we do not immediately remove unresponsive validators from the current era, as removing a validator is equivalent to marking it as unresponsive (so the cure would not be better than the disease), and because it is algorithmically simpler to just check at the end of each era. </p>
-</div>
-</div>
-<div class="section" id="grandpa">
-<h2>Grandpa<a class="headerlink" href="#grandpa" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="unjustified-vote">
-<h3>Unjustified vote<a class="headerlink" href="#unjustified-vote" title="Permalink to this headline">¶</a></h3>
+
+
+
+<h2 id="grandpa">Grandpa<a class="headerlink" href="#grandpa" title="Permalink to this headline">¶</a></h2>
+
+<h3 id="unjustified-vote">Unjustified vote<a class="headerlink" href="#unjustified-vote" title="Permalink to this headline">¶</a></h3>
 <p>Relative to a block <span class="math notranslate nohighlight">\(B\)</span> that was finalized in Grandpa round <span class="math notranslate nohighlight">\(r_B\)</span>, an unjustified vote is either a pre-vote or a pre-commit signed by a validator <span class="math notranslate nohighlight">\(v\)</span> in some round <span class="math notranslate nohighlight">\(r_v&gt;r_B\)</span>, for a chain that does not contain <span class="math notranslate nohighlight">\(B\)</span>. Simply put, it means voting for a chain that is incompatible with the current chain of finalized blocks. </p>
 <p>It follows from Grandpa paper that this can only occur if either the validator <span class="math notranslate nohighlight">\(v\)</span> is not following the standard protocol (level 3 misconduct), or <span class="math notranslate nohighlight">\(v\)</span> observed a <em>rejecting set of votes</em> (defined further below) for <span class="math notranslate nohighlight">\(B\)</span> in a prior round. The detection mechanism thus works as follows. It starts when another validator <span class="math notranslate nohighlight">\(v'\)</span> submits a transaction <span class="math notranslate nohighlight">\(T\)</span> containing a reference to block <span class="math notranslate nohighlight">\(B\)</span> with a proof that it is finalized, and the unjustified vote (or collection or votes in case of concurrence) relative to <span class="math notranslate nohighlight">\(B\)</span>. This transaction raises a public time-bound challenge. If the challenge goes unanswered for some time (to be defined), we slash 10% from the signer(s) of the unjustified vote(s), and reward <span class="math notranslate nohighlight">\(v'\)</span> 10% of the slashings (as the signer(s) should be in capacity to answer the challenge if they are honest). Otherwise, any validator <span class="math notranslate nohighlight">\(v''\)</span> can answer the challenge by, in turn, starting a detection mechanism for a <em>rejecting set of votes</em> (defined below). In that case, we finalize the current mechanism without penalizing anybody, and we keep a register of all the validators that have raised or answered challenges so far (i.e. <span class="math notranslate nohighlight">\(v'\)</span> and <span class="math notranslate nohighlight">\(v''\)</span>), as they will all be rewarded when the culprits are eventually found.</p>
 <p>As mentioned before, we slash 10% if a single validator is guilty of an unjustified vote. We will say more about slashing concurrent cases of unjustified votes by several validators further below. We ignore any further unjustified votes by the same validator in the same era (we will ignore all messages from that validator in the remainder of the era anyway).</p>
-</div>
-<div class="section" id="rejecting-set-of-votes">
-<h3>Rejecting set of votes<a class="headerlink" href="#rejecting-set-of-votes" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="rejecting-set-of-votes">Rejecting set of votes<a class="headerlink" href="#rejecting-set-of-votes" title="Permalink to this headline">¶</a></h3>
 <p><em>Context: Recall from the Grandpa paper that a set <span class="math notranslate nohighlight">\(S\)</span> of votes has supermajority for a block <span class="math notranslate nohighlight">\(B\)</span> if there are <span class="math notranslate nohighlight">\(&gt;2/3\)</span> validators who vote in <span class="math notranslate nohighlight">\(S\)</span> for chains that contain <span class="math notranslate nohighlight">\(B\)</span>. Similarly, we say that it is impossible for set <span class="math notranslate nohighlight">\(S\)</span> to have supermajority for block <span class="math notranslate nohighlight">\(B\)</span> if there are <span class="math notranslate nohighlight">\(&gt;2/3\)</span> validators who vote in <span class="math notranslate nohighlight">\(S\)</span> for chains that don’t contain <span class="math notranslate nohighlight">\(B\)</span>. It follows that a set <span class="math notranslate nohighlight">\(S\)</span> has both of these properties simultaneously only when there are <span class="math notranslate nohighlight">\(&gt;1/3\)</span> validators that equivocate in <span class="math notranslate nohighlight">\(S\)</span>. Recall also that if block <span class="math notranslate nohighlight">\(B\)</span> is finalized in a round <span class="math notranslate nohighlight">\(r_B\)</span>, then (assuming honest behaviors) there must be a set <span class="math notranslate nohighlight">\(V_B\)</span> of pre-votes and a set <span class="math notranslate nohighlight">\(C_B\)</span> of pre-commits on that round, so that both sets have supermajority for <span class="math notranslate nohighlight">\(B\)</span>. Finally, a validator <span class="math notranslate nohighlight">\(v\)</span> considers block <span class="math notranslate nohighlight">\(B\)</span> as finalized iff <span class="math notranslate nohighlight">\(v\)</span> can see such a set <span class="math notranslate nohighlight">\(C_B\)</span> of pre-commits, even if it does not yet see sufficiently many pre-votes.</em></p>
 <p>Relative to a block <span class="math notranslate nohighlight">\(B\)</span> finalized in round <span class="math notranslate nohighlight">\(r_B\)</span>, a rejecting set of votes is a set <span class="math notranslate nohighlight">\(S\)</span> of votes of the same type (either pre-votes or pre-commits) and on the same round <span class="math notranslate nohighlight">\(r_S\geq r_B\)</span>, for which it is impossible to have a supermajority for <span class="math notranslate nohighlight">\(B\)</span>.</p>
 <p>Such a set implies the collusion of <span class="math notranslate nohighlight">\(&gt;1/3\)</span> of validators, and is one of the most dangerous attacks on the system as it can lead to finalizing blocks in different chains (see Section 4.1 in Grandpa paper). We consider it of level 4 and slash 100% from all culprits. </p>
@@ -126,9 +525,9 @@
 <p>Finally, if <span class="math notranslate nohighlight">\(r_s&gt;r_B\)</span>, transaction <span class="math notranslate nohighlight">\(T\)</span> raises a time-bound challenge which can be answered by any validator, and where a valid answer consists of a new transaction <span class="math notranslate nohighlight">\(T'\)</span> containing a) set <span class="math notranslate nohighlight">\(C_B\)</span> and a reference to block <span class="math notranslate nohighlight">\(B\)</span>, b) a set <span class="math notranslate nohighlight">\(S'\)</span> of votes of the same type (either pre-votes or pre-commits) and on the same round <span class="math notranslate nohighlight">\(r_{S'}\)</span> for some <span class="math notranslate nohighlight">\(r_B\leq r_{S'}&lt;r_S\)</span> for which it is impossible to have a supermajority for <span class="math notranslate nohighlight">\(B\)</span>, and c) a reference to <span class="math notranslate nohighlight">\(T\)</span>. If a validator <span class="math notranslate nohighlight">\(v'\)</span> provides such a transaction <span class="math notranslate nohighlight">\(T'\)</span>, we remark that <span class="math notranslate nohighlight">\(S'\)</span> is a rejecting set of votes relative to <span class="math notranslate nohighlight">\(B\)</span>, so the whole detection mechanism performs a new iteration. As the value of <span class="math notranslate nohighlight">\((r_s-r_B)\)</span> decreases with every iteration, the mechanism must eventually stop. In contrast, if nobody answers the current challenge within a specified period of time, we slash 100% from all validators that voted in set <span class="math notranslate nohighlight">\(S\)</span>, because each one of them should be able to answer the challenge if they are honest (proved in Lemma 4.2 of Grandpa paper).</p>
 <p>Throughout the iterations, we only need to keep track of what the current challenge is, and the list of validators who have raised or answered previous challenges, as we will reward them all at the end.</p>
 <p><em>(Q. What to do in the case that such a chain of challenges eventually targets a group of validators from a previous era, who are not currently validators (nor online) anymore?)</em></p>
-</div>
-<div class="section" id="equivocation---concurrent-cases-of-unjustified-vote">
-<h3>Equivocation / concurrent cases of unjustified vote<a class="headerlink" href="#equivocation---concurrent-cases-of-unjustified-vote" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="equivocation---concurrent-cases-of-unjustified-vote">Equivocation / concurrent cases of unjustified vote<a class="headerlink" href="#equivocation---concurrent-cases-of-unjustified-vote" title="Permalink to this headline">¶</a></h3>
 <p>An equivocation is defined as a validator signing two or more votes in the same round, for the same vote type (either pre-vote or pre-commit). It admits a short proof of misconduct consisting of two signed votes. Notice that a set of votes proving multiple equivocations can be submitted in a single transaction.</p>
 <p>A validator can equivocate by mistake (for an isolated case) if the nodes are run in several computers and there is imperfect coordination between them, so we consider it a level 2 misconduct. We ignore any additional equivocations by the same validator in the same era.</p>
 <p>In every era, we will keep a counter <span class="math notranslate nohighlight">\(k\)</span> on the number of validators that committed Grandpa equivocations or unjustified votes so far. We keep a single counter for both misconducts because an adversary might use a combination of both to attack the finality tool, so several concurrent cases of both misconducts should be considered as a single collusion attack. We now describe a slashing mechanism that depends on this counter, and which is used for isolated and concurrent cases of equivocation, and also for concurrent cases of unjustified vote. In the last case, this slashing occurs in addition to the slashing described in the corresponding section above.</p>
@@ -137,146 +536,98 @@
 \[\min\{(3k/n)^2, 1\},\]</div>
 <p>where <span class="math notranslate nohighlight">\(n\)</span> is the number of validators. Notice that this amount starts small, under 0.4% for an isolated case (for <span class="math notranslate nohighlight">\(n\geq 50\)</span>), and rises quadratically to 100% when <span class="math notranslate nohighlight">\(k\)</span> approaches the critical value <span class="math notranslate nohighlight">\(n/3\)</span>. Once the slashed fraction goes above 1%, we consider it of level 3.</p>
 <p>The rewards given to the reporters do not grow with <span class="math notranslate nohighlight">\(k\)</span>. Namely, they receive 10% of what would have been the slashing for <span class="math notranslate nohighlight">\(k=1\)</span> (times the number of reported validators). This ensures that a reporter has no incentive to withold information in wait for the counter <span class="math notranslate nohighlight">\(k\)</span> to go higher. Also, for operational convenience we do not retro-actively slash culprits as new cases of concurrence arrive. This could also give an economical incentive to a member of a colluding party to report themselves early on, to be slashed less.</p>
-</div>
-<div class="section" id="invalid-vote">
-<h3>Invalid vote<a class="headerlink" href="#invalid-vote" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="invalid-vote">Invalid vote<a class="headerlink" href="#invalid-vote" title="Permalink to this headline">¶</a></h3>
 <p><em>Context: in our current protocol for validating parachain blobs, we make a distinction between <strong>minimally validated</strong> blobs (having, say, one or two validity statements) and <strong>fully validated</strong> blobs (having a certain minimum number of votes, say five, where this minimum increases if there are fishermen reports about that blob). We allow Babe block producers to include references of minimimally validated blobs, but in contrast we only allow Grandpa voters to vote for relay chain blocks that contain only fully validated blobs (we call such a block a validated block).</em></p>
 <p>An invalid vote is defined as a vote (either pre-vote or pre-commit) for a chain that contains a non-validated block, i.e. a block which contains a reference to a parachain blob that is not fully validated.</p>
 <p>For the time being we propose not to slash this misconduct, because it does not lead to a dangerous attack, assuming an honest majority of Grandpa voters, and because there does not seem to be an efficient detection mechanism. </p>
 <p>As a safeguard, we only advise adjusting the Grandpa protocol so that each voter keeps track of the validity status of all relay chain blocks (and of all parachain blobs), and that by default a voter A ignores any vote from a voter B for a chain which, from the point of view of A, contains non-validated blocks. Similarly, a Grandpa voter should ignore any vote that is either currently being challenged or found to be faulty, by a procedure of unjustified vote or rejecting set of votes (see sections above).</p>
-</div>
-</div>
-<div class="section" id="babe">
-<h2>Babe<a class="headerlink" href="#babe" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="babe-equivocation">
-<h3>Babe Equivocation<a class="headerlink" href="#babe-equivocation" title="Permalink to this headline">¶</a></h3>
+
+
+
+<h2 id="babe">Babe<a class="headerlink" href="#babe" title="Permalink to this headline">¶</a></h2>
+
+<h3 id="babe-equivocation">Babe Equivocation<a class="headerlink" href="#babe-equivocation" title="Permalink to this headline">¶</a></h3>
 <p>An equivocation in Babe corresponds to a block producer producing two or more relay chain blocks in the same time slot. It admits a short proof of misconduct containing references to both blocks. It can occur in good faith if a validator node is run in several computers and there is bad coordination among them, so we consider it of level 2. We ignore additional equivocations by the same validator in the same era.</p>
 <p>Equivocations do not pose a threat to Babe, unless there is a long sequence of colluding block producers who grow two branches of a fork simultaneously, but such an attack is highly unlikely to succeed as long as the colluding party is a minority. For this reason, we propose to disregard concurrent equivocations in the same era. Alternatively, we could keep a counter <span class="math notranslate nohighlight">\(k\)</span> on the number of block producers that have equivocated so far in the current era, and slash new culprits a fraction of their stake equal to </p>
 <div class="math notranslate nohighlight">
 \[\min\{(3k/n)^2, 1\},\]</div>
 <p>where <span class="math notranslate nohighlight">\(n\)</span> is the number of validators. Once this fraction is above 1%, we consider it of level 3. We do not retro-actively adjust the slashings as new cases arrive, and we do not make the reporters’ rewards grow with <span class="math notranslate nohighlight">\(k\)</span> (we pay them 10% of what would be the slashing if <span class="math notranslate nohighlight">\(k=1\)</span>.)</p>
-</div>
-<div class="section" id="invalid-block">
-<h3>Invalid Block<a class="headerlink" href="#invalid-block" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="invalid-block">Invalid Block<a class="headerlink" href="#invalid-block" title="Permalink to this headline">¶</a></h3>
 <p>An invalid block can occur, for instance, if the block producer adds a reference to a parachain blob which has no validity statements. Invalid blocks do not pose a threat to Babe, unless there is a large fraction of block producers who decide to build on top of an invalid block, but this attack is unlikely to succeed. For this reason, we suggest not to slash this misconduct.</p>
 <p>If we eventually decide to have a slashing mechanism, we could either have all validators vote on the validity of the block. Alternatively, a block producer can include the whole invalid block in a new block, as proof of misconduct. </p>
-</div>
-</div>
-<div class="section" id="parachain-validity-availability-protocol">
-<h2>Parachain validity-availability protocol<a class="headerlink" href="#parachain-validity-availability-protocol" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="invalid-validity-statement">
-<h3>Invalid validity statement<a class="headerlink" href="#invalid-validity-statement" title="Permalink to this headline">¶</a></h3>
+
+
+
+<h2 id="parachain-validity-availability-protocol">Parachain validity-availability protocol<a class="headerlink" href="#parachain-validity-availability-protocol" title="Permalink to this headline">¶</a></h2>
+
+<h3 id="invalid-validity-statement">Invalid validity statement<a class="headerlink" href="#invalid-validity-statement" title="Permalink to this headline">¶</a></h3>
 <p>This misconduct is defined as a parachain validator who issues a validity statement for an invalid blob. This misconduct poses the highest security risk, especially in case of concurrence, and unfortunately it does not admit a proof of misconduct, so we are forced to deal with it via a voting mechanism. We consider it a level 4 misconduct and slash 100%.</p>
 <p>The detection mechanism is as follows. Inspection phase: in the current standard protocol, Babe block producers will add references to <em>minimally validated</em> blobs (having one validity statement). After a blob has been added to a relay chain block, the protocol will randomly select some extra validators to check the blob and provide more validity statements, until there are sufficiently many statements to make the blob <em>fully validated</em>. If one or more fishermen submit reports with a reference to certain blob, the protocol automatically adjusts, making the bar to get fully validated higher and selecting more validators to inspect that blob. These validators get paid for issuing these extra validity statements, as these are payable actions, but only the validators selected by the protocol have the right to issue them. On the other hand, fishermen are checking for the validity of blobs all the time.</p>
 <p>Voting phase: the voting phase starts as soon as there is at least one statement of validity and one statement of invalidity issued by validators for the same blob. This can happen before or after the blob is referred to in a Babe block (if before, the inspection phase is skipped; and in any case, fishermen reports are ignored once there is a statment of invalidity). When a validator sees a statement of validity and a statement of invalidity for a blob, she inspects it as well and issues a statement, so eventually most of the relay chain validators will vote (and will get paid for it as payable actions). We count the number of statement of validity, and the number of statements of invalidity: as soon as one of these numbers is <span class="math notranslate nohighlight">\(&gt;n/3\)</span> (where <span class="math notranslate nohighlight">\(n\)</span> is the number of validators), and the other is not, we take the plurality vote as official. If it is decided that the blob is invalid, we slash all validators that stated otherwise and we reward all fishermen; if it is decided that the blob is valid, we slash fishermen and all validators that stated otherwise. </p>
 <p>If it happens that both the number of statements of validity and the number of statements of invalidity are <span class="math notranslate nohighlight">\(&gt;n/3\)</span>, we unfortunately don’t know who the culprits are (this should never happen). In this case we slash no-one (and reimburse any slashing done), and consider the blob as invalid to err on the safe side.</p>
-</div>
-</div>
-</div>
 
 
-          </div>
+
+
+
+          </article>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../slashing.html">Slashing</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Slashing mechanisms</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#general-principles">General principles</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#network-protocol">Network Protocol</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#unresponsiveness">Unresponsiveness</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#grandpa">Grandpa</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#unjustified-vote">Unjustified vote</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#rejecting-set-of-votes">Rejecting set of votes</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#equivocation---concurrent-cases-of-unjustified-vote">Equivocation / concurrent cases of unjustified vote</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#invalid-vote">Invalid vote</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#babe">Babe</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#babe-equivocation">Babe Equivocation</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#invalid-block">Invalid Block</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#parachain-validity-availability-protocol">Parachain validity-availability protocol</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#invalid-validity-statement">Invalid validity statement</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="npos.html">Slashing across eras with NPoS</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../../polkadot.html">Polkadot</a><ul>
-  <li><a href="../slashing.html">Slashing</a><ul>
-      <li>Previous: <a href="../slashing.html" title="previous chapter">Slashing</a></li>
-      <li>Next: <a href="npos.html" title="next chapter">Slashing across eras with NPoS</a></li>
-  </ul></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+    </main>
+    <footer class="md-footer">
+      <div class="md-footer-nav">
+        <nav class="md-footer-nav__inner md-grid">
+            
+              <a href="../slashing.html" title="Material"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+                 rel="prev">
+                <div class="md-flex__cell md-flex__cell--shrink">
+                  <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+                </div>
+                <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                  <span class="md-flex__ellipsis">
+                    <span
+                        class="md-footer-nav__direction"> Previous </span> Slashing </span>
+                </div>
+              </a>
+            
+            
+              <a href="npos.html" title="Admonition"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--next"
+                 rel="next">
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                  class="md-flex__ellipsis"> <span
+                  class="md-footer-nav__direction"> Next </span> Slashing across eras with NPoS </span>
+              </div>
+              <div class="md-flex__cell md-flex__cell--shrink"><i
+                  class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+              </div>
+            
+          </a>
+          
+        </nav>
+      </div>
+      <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+          <div class="md-footer-copyright">
+              <div class="md-footer-copyright__highlight">
+                &#169; Copyright 2019, Web3 Foundation.
+                
+            </div>
+              Created using
+                <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+               and
+              <a href="https://github.com/bashtage/sphinx-material/">Material for
+                Sphinx</a></div>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Web3 Foundation.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../../_sources/polkadot/slashing/amounts.md.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
+    </footer>
+      <script src="../../_static/javascripts/application.js"></script>
+      <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </div>
   </body>
 </html>

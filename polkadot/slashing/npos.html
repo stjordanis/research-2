@@ -4,8 +4,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Slashing across eras with NPoS &#8212; Web3 Foundation Research  documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Slashing across eras with NPoS &#8212; Research at W3F</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -19,47 +61,374 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Research Team Members" href="../../research_team_members.html" />
     <link rel="prev" title="Slashing mechanisms" href="amounts.html" />
+  
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body dir=ltr
+        data-md-color-primary=deep-orange data-md-color-accent=deep-orange>
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448"
+           id="__github">
+        <path fill="currentColor"
+              d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"></path>
+      </svg>
+    </defs>
+  </svg>
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#polkadot/slashing/npos" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="Research at W3F"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/w3f_logo.svg" height="26"
+                   alt="Research at W3F logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Research at W3F</span>
+          <span class="md-header-nav__topic"> Slashing across eras with NPoS </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">Research at W3F</a></li>
+          <li class="md-tabs__item"><a href="../../polkadot.html" class="md-tabs__link">Polkadot</a></li>
+          <li class="md-tabs__item"><a href="../slashing.html" class="md-tabs__link">Slashing</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="Research at W3F" class="md-nav__button md-logo">
+      
+        <img src="../../_static/w3f_logo.svg" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="Research at W3F">Research at W3F</a>
+  </label>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../polkadot.html" class="md-nav__link">Polkadot</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">Polkadot</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Availability_and_Validity.html" class="md-nav__link">Availability and Validity</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../GRANDPA.html" class="md-nav__link">GRANDPA</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../ICMP.html" class="md-nav__link">ICMP Scheme</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Parachain-Allocation.html" class="md-nav__link">Parachain Allocation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Polkadot-Runtime-Environment.html" class="md-nav__link">Polkadot Runtime Environment Specification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Token Economics.html" class="md-nav__link">Token Economics</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../BABE.html" class="md-nav__link">BABE</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../NPoS.html" class="md-nav__link">NPoS</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../keys.html" class="md-nav__link">Keys</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../networking.html" class="md-nav__link">Networking</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../slashing.html" class="md-nav__link">Slashing</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="amounts.html" class="md-nav__link">Slashing mechanisms</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Slashing across eras with NPoS </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Slashing across eras with NPoS</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-slashing-npos--page-root" class="md-nav__link">Slashing across eras with NPoS</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#reduced-rewards" class="md-nav__link">Reduced rewards</a>
+        </li>
+        <li class="md-nav__item"><a href="#slashing-within-one-era" class="md-nav__link">Slashing within one era</a>
+        </li>
+        <li class="md-nav__item"><a href="#slashing-in-past-eras" class="md-nav__link">Slashing in past eras</a>
+        </li>
+        <li class="md-nav__item"><a href="#slashing-spans" class="md-nav__link">Slashing spans</a>
+        </li>
+        <li class="md-nav__item"><a href="#actions" class="md-nav__link">Actions</a>
+        </li>
+        <li class="md-nav__item"><a href="#accounting" class="md-nav__link">Accounting</a>
+        </li>
+        <li class="md-nav__item"><a href="#monotonicity" class="md-nav__link">Monotonicity</a>
+        </li>
+        <li class="md-nav__item"><a href="#suppressed-nominators-in-phragmen" class="md-nav__link">Suppressed nominators in Phragmen</a>
+        </li>
+        <li class="md-nav__item"><a href="#rewards-for-slashable-offense-reports" class="md-nav__link">Rewards for slashable offense reports</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#rewards-based-on-slashing-nominators" class="md-nav__link">Rewards based on slashing nominators</a>
+        </li>
+        <li class="md-nav__item"><a href="#rewards-based-on-slashing-only-validators" class="md-nav__link">Rewards based on slashing only validators</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/slashing/npos.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav><ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#reduced-rewards" class="md-nav__link">Reduced rewards</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#slashing-within-one-era" class="md-nav__link">Slashing within one era</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#slashing-in-past-eras" class="md-nav__link">Slashing in past eras</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#slashing-spans" class="md-nav__link">Slashing spans</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#actions" class="md-nav__link">Actions</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#accounting" class="md-nav__link">Accounting</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#monotonicity" class="md-nav__link">Monotonicity</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#suppressed-nominators-in-phragmen" class="md-nav__link">Suppressed nominators in Phragmen</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#rewards-for-slashable-offense-reports" class="md-nav__link">Rewards for slashable offense reports</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#rewards-based-on-slashing-nominators" class="md-nav__link">Rewards based on slashing nominators</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#rewards-based-on-slashing-only-validators" class="md-nav__link">Rewards based on slashing only validators</a>
+      
+    </li></ul>
+    </li></ul>
+    </li></ul>
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../research_team_members.html" class="md-nav__link">Research Team Members</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-slashing-npos--page-root" class="md-nav__link">Slashing across eras with NPoS</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#reduced-rewards" class="md-nav__link">Reduced rewards</a>
+        </li>
+        <li class="md-nav__item"><a href="#slashing-within-one-era" class="md-nav__link">Slashing within one era</a>
+        </li>
+        <li class="md-nav__item"><a href="#slashing-in-past-eras" class="md-nav__link">Slashing in past eras</a>
+        </li>
+        <li class="md-nav__item"><a href="#slashing-spans" class="md-nav__link">Slashing spans</a>
+        </li>
+        <li class="md-nav__item"><a href="#actions" class="md-nav__link">Actions</a>
+        </li>
+        <li class="md-nav__item"><a href="#accounting" class="md-nav__link">Accounting</a>
+        </li>
+        <li class="md-nav__item"><a href="#monotonicity" class="md-nav__link">Monotonicity</a>
+        </li>
+        <li class="md-nav__item"><a href="#suppressed-nominators-in-phragmen" class="md-nav__link">Suppressed nominators in Phragmen</a>
+        </li>
+        <li class="md-nav__item"><a href="#rewards-for-slashable-offense-reports" class="md-nav__link">Rewards for slashable offense reports</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#rewards-based-on-slashing-nominators" class="md-nav__link">Rewards based on slashing nominators</a>
+        </li>
+        <li class="md-nav__item"><a href="#rewards-based-on-slashing-only-validators" class="md-nav__link">Rewards based on slashing only validators</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/slashing/npos.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
             
-  <div class="section" id="slashing-across-eras-with-npos">
-<h1>Slashing across eras with NPoS<a class="headerlink" href="#slashing-across-eras-with-npos" title="Permalink to this headline">¶</a></h1>
+  
+<h1 id="polkadot-slashing-npos--page-root">Slashing across eras with NPoS<a class="headerlink" href="#polkadot-slashing-npos--page-root" title="Permalink to this headline">¶</a></h1>
 <p>Authors:  Jeffrey Burdges, Robert Habermeier, Alfonso Cevallos, (and Alistair Stewart once he reviews it closely)</p>
 <p>We need our slashing algorithm to be fair and effective.  We discuss how this means slashing must respect nominators’ exposure, be anti-Sibel, and be monotonic. </p>
 <p>TODO:  Anything about era boundaries?</p>
-<div class="section" id="reduced-rewards">
-<h2>Reduced rewards<a class="headerlink" href="#reduced-rewards" title="Permalink to this headline">¶</a></h2>
+
+<h2 id="reduced-rewards">Reduced rewards<a class="headerlink" href="#reduced-rewards" title="Permalink to this headline">¶</a></h2>
 <p>TODO:  How small should a slash be to ignore the slashing span system?</p>
-</div>
-<div class="section" id="slashing-within-one-era">
-<h2>Slashing within one era<a class="headerlink" href="#slashing-within-one-era" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="slashing-within-one-era">Slashing within one era<a class="headerlink" href="#slashing-within-one-era" title="Permalink to this headline">¶</a></h2>
 <p>In any era <span class="math notranslate nohighlight">\(e\)</span>, there is a fixed amount of stake aka base exposure <span class="math notranslate nohighlight">\(x_{\eta,\nu,e}\)</span> assigned by any nominator <span class="math notranslate nohighlight">\(\eta\)</span> to any validator <span class="math notranslate nohighlight">\(\nu\)</span>.  We demand that slashing never exceeds nominators’ exposure because doing so creates an incentive to break up stash keys.  We avoid encouraging such Sibel-ish behavior in Polkadot because doing so makes Polkadot less fair and harms our information about nominator behavior.</p>
 <p>We immediately remove any validator <span class="math notranslate nohighlight">\(\nu\)</span> whenever they gets slashed, which prevents repeated slashing after that block height.  There is however an inconsistency in that <span class="math notranslate nohighlight">\(\nu\)</span> might commit multiple violations before the chain acknowledges the slash and kicks <span class="math notranslate nohighlight">\(\nu\)</span>.  We fear this introduces significant randomness into our slashing penalties, which increases governance workload and makes the slashing less fair.  We also worry that <span class="math notranslate nohighlight">\(\nu\)</span> might equivocate retroactively, perhaps to extort their own nominators.  As a counter measure, if era <span class="math notranslate nohighlight">\(e\)</span> sees validator <span class="math notranslate nohighlight">\(\nu\)</span> slashed for several distinct proportions <span class="math notranslate nohighlight">\(p_i\)</span>, then we define <span class="math notranslate nohighlight">\(p_{\nu,e} := \max_i p_i\)</span> and slash their nominator <span class="math notranslate nohighlight">\(\eta\)</span> only <span class="math notranslate nohighlight">\(p_{\nu,e} x_{\eta,\nu,e}\)</span>.  </p>
 <p><small>As an aside, we could write <span class="math notranslate nohighlight">\(p_{\eta,\nu,e}\)</span> throughout if we wanted to slash different nominators differently, like by slashing the validator themselves more, i.e. <span class="math notranslate nohighlight">\(p_{\nu,\nu,e} &gt; p_{\eta,\nu,e}\)</span> for <span class="math notranslate nohighlight">\(\nu \ne \eta\)</span>.  We abandoned this idea because validators could always be their own nominators.</small></p>
 <p>We actually have only minimal concerns about multiple miss-behaviours from the same validator <span class="math notranslate nohighlight">\(\nu\)</span> in one era, but if we discover some in future then the slashing lock could combine them before producing these <span class="math notranslate nohighlight">\(p_i\)</span>.  In other words, <span class="math notranslate nohighlight">\(p_{\nu,e} \ge \max_i p_i\)</span> with equality by default, but a strict inequality remains possible for some <span class="math notranslate nohighlight">\(p_i\)</span> combinations.  We expect this would complicate cross era logic, but such issues should be addressed by considering the specific miss-behaviour.  </p>
 <p>In essence, this <span class="math notranslate nohighlight">\(p_{\nu,e} := \max_i p_i\)</span> definition provides default mechanism for combining slashes within one era that is simple, fair, and commutative, but alternative logic remains possible so long as we slash the same regardless of the order in which offenses are detected.  We emphasise that future slashing logic might take numerous factors into consideration, so doing <span class="math notranslate nohighlight">\(\max_i p_i\)</span> here retains the most flexibility for future slashing logic.</p>
 <p>We do however worry about miss-behaviours from different validators <span class="math notranslate nohighlight">\(\nu \ne \nu'\)</span> both because nomination must restrict Sibels and also because correlated slashing need not necessarily involve the same validators.  We therefore let <span class="math notranslate nohighlight">\(N_{\eta,e}\)</span> denote the validators nominated by <span class="math notranslate nohighlight">\(\eta\)</span> in era <span class="math notranslate nohighlight">\(e\)</span> and slash <span class="math notranslate nohighlight">\(\sum_{\nu \in N_e} p_{\nu,e} x_{\eta,\nu,e}\)</span> from <span class="math notranslate nohighlight">\(\eta\)</span> when multiple validators <span class="math notranslate nohighlight">\(\nu \in N_{\eta,e}\)</span> get slashed.</p>
-</div>
-<div class="section" id="slashing-in-past-eras">
-<h2>Slashing in past eras<a class="headerlink" href="#slashing-in-past-eras" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="slashing-in-past-eras">Slashing in past eras<a class="headerlink" href="#slashing-in-past-eras" title="Permalink to this headline">¶</a></h2>
 <p>As hinted above, we cannot assume that all events that warrant slashing a particular stash account get detected early or occur within the same era.  If <span class="math notranslate nohighlight">\(e\)</span> and <span class="math notranslate nohighlight">\(e'\)</span> are distinct eras then we expect <span class="math notranslate nohighlight">\(x_{\eta,\nu_j,e} \ne x_{\eta,\nu_j,e'}\)</span> so the above arguments fail.  Indeed, we cannot even sum slashes applied to different validators because doing so could quickly exceeds nominators exposure <span class="math notranslate nohighlight">\(x_{\eta,\nu,e}\)</span>.</p>
 <p>We might assume <span class="math notranslate nohighlight">\(\min \{ x_{\eta,\nu_j,e}, x_{\eta,\nu_j,e'} \}\)</span> to be the “same” stake, but this does not obviously buy us much.  We therefore suggest slashing <span class="math notranslate nohighlight">\(\eta\)</span> the amount
 $$ \max_e \sum_{\nu \in N_e} p_{\nu,e} x_{\eta,\nu,e} $$
 where again <span class="math notranslate nohighlight">\(N_e\)</span> is the validators nominated by <span class="math notranslate nohighlight">\(\eta\)</span> in era <span class="math notranslate nohighlight">\(e\)</span></p>
 <p>In particular, there is still an extortion attack in which someone runs many poorly staked validators, receives nominations, and then threatens their nominators with being slashed.  We cannot prevent such attacks entirely, but this outer <span class="math notranslate nohighlight">\(\max_e\)</span> reduces the damage over formula that add slashing from different eras.</p>
-</div>
-<div class="section" id="slashing-spans">
-<h2>Slashing spans<a class="headerlink" href="#slashing-spans" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="slashing-spans">Slashing spans<a class="headerlink" href="#slashing-spans" title="Permalink to this headline">¶</a></h2>
 <p>We thus far kept our slashing relatively simple and fixed some fairness issues with the outer maximum <span class="math notranslate nohighlight">\(\max_e \cdots\)</span>, but created another problem:  If <span class="math notranslate nohighlight">\(\nu\)</span> gets slashed once, then <span class="math notranslate nohighlight">\(\nu\)</span> could thereafter commit similar offenses with impunity, which is neither fair nor effective.  As noted above, we accept this within a single era because validators get removed when they get slashed, but across eras nominators can support multiple validators.  We therefore need another mechanism that removes this impunity to minimize any further risks to the network going forwards. </p>
 <p>We propose to limit the eras spanned by this outer maximum to an explicit spans <span class="math notranslate nohighlight">\(\bar{e}\)</span> that end after an eras <span class="math notranslate nohighlight">\(e \in \bar{e}\)</span> in which any slashing events for that span <span class="math notranslate nohighlight">\(\bar{e}\)</span> gets detected.  In concrete terms, we partition the eras of some nominator <span class="math notranslate nohighlight">\(\eta\)</span> into <em>slashing spans</em> which are maximal contiguous sequence of eras <span class="math notranslate nohighlight">\(\bar{e} = \left[ e_1, \ldots, e_n \right]\)</span> such that <span class="math notranslate nohighlight">\(e_n\)</span> is the least era in which <span class="math notranslate nohighlight">\(\eta\)</span> gets slashed for actions in one of the <span class="math notranslate nohighlight">\(e_i \in \bar{e}\)</span>.  </p>
 <p>We shall sum offences across slashing spans.  In other words, if we <span class="math notranslate nohighlight">\(\bar{e}\)</span> range over the slashing spans for <span class="math notranslate nohighlight">\(\eta\)</span> then we have slashed <span class="math notranslate nohighlight">\(\eta\)</span> in total
@@ -69,31 +438,31 @@ In particular, if <span class="math notranslate nohighlight">\(\eta\)</span> get
 <p>Slashing Span Lemma.  Any slashing span-like construction must end whenever we detect some slash.  </p>
 <p>Proof.  Let <span class="math notranslate nohighlight">\(x'\)</span> be the validators’ minimum self exposure and let <span class="math notranslate nohighlight">\(y\)</span> be the stake to become a validator.  Some nominator <span class="math notranslate nohighlight">\(\eta_1\)</span> nominates validators <span class="math notranslate nohighlight">\(\nu_e\)</span> for <span class="math notranslate nohighlight">\(e=1\ldots\)</span> with her account of <span class="math notranslate nohighlight">\(y-x'\)</span> stake.  In epoch <span class="math notranslate nohighlight">\(e-1\)</span>, <span class="math notranslate nohighlight">\(\nu_i\)</span> stakes enough to become a validator in epoch <span class="math notranslate nohighlight">\(e\)</span>, so <span class="math notranslate nohighlight">\(\nu_1\)</span> stakes only <span class="math notranslate nohighlight">\(x'\)</span> and <span class="math notranslate nohighlight">\(\nu_i\)</span> for <span class="math notranslate nohighlight">\(i&gt;1\)</span> stakes somewhat more.  In epoch <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(\nu_i\)</span> commits a violation.  If we did not end <span class="math notranslate nohighlight">\(\eta_1\)</span>’s slashing span <span class="math notranslate nohighlight">\(\bar{e}\)</span> then then <span class="math notranslate nohighlight">\(max_{e \in \bar{e}}\)</span> rule would prevent these slashes from actually slashing <span class="math notranslate nohighlight">\(\eta_1\)</span> further.  In this way, a planned series of violations causing slashes across epochs only actually slashes <span class="math notranslate nohighlight">\(x' / y\)</span> of the desired slash value.  <span class="math notranslate nohighlight">\(\square\)</span></p>
 <p>There are many design choices that restrain this lemma somewhat, but they make our slashing fragile, which harms our analysis and compossibility. </p>
-</div>
-<div class="section" id="actions">
-<h2>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="actions">Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h2>
 <p>We now detail several additional actions taken whenever some validator <span class="math notranslate nohighlight">\(\nu\)</span> causes the slashing of some nominator <span class="math notranslate nohighlight">\(\eta\)</span>.  Among other concerns, these help mitigate reenlistment mistakes that nominators would occasionally make.</p>
 <p>We first post a slashing transaction to the chain, which drops the offending validator <span class="math notranslate nohighlight">\(\nu\)</span> from the active validator list by invalidating their controller key, or maybe just their session keys.  In consequence, all nodes ignore <span class="math notranslate nohighlight">\(\nu\)</span> for the remainder of the era.  It invalidates any future blocks that do not ignore <span class="math notranslate nohighlight">\(\nu\)</span> too.  We also remove all nomination approval votes by any nominator for <span class="math notranslate nohighlight">\(\nu\)</span>, even those who currently allocate <span class="math notranslate nohighlight">\(\nu\)</span> zero stake.  </p>
 <p>We handle the nominator <span class="math notranslate nohighlight">\(\eta\)</span> less speedily though.  We merely update the slashing accounting below when the offense occurred in some past slashing span for <span class="math notranslate nohighlight">\(\eta\)</span>, meaning we need not end their current slashing span.  We go further assuming the usual case that the offense occurred in <span class="math notranslate nohighlight">\(\eta\)</span>’s currently running slashing span though:  We terminate <span class="math notranslate nohighlight">\(\eta\)</span>’s current slashing span at the end of the current era, which should then start a new slashing span for <span class="math notranslate nohighlight">\(\eta\)</span>.  </p>
 <p>We also mark <span class="math notranslate nohighlight">\(\eta\)</span><em>suppressed</em> which partially <em>suppresses</em> all of <span class="math notranslate nohighlight">\(\eta\)</span>’s nomination approval votes for future eras.  We do not suppress or remove <span class="math notranslate nohighlight">\(\eta\)</span>’s current nominations for the current era or reduce the stake currently backing other validators.  In principle, we could suppresses <span class="math notranslate nohighlight">\(\eta\)</span>’s nomination approval votes somewhat whenever <span class="math notranslate nohighlight">\(\eta\)</span> gets slashed in previous slashing spans, but doing so appears unnecessary because suppression really comes only as part of ending a slashing span. </p>
 <p>Also, we permit <span class="math notranslate nohighlight">\(\eta\)</span> to update their nomination approval votes for future eras during the current or future era, but doing so removes them from the aka suppressed state.  We also notify <span class="math notranslate nohighlight">\(\eta\)</span> that <span class="math notranslate nohighlight">\(\nu\)</span> cause them to be slashed and suppressed.  </p>
 <p>These state alterations reduce the risks of unintentional reenlistment of any nominator, while also balancing risks to the network.  In particular, these measures provide justification for treating any future nominations by <span class="math notranslate nohighlight">\(\eta\)</span> separately from any that happen in the current era or before.</p>
-</div>
-<div class="section" id="accounting">
-<h2>Accounting<a class="headerlink" href="#accounting" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="accounting">Accounting<a class="headerlink" href="#accounting" title="Permalink to this headline">¶</a></h2>
 <p>We cannot slash for anything beyond the unbonding period and must expire slashing records when they go past the unbonding period.  We address this easily thanks to slashing spans:  We track the maximum slash <span class="math notranslate nohighlight">\(s_{\eta}\)</span> within each slashing span, which we update anytime a slash raises the slashing span’s maximum slash.  We shall use <span class="math notranslate nohighlight">\(s_{\eta}\)</span> again below in rewards computations. </p>
 <p>As an aside, there was another accounting strategy here:  Record all slash events along with some value <span class="math notranslate nohighlight">\(s_{\eta,\nu,e}\)</span> recording the amount actually slashed at that time.  If <span class="math notranslate nohighlight">\(e'\)</span> is later than <span class="math notranslate nohighlight">\(e\)</span> then we record the initial slash <span class="math notranslate nohighlight">\(s_{\eta,\nu,e} := p_{\nu,e} x_{\eta,\nu_j,e}\)</span> at <span class="math notranslate nohighlight">\(e\)</span> and record a lesser slash <span class="math notranslate nohighlight">\(s_{\eta,\nu,e'} := p_{\nu,e'} x_{\eta,\nu_j,e'} - p_{\nu,e} x_{\eta,\nu_j,e}\)</span> at the later <span class="math notranslate nohighlight">\(e'\)</span>.  These <span class="math notranslate nohighlight">\(s_{\eta,\nu,e}\)</span> values permit slashes to expire without unfairly increasing other slashes.  We believe this extra complexity and storage, does not improve network security, and strengthens extortion attacks on nominators.</p>
-</div>
-<div class="section" id="monotonicity">
-<h2>Monotonicity<a class="headerlink" href="#monotonicity" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="monotonicity">Monotonicity<a class="headerlink" href="#monotonicity" title="Permalink to this headline">¶</a></h2>
 <p>We ask that slashing be monotonic increasing for all parties so that validators cannot reduce any nominator’s slash by additional miss-behavior.  In other words, the amount any nominator gets slashed can only increase with more slashings events, even ones involving the same validator but not the same nominator.</p>
 <p>We think fairness imposes this condition because otherwise validators can reduce the slash of their favoured nominators, normally by making other nominators be slashed more.  We know trusted computing environments (TEE) avoid this issue, but we do not currently foresee requiring that all validators use them.</p>
 <p>We have achieved monotonicity with (<span class="math notranslate nohighlight">\(\dag\)</span>) because summation and maximums are monotonically increasing  over the positive real numbers, assuming any logic that adjusts the <span class="math notranslate nohighlight">\(p_{\nu,e}\)</span> also adheres to monotonicity.</p>
 <p>There are no meaningful limits on the diversity of nominators who nominated a particular validator within the unbonding period.  As a direct consequence of monotonicity, almost every nominators can be slashed simultaneously, even if only one validator gets slashed.  In particular, there are “rage quit attacks” in which one widely trusted validator adds past equivocations that cover many nominators.  We therefore cannot bound the total stake destroyed by a combined slashing event much below the slash applied to the total stake of the network.</p>
 <p>In particular, we cannot prevent validators from retroactively validating invalid blocks, which causes a 100% slash.  We could reduce these high slashes from old offenses if truly uncorrelated, but if correlated then only governance could interveen by searching historical logs for the invalid block hash.</p>
-</div>
-<div class="section" id="suppressed-nominators-in-phragmen">
-<h2>Suppressed nominators in Phragmen<a class="headerlink" href="#suppressed-nominators-in-phragmen" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="suppressed-nominators-in-phragmen">Suppressed nominators in Phragmen<a class="headerlink" href="#suppressed-nominators-in-phragmen" title="Permalink to this headline">¶</a></h2>
 <p>Above, we defined a slashing span <span class="math notranslate nohighlight">\(\bar{e}\)</span> for a nominator <span class="math notranslate nohighlight">\(\eta\)</span> to end after the era <span class="math notranslate nohighlight">\(e\)</span> during which a slashing event during <span class="math notranslate nohighlight">\(\bar{e}\)</span> gets detected and acknowledged by the chain.  We asked above that all <span class="math notranslate nohighlight">\(\eta\)</span>’s nomination approval votes, for any validator, should be <em>suppressed</em> after the era <span class="math notranslate nohighlight">\(e\)</span> that ends a slashing span <span class="math notranslate nohighlight">\(\bar{e}\)</span>, but never defined suppressed.  </p>
 <p>We introduce a network paramater <span class="math notranslate nohighlight">\(\xi\)</span> called the <em>suppression factor</em>.  We let <span class="math notranslate nohighlight">\(s_{\eta,\bar{e}}\)</span> denote the value slashed from nominator <span class="math notranslate nohighlight">\(\eta\)</span> in slashing span <span class="math notranslate nohighlight">\(\bar{e}\)</span>.  We also let <span class="math notranslate nohighlight">\(E\)</span> denote the slashing spans of <span class="math notranslate nohighlight">\(\eta\)</span> within the unbonding period for which <span class="math notranslate nohighlight">\(\eta\)</span> has not updated their nominations.  We now ignore <span class="math notranslate nohighlight">\(\xi \sum_{\bar{e} \in E} s_{\eta,\bar{e}}\)</span> of <span class="math notranslate nohighlight">\(\eta\)</span>’s stake in Phragmen when <span class="math notranslate nohighlight">\(\eta\)</span> is marked as suppressed. </p>
 <p>If suppression does nothing (<span class="math notranslate nohighlight">\(\xi = 0\)</span>), then at the next epoch <span class="math notranslate nohighlight">\(\eta\)</span> enters a fresh slashing span by the Slashing Span Lemma, and risks additive slashing.  We consider this problematic for several reasons:  First, we consider <span class="math notranslate nohighlight">\(\eta\)</span>’s judgement flawed, so they should reevaluate their votes’ risks, both for themselves and the network’s good.  Second, <span class="math notranslate nohighlight">\(\eta\)</span> could easily be slashed several times if reports are prompt, but only once if reports are delayed, which incentivizes delaying reports.  Also, slashes could be caused by intermittent bugs.</p>
@@ -101,19 +470,19 @@ In particular, if <span class="math notranslate nohighlight">\(\eta\)</span> get
 <p>We think <span class="math notranslate nohighlight">\(\xi = 1\)</span> or <span class="math notranslate nohighlight">\(2\)</span> sounds reasonable.  We suspect <span class="math notranslate nohighlight">\(\xi &gt; 2\)</span> meshes poorly with our 2/3rds honest assumption elsewhere.  At some point <span class="math notranslate nohighlight">\(\xi &lt; 0.5\)</span> creates similar issues to <span class="math notranslate nohighlight">\(\xi = 0\)</span>, but no intuitive arguments present themselves. </p>
 <p>We have intentionally kept the above computation <span class="math notranslate nohighlight">\(\xi \sum_{\bar{e} \in E} s_{\eta,\bar{e}}\)</span> extremely simple so that <span class="math notranslate nohighlight">\(\xi\)</span> can dynamically be changed by governance to reintroduce suppressed stake in an emergency.  We code could change <span class="math notranslate nohighlight">\(\xi\)</span> automatically but doing so appears pointless.</p>
 <p>TODO:  Import any discussion from Alfonso’s text</p>
-</div>
-<div class="section" id="rewards-for-slashable-offense-reports">
-<h2>Rewards for slashable offense reports<a class="headerlink" href="#rewards-for-slashable-offense-reports" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="rewards-for-slashable-offense-reports">Rewards for slashable offense reports<a class="headerlink" href="#rewards-for-slashable-offense-reports" title="Permalink to this headline">¶</a></h2>
 <p>Interestingly, we find that monotonicity also constrains our rewards for offense reports that result in slashing:  If a validator <span class="math notranslate nohighlight">\(\nu\)</span> gets slashed, then they could freely equivocate more and report upon themselves to earn back some of the slashed value.  </p>
-<div class="section" id="rewards-based-on-slashing-nominators">
-<h3>Rewards based on slashing nominators<a class="headerlink" href="#rewards-based-on-slashing-nominators" title="Permalink to this headline">¶</a></h3>
+
+<h3 id="rewards-based-on-slashing-nominators">Rewards based on slashing nominators<a class="headerlink" href="#rewards-based-on-slashing-nominators" title="Permalink to this headline">¶</a></h3>
 <p>We define <span class="math notranslate nohighlight">\(f_\infty\)</span> to be the maximum proportion of a slash that ever gets paid out, presumably <span class="math notranslate nohighlight">\(f_\infty &lt; 0.1\)</span>.  We also define <span class="math notranslate nohighlight">\(f_1 \le {1\over2}\)</span> to be the proportion of <span class="math notranslate nohighlight">\(f_\infty\)</span> paid out initially on the first offence detection.  So a fresh slash of value <span class="math notranslate nohighlight">\(s\)</span> results in a payout of <span class="math notranslate nohighlight">\(f_\infty f_1 s\)</span>.  Set <span class="math notranslate nohighlight">\(f_0 := {1-f_1 \over f_1} f_\infty\)</span> so that <span class="math notranslate nohighlight">\(f_\infty = {f_1 \over 1-f_1} f_0\)</span>.</p>
 <p>We consider a slash of value <span class="math notranslate nohighlight">\(s := p_{\nu,e} x_{\eta,\nu,e}\)</span> being applied to the nominator <span class="math notranslate nohighlight">\(\eta\)</span>.  We let <span class="math notranslate nohighlight">\(s_{\eta,i}\)</span> and <span class="math notranslate nohighlight">\(s_{\eta,i+1}\)</span> denote <span class="math notranslate nohighlight">\(\eta\)</span>’s actual slash in slashing span <span class="math notranslate nohighlight">\(\bar{e}\)</span> given by <span class="math notranslate nohighlight">\(\max_{e \in \bar{e}} \sum_{\nu \in N_e} p_{\nu,e} x_{\eta,\nu,e}\)</span> before and after applying the new slash, respectively, so when <span class="math notranslate nohighlight">\(\eta\)</span>’s slash increases by <span class="math notranslate nohighlight">\(s_{\eta,i+1} - s_{\eta,i}\)</span>.</p>
 <p>We track the value <span class="math notranslate nohighlight">\(s_{\eta,i}\)</span> in <span class="math notranslate nohighlight">\(\eta\)</span>’s slashing span record, but we also track another value <span class="math notranslate nohighlight">\(t_{\eta,i} &lt; s_{\eta,i}\)</span> that represents the total amount paid out so far.  If <span class="math notranslate nohighlight">\(s_{\eta,i+1} &gt; s_{\eta,i}\)</span> then we pay out <span class="math notranslate nohighlight">\(r := f_1 (f_0 s_{\eta,i+1} - t_{\eta,i})\)</span> and increase <span class="math notranslate nohighlight">\(t_{\eta,i}\)</span> by this amount.  If <span class="math notranslate nohighlight">\(s_{\eta,i+1} = s_{\eta,i}\)</span> then we pay out <span class="math notranslate nohighlight">\(r := f_1 \max(f_0 s - t_{\eta,i},0)\)</span>.  In either case, we store <span class="math notranslate nohighlight">\(t_{\eta,i+1} := t_{\eta,i} + r\)</span>.</p>
 <p>In this way, our validator <span class="math notranslate nohighlight">\(\nu\)</span> cannot reclaim more than <span class="math notranslate nohighlight">\(f_{\infty} f_1 s\)</span> from a slash of value <span class="math notranslate nohighlight">\(s\)</span>, even by repeatedly equivocations.  Any slash of size <span class="math notranslate nohighlight">\(s_{\eta,i}\)</span> always results in some payout, but slashes less than <span class="math notranslate nohighlight">\(t_{\eta,i}\)</span> never pay out.</p>
-</div>
-<div class="section" id="rewards-based-on-slashing-only-validators">
-<h3>Rewards based on slashing only validators<a class="headerlink" href="#rewards-based-on-slashing-only-validators" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="rewards-based-on-slashing-only-validators">Rewards based on slashing only validators<a class="headerlink" href="#rewards-based-on-slashing-only-validators" title="Permalink to this headline">¶</a></h3>
 <p>We dislike that the above reward scheme requires considering all impacted <span class="math notranslate nohighlight">\(\eta\)</span> when doing payouts, so we propose to compute rewards only for validators being slashed instead.  We shall require that validators always get slashed whenever their nominators get slashed, which means validators cannot be slashed 100% without their nominators all also being slashed 100%.</p>
 <p>We have some minimum exposure aka stake <span class="math notranslate nohighlight">\(x'\)</span> that validator operators must provide themselves, meaning <span class="math notranslate nohighlight">\(x_{\nu,\nu,e} \ge x'\)</span>.  As a simplifying assumption, we ask that <span class="math notranslate nohighlight">\(f_\infty\)</span> be kept small enough that rewards can always be covered by the validators’ exposure, meaning <span class="math notranslate nohighlight">\(x' \ge f_{\infty} \sum_\eta x_{\eta,\nu,e}\)</span>.  We do not explore any cases where this fails here, but doing so requires a subtle definition of some <span class="math notranslate nohighlight">\(x' &gt; x_{\nu,\nu,e}\)</span> such that rewards still cannot create inflation. </p>
 <p>We now define <span class="math notranslate nohighlight">\(f' &gt; f_0\)</span> such that <span class="math notranslate nohighlight">\(f' x' = {1-f_1 \over f_1} f_{\infty} x_{\min}\)</span> where <span class="math notranslate nohighlight">\(x_{\min} = \sum_\eta x_{\eta,\nu,e}\)</span> is our required minimum total stake for any validator.  In the above scheme, we shall replace <span class="math notranslate nohighlight">\(f_{\infty}\)</span> by <span class="math notranslate nohighlight">\(f'\)</span> and only apply the payouts to slashes against validator operators minimum exposure <span class="math notranslate nohighlight">\(x'\)</span>, meaning replace the slash value <span class="math notranslate nohighlight">\(p_{\nu,e} x_{\eta,\nu,e}\)</span> by <span class="math notranslate nohighlight">\(\max_{e \in \bar{e}} p_{\nu,e} x'\)</span>.</p>
@@ -122,105 +491,65 @@ In particular, if <span class="math notranslate nohighlight">\(\eta\)</span> get
 <p>We track the value <span class="math notranslate nohighlight">\(s^\prime_{\nu,i}\)</span> in the validator <span class="math notranslate nohighlight">\(\nu\)</span>’s slashing span record, but we also track another value <span class="math notranslate nohighlight">\(t_{\nu,i} &lt; s^\prime_{\nu,i}\)</span> that represents the total amount paid out so far.  If <span class="math notranslate nohighlight">\(s^\prime_{\nu,i+1} &gt; s^\prime_{\nu,i}\)</span> then we pay out <span class="math notranslate nohighlight">\(r := f_1 (f' s^\prime_{\nu,i+1} - t_{\nu,i})\)</span> and increase <span class="math notranslate nohighlight">\(t_{\eta,i}\)</span> by this amount.  If <span class="math notranslate nohighlight">\(s^\prime_{\nu,i+1} = s^\prime_{\nu,i}\)</span> then we pay out <span class="math notranslate nohighlight">\(r := f_1 \max(f' s' - t_{\nu,i},0)\)</span>.  In either case, we store <span class="math notranslate nohighlight">\(t_{\nu,i+1} := t_{\nu,i} + r\)</span>.</p>
 <p>In this way, our validator <span class="math notranslate nohighlight">\(\nu\)</span> cannot reclaim more than <span class="math notranslate nohighlight">\(f' f_1 s\)</span> from a slash of value <span class="math notranslate nohighlight">\(s\)</span>, even by repeatedly equivocations.  Any slash of size <span class="math notranslate nohighlight">\(s_{\nu,i}\)</span> always results in some payout, but slashes less than <span class="math notranslate nohighlight">\(t_{\nu,i}\)</span> never pay out.</p>
 <p>In both scheme, we have similar payouts initially, but our second scheme with payouts based only on the validator slashes results in smaller reward payouts when cross era slashing logic kicks in.  As an example, if a validator <span class="math notranslate nohighlight">\(\nu\)</span> gets similar slashes for different epochs, then the <span class="math notranslate nohighlight">\(r_1\)</span> factor would reduce the entire reward if payouts are based only on the validator slashes, but if <span class="math notranslate nohighlight">\(\nu\)</span> has disjoin nominators in every epoch then the <span class="math notranslate nohighlight">\(r_1\)</span> factor makes only a minimal appearance. </p>
-</div>
-</div>
-</div>
 
 
-          </div>
+
+
+
+          </article>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../NPoS.html">NPoS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../slashing.html">Slashing</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="amounts.html">Slashing mechanisms</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Slashing across eras with NPoS</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#reduced-rewards">Reduced rewards</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#slashing-within-one-era">Slashing within one era</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#slashing-in-past-eras">Slashing in past eras</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#slashing-spans">Slashing spans</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#actions">Actions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#accounting">Accounting</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#monotonicity">Monotonicity</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#suppressed-nominators-in-phragmen">Suppressed nominators in Phragmen</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rewards-for-slashable-offense-reports">Rewards for slashable offense reports</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#rewards-based-on-slashing-nominators">Rewards based on slashing nominators</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#rewards-based-on-slashing-only-validators">Rewards based on slashing only validators</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../../polkadot.html">Polkadot</a><ul>
-  <li><a href="../slashing.html">Slashing</a><ul>
-      <li>Previous: <a href="amounts.html" title="previous chapter">Slashing mechanisms</a></li>
-      <li>Next: <a href="../../research_team_members.html" title="next chapter">Research Team Members</a></li>
-  </ul></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+    </main>
+    <footer class="md-footer">
+      <div class="md-footer-nav">
+        <nav class="md-footer-nav__inner md-grid">
+            
+              <a href="amounts.html" title="Material"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+                 rel="prev">
+                <div class="md-flex__cell md-flex__cell--shrink">
+                  <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+                </div>
+                <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                  <span class="md-flex__ellipsis">
+                    <span
+                        class="md-footer-nav__direction"> Previous </span> Slashing mechanisms </span>
+                </div>
+              </a>
+            
+            
+              <a href="../../research_team_members.html" title="Admonition"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--next"
+                 rel="next">
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                  class="md-flex__ellipsis"> <span
+                  class="md-footer-nav__direction"> Next </span> Research Team Members </span>
+              </div>
+              <div class="md-flex__cell md-flex__cell--shrink"><i
+                  class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+              </div>
+            
+          </a>
+          
+        </nav>
+      </div>
+      <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+          <div class="md-footer-copyright">
+              <div class="md-footer-copyright__highlight">
+                &#169; Copyright 2019, Web3 Foundation.
+                
+            </div>
+              Created using
+                <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+               and
+              <a href="https://github.com/bashtage/sphinx-material/">Material for
+                Sphinx</a></div>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Web3 Foundation.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../../_sources/polkadot/slashing/npos.md.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
+    </footer>
+      <script src="../../_static/javascripts/application.js"></script>
+      <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </div>
   </body>
 </html>

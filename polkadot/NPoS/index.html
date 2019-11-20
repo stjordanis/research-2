@@ -4,8 +4,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Intro to Nominated Proof-of-Stake &#8212; Web3 Foundation Research  documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Intro to Nominated Proof-of-Stake &#8212; Research at W3F</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -19,138 +61,375 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="1. Overview of results for the NPoS election problem" href="1. Overview.html" />
     <link rel="prev" title="NPoS" href="../NPoS.html" />
+  
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body dir=ltr
+        data-md-color-primary=deep-orange data-md-color-accent=deep-orange>
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448"
+           id="__github">
+        <path fill="currentColor"
+              d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"></path>
+      </svg>
+    </defs>
+  </svg>
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#polkadot/NPoS/index" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="Research at W3F"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/w3f_logo.svg" height="26"
+                   alt="Research at W3F logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Research at W3F</span>
+          <span class="md-header-nav__topic"> Intro to Nominated Proof-of-Stake </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">Research at W3F</a></li>
+          <li class="md-tabs__item"><a href="../../polkadot.html" class="md-tabs__link">Polkadot</a></li>
+          <li class="md-tabs__item"><a href="../NPoS.html" class="md-tabs__link">NPoS</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="Research at W3F" class="md-nav__button md-logo">
+      
+        <img src="../../_static/w3f_logo.svg" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="Research at W3F">Research at W3F</a>
+  </label>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../polkadot.html" class="md-nav__link">Polkadot</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">Polkadot</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Availability_and_Validity.html" class="md-nav__link">Availability and Validity</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../GRANDPA.html" class="md-nav__link">GRANDPA</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../ICMP.html" class="md-nav__link">ICMP Scheme</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Parachain-Allocation.html" class="md-nav__link">Parachain Allocation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Polkadot-Runtime-Environment.html" class="md-nav__link">Polkadot Runtime Environment Specification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Token Economics.html" class="md-nav__link">Token Economics</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../BABE.html" class="md-nav__link">BABE</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../NPoS.html" class="md-nav__link">NPoS</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Intro to Nominated Proof-of-Stake </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Intro to Nominated Proof-of-Stake</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-npos-index--page-root" class="md-nav__link">Intro to Nominated Proof-of-Stake</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#validators-and-nominators" class="md-nav__link">Validators and nominators</a>
+        </li>
+        <li class="md-nav__item"><a href="#the-npos-scheme" class="md-nav__link">The NPoS scheme</a>
+        </li>
+        <li class="md-nav__item"><a href="#the-election-process" class="md-nav__link">The election process</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/NPoS/index.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav><ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#validators-and-nominators" class="md-nav__link">Validators and nominators</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#the-npos-scheme" class="md-nav__link">The NPoS scheme</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#the-election-process" class="md-nav__link">The election process</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="1. Overview.html" class="md-nav__link">1. Overview of results for the NPoS election problem</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="2. The min-norm max-flow problem.html" class="md-nav__link">2. The min-norm max-flow problem</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="3. The maximin support problem.html" class="md-nav__link">3. The maximin support problem</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="4. Sequential Phragmén’s method.html" class="md-nav__link">4. Sequential Phragmén’s method.</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="5. A Phragmén-like Heuristic.html" class="md-nav__link">5. A Phragmén-like Heuristic</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../keys.html" class="md-nav__link">Keys</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../networking.html" class="md-nav__link">Networking</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../slashing.html" class="md-nav__link">Slashing</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../research_team_members.html" class="md-nav__link">Research Team Members</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-npos-index--page-root" class="md-nav__link">Intro to Nominated Proof-of-Stake</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#validators-and-nominators" class="md-nav__link">Validators and nominators</a>
+        </li>
+        <li class="md-nav__item"><a href="#the-npos-scheme" class="md-nav__link">The NPoS scheme</a>
+        </li>
+        <li class="md-nav__item"><a href="#the-election-process" class="md-nav__link">The election process</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/NPoS/index.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
             
-  <div class="section" id="intro-to-nominated-proof-of-stake">
-<h1>Intro to Nominated Proof-of-Stake<a class="headerlink" href="#intro-to-nominated-proof-of-stake" title="Permalink to this headline">¶</a></h1>
-<p><img alt="../../_images/NPoS_Cover.png" src="../../_images/NPoS_Cover.png" /></p>
+  
+<h1 id="polkadot-npos-index--page-root">Intro to Nominated Proof-of-Stake<a class="headerlink" href="#polkadot-npos-index--page-root" title="Permalink to this headline">¶</a></h1>
+<p><img alt="../../_images/NPoS_Cover.png" src="../../_images/NPoS_Cover.png"/></p>
 <p>The Polkadot blockchain will implement nominated proof-of-stake (NPoS), a relatively new type of scheme used to select the validators who are allowed to participate in the consensus protocol. In this note we give an intro to NPoS, and a peek inside the research carried out at the Web3 Foundation. We also explain the peculiar way in which validators get elected. So how does NPoS work in Polkadot?</p>
-<div class="section" id="validators-and-nominators">
-<h2>Validators and nominators<a class="headerlink" href="#validators-and-nominators" title="Permalink to this headline">¶</a></h2>
+
+<h2 id="validators-and-nominators">Validators and nominators<a class="headerlink" href="#validators-and-nominators" title="Permalink to this headline">¶</a></h2>
 <p>A couple of times per day, the system elects a group of entities called <strong>validators</strong>, who in the next few hours will play a key role in highly sensitive protocols such as block production and the GRANDPA finality gadget. Their job is demanding as they need to run costly operations, ensure high communication responsiveness, and build a long-term reputation of reliability. They also must stake their DOTs, Polkadot’s native token, as a guarantee of good behavior, and this stake gets slashed whenever they deviate from their protocol. In contrast, they get paid well when they play by the rules. Any node that is up to the task can publicly offer itself as a validator candidate. However, for operational reasons only a limited number of validators can be elected, expected to be hundreds or thousands.</p>
 <p>The system also encourages any DOT holder to participate as a <strong>nominator</strong>. A nominator publishes a list of validator candidates that she trusts, and puts down an amount of DOTs at stake to support them with. If some of these candidates are elected as validators, she shares with them the payments, or the sanctions, on a per-staked-DOT basis. Unlike validators, an unlimited number of parties can participate as nominators. As long as a nominator is diligent in her choice and only supports validator candidates with good security practices, her role carries low risk and provides a continuous source of revenue. There are other special roles in the Polkadot network, but we focus only on the relation between these two roles.</p>
-<p><img alt="../../_images/NPoS_1.png" src="../../_images/NPoS_1.png" /></p>
-</div>
-<div class="section" id="the-npos-scheme">
-<h2>The NPoS scheme<a class="headerlink" href="#the-npos-scheme" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../../_images/NPoS_1.png" src="../../_images/NPoS_1.png"/></p>
+
+
+<h2 id="the-npos-scheme">The NPoS scheme<a class="headerlink" href="#the-npos-scheme" title="Permalink to this headline">¶</a></h2>
 <p>This nominator-validator arrangement gives strong security guarantees. It allows for the system to select validators with massive amounts of aggregate stake — much higher than any single party’s DOT holdings — and eliminate candidates with low stake. In fact, at any given moment we expect there to be a considerable fraction of all the DOTs supply be staked in NPoS. This makes it very difficult for an adversarial entity to get validators elected (as they need to build a fair amount of reputation to get the required backing) and very costly to attack the system (because any attack will result in large amounts of DOTs being slashed).</p>
 <p>Our NPoS scheme is much more efficient than proof-of-work (PoW) and faster than standard proof-of-stake (PoS). Networks with deterministic finality must have a limited validator set (the size can be changed with governance). NPoS allows for virtually all DOT holders to continuously participate, thus maintaining high levels of security by putting more value at stake and allowing more people to earn a yield based on their holdings.</p>
-</div>
-<div class="section" id="the-election-process">
-<h2>The election process<a class="headerlink" href="#the-election-process" title="Permalink to this headline">¶</a></h2>
-<p><img alt="../../_images/NPoS_2.png" src="../../_images/NPoS_2.png" /></p>
+
+
+<h2 id="the-election-process">The election process<a class="headerlink" href="#the-election-process" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../../_images/NPoS_2.png" src="../../_images/NPoS_2.png"/></p>
 <p>How to elect the validators, given the nominators’ votes? Unlike other PoS-based projects where validators are weighted by stake, Polkadot gives elected validators equal voting power in the consensus protocol. To reflect this fact, the nominators’ stake should be distributed among the elected validators as evenly as possible, while still respecting the nominators’ preferences. At the Web3 Foundation research team, we use tools ranging from election theory to game theory to discrete optimization, to develop an efficient election process that offers fair representation and security, and can be applied in the future to any blockchain using NPoS. We explore these objectives below, together with some examples.</p>
 <p><strong>Fair representation.</strong> In the late 19th century, Swedish mathematician Lars Edvard Phragmén proposed a method for electing members to his country’s parliament. He noticed that the election methods at the time tended to give all the seats to the most popular political party; in contrast, his new method ensured that the number of seats assigned to each party were proportional to the votes given to them, so it gave more representation to minorities. The property achieved by his method is formally known as proportional justified representation, and is very fitting for the NPoS election because it ensures that any pool of nodes is neither over-represented nor under-represented by the elected validators, proportional to their stake. Our heuristics build on top of Phragmén’s suggested method and ensure this property in every election.</p>
-<p><img alt="../../_images/NPoS_3.png" src="../../_images/NPoS_3.png" /></p>
+<p><img alt="../../_images/NPoS_3.png" src="../../_images/NPoS_3.png"/></p>
 <p>The illustration represents a typical input to the election process, with nominators on the left having different amounts of stake, and connected by lines to those validator candidates on the right that they trust (for simplicity, validators have no stake of their own in this example, though they will in a real scenario). Suppose we need to elect n=4 validators. The fair representation property roughly translates to the rule that any nominator holding at least one n-th of the total stake is guaranteed to have at least one of their trusted validators elected. As the total stake is 40 DOTS and a fourth of it is 10 DOTS, the first two nominators are guaranteed to be represented by a validator. In the image below we see three possible election results: one that violates the fair representation property and two that achieve it.</p>
-<p><img alt="../../_images/NPoS_4.png" src="../../_images/NPoS_4.png" /></p>
+<p><img alt="../../_images/NPoS_4.png" src="../../_images/NPoS_4.png"/></p>
 <p><strong>Security.</strong> If a nominator gets two or more of its trusted validators elected, we need to distribute her stake among them, in such a way that the validators’ backings are as balanced as possible. Recall that we want to make it as difficult as possible for an adversarial pool to get a validator elected, and they can achieve this only if they get a high enough backing. Therefore, we equate the level of security of an election result to <em>the minimum amount of backing of any elected validator</em>. For the last two election results with fair representation, we provide stake distributions which show that they achieve security levels of 6 and 9 respectively.</p>
-<p><img alt="../../_images/NPoS_5.png" src="../../_images/NPoS_5.png" /></p>
+<p><img alt="../../_images/NPoS_5.png" src="../../_images/NPoS_5.png"/></p>
 <p>The election result on the right achieves a higher security level, and clearly does a better job at splitting the nominators’ stake into validators’ backings of roughly equal size. The goal of the NPoS election process is thus to provide a result that achieves fair representation and a security level that is as high as possible. This gives rise to a rather challenging optimization problem (it is <a class="reference external" href="https://www.britannica.com/science/NP-complete-problem">NP-complete</a>), for which we have developed fast approximate heuristics with strong guarantees on security and scalability.</p>
 <p>We are excited about the technical developments brought forward by Polkadot, and the possibilities enabled by NPoS and other highly efficient schemes being developed in the blockchain space. To learn more about the operations side of the problem of electing validators in NPoS, go to the <a class="reference external" href="1. Overview.html">technical overview of our results</a>. </p>
-</div>
-</div>
 
 
-          </div>
+
+
+          </article>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../NPoS.html">NPoS</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Intro to Nominated Proof-of-Stake</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#validators-and-nominators">Validators and nominators</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#the-npos-scheme">The NPoS scheme</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#the-election-process">The election process</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="1. Overview.html">1. Overview of results for the NPoS election problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="2. The min-norm max-flow problem.html">2. The min-norm max-flow problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="3. The maximin support problem.html">3. The maximin support problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="4. Sequential Phragmén’s method.html">4. Sequential Phragmén’s method.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="5. A Phragmén-like Heuristic.html">5. A Phragmén-like Heuristic</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../../polkadot.html">Polkadot</a><ul>
-  <li><a href="../NPoS.html">NPoS</a><ul>
-      <li>Previous: <a href="../NPoS.html" title="previous chapter">NPoS</a></li>
-      <li>Next: <a href="1. Overview.html" title="next chapter">1. Overview of results for the NPoS election problem</a></li>
-  </ul></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+    </main>
+    <footer class="md-footer">
+      <div class="md-footer-nav">
+        <nav class="md-footer-nav__inner md-grid">
+            
+              <a href="../NPoS.html" title="Material"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+                 rel="prev">
+                <div class="md-flex__cell md-flex__cell--shrink">
+                  <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+                </div>
+                <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                  <span class="md-flex__ellipsis">
+                    <span
+                        class="md-footer-nav__direction"> Previous </span> NPoS </span>
+                </div>
+              </a>
+            
+            
+              <a href="1. Overview.html" title="Admonition"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--next"
+                 rel="next">
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                  class="md-flex__ellipsis"> <span
+                  class="md-footer-nav__direction"> Next </span> 1. Overview of results for the NPoS election problem </span>
+              </div>
+              <div class="md-flex__cell md-flex__cell--shrink"><i
+                  class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+              </div>
+            
+          </a>
+          
+        </nav>
+      </div>
+      <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+          <div class="md-footer-copyright">
+              <div class="md-footer-copyright__highlight">
+                &#169; Copyright 2019, Web3 Foundation.
+                
+            </div>
+              Created using
+                <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+               and
+              <a href="https://github.com/bashtage/sphinx-material/">Material for
+                Sphinx</a></div>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Web3 Foundation.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../../_sources/polkadot/NPoS/index.md.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
+    </footer>
+      <script src="../../_static/javascripts/application.js"></script>
+      <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </div>
   </body>
 </html>

@@ -4,8 +4,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>1. Overview of results for the NPoS election problem &#8212; Web3 Foundation Research  documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>1. Overview of results for the NPoS election problem &#8212; Research at W3F</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -19,58 +61,431 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="2. The min-norm max-flow problem" href="2. The min-norm max-flow problem.html" />
     <link rel="prev" title="Intro to Nominated Proof-of-Stake" href="index.html" />
+  
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body dir=ltr
+        data-md-color-primary=deep-orange data-md-color-accent=deep-orange>
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448"
+           id="__github">
+        <path fill="currentColor"
+              d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"></path>
+      </svg>
+    </defs>
+  </svg>
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#polkadot/NPoS/1. Overview" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="Research at W3F"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/w3f_logo.svg" height="26"
+                   alt="Research at W3F logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Research at W3F</span>
+          <span class="md-header-nav__topic"> 1. Overview of results for the NPoS election problem </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">Research at W3F</a></li>
+          <li class="md-tabs__item"><a href="../../polkadot.html" class="md-tabs__link">Polkadot</a></li>
+          <li class="md-tabs__item"><a href="../NPoS.html" class="md-tabs__link">NPoS</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="Research at W3F" class="md-nav__button md-logo">
+      
+        <img src="../../_static/w3f_logo.svg" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="Research at W3F">Research at W3F</a>
+  </label>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../polkadot.html" class="md-nav__link">Polkadot</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">Polkadot</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Availability_and_Validity.html" class="md-nav__link">Availability and Validity</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../GRANDPA.html" class="md-nav__link">GRANDPA</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../ICMP.html" class="md-nav__link">ICMP Scheme</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Parachain-Allocation.html" class="md-nav__link">Parachain Allocation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Polkadot-Runtime-Environment.html" class="md-nav__link">Polkadot Runtime Environment Specification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Token Economics.html" class="md-nav__link">Token Economics</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../BABE.html" class="md-nav__link">BABE</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../NPoS.html" class="md-nav__link">NPoS</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="index.html" class="md-nav__link">Intro to Nominated Proof-of-Stake</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 1. Overview of results for the NPoS election problem </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">1. Overview of results for the NPoS election problem</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-npos-1-overview--page-root" class="md-nav__link">1. Overview of results for the NPoS election problem</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#problem-statement-and-notation" class="md-nav__link">Problem statement and notation</a>
+        </li>
+        <li class="md-nav__item"><a href="#operational-concerns" class="md-nav__link">Operational concerns</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#efficient-algorithms" class="md-nav__link">Efficient algorithms</a>
+        </li>
+        <li class="md-nav__item"><a href="#who-elects-the-committee-" class="md-nav__link">Who elects the committee?</a>
+        </li>
+        <li class="md-nav__item"><a href="#committee-finding-algorithm--off-chain-" class="md-nav__link">Committee-finding algorithm (off-chain)</a>
+        </li>
+        <li class="md-nav__item"><a href="#committee-comparing-algorithm--on-chain-" class="md-nav__link">Committee-comparing algorithm (on-chain)</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#objectives" class="md-nav__link">Objectives</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#balance" class="md-nav__link">Balance</a>
+        </li>
+        <li class="md-nav__item"><a href="#support" class="md-nav__link">Support</a>
+        </li>
+        <li class="md-nav__item"><a href="#fair-representation" class="md-nav__link">Fair representation</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#overview-of-our-results" class="md-nav__link">Overview of our results</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#committee-finding" class="md-nav__link">Committee finding</a>
+        </li>
+        <li class="md-nav__item"><a href="#committee-comparing" class="md-nav__link">Committee-comparing</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/NPoS/1. Overview.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav><ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#problem-statement-and-notation" class="md-nav__link">Problem statement and notation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#operational-concerns" class="md-nav__link">Operational concerns</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#efficient-algorithms" class="md-nav__link">Efficient algorithms</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#who-elects-the-committee-" class="md-nav__link">Who elects the committee?</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#committee-finding-algorithm--off-chain-" class="md-nav__link">Committee-finding algorithm (off-chain)</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#committee-comparing-algorithm--on-chain-" class="md-nav__link">Committee-comparing algorithm (on-chain)</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#objectives" class="md-nav__link">Objectives</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#balance" class="md-nav__link">Balance</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#support" class="md-nav__link">Support</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#fair-representation" class="md-nav__link">Fair representation</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#overview-of-our-results" class="md-nav__link">Overview of our results</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#committee-finding" class="md-nav__link">Committee finding</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#committee-comparing" class="md-nav__link">Committee-comparing</a>
+      
+    </li></ul>
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="2. The min-norm max-flow problem.html" class="md-nav__link">2. The min-norm max-flow problem</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="3. The maximin support problem.html" class="md-nav__link">3. The maximin support problem</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="4. Sequential Phragmén’s method.html" class="md-nav__link">4. Sequential Phragmén’s method.</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="5. A Phragmén-like Heuristic.html" class="md-nav__link">5. A Phragmén-like Heuristic</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../keys.html" class="md-nav__link">Keys</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../networking.html" class="md-nav__link">Networking</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../slashing.html" class="md-nav__link">Slashing</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../research_team_members.html" class="md-nav__link">Research Team Members</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-npos-1-overview--page-root" class="md-nav__link">1. Overview of results for the NPoS election problem</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#problem-statement-and-notation" class="md-nav__link">Problem statement and notation</a>
+        </li>
+        <li class="md-nav__item"><a href="#operational-concerns" class="md-nav__link">Operational concerns</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#efficient-algorithms" class="md-nav__link">Efficient algorithms</a>
+        </li>
+        <li class="md-nav__item"><a href="#who-elects-the-committee-" class="md-nav__link">Who elects the committee?</a>
+        </li>
+        <li class="md-nav__item"><a href="#committee-finding-algorithm--off-chain-" class="md-nav__link">Committee-finding algorithm (off-chain)</a>
+        </li>
+        <li class="md-nav__item"><a href="#committee-comparing-algorithm--on-chain-" class="md-nav__link">Committee-comparing algorithm (on-chain)</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#objectives" class="md-nav__link">Objectives</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#balance" class="md-nav__link">Balance</a>
+        </li>
+        <li class="md-nav__item"><a href="#support" class="md-nav__link">Support</a>
+        </li>
+        <li class="md-nav__item"><a href="#fair-representation" class="md-nav__link">Fair representation</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#overview-of-our-results" class="md-nav__link">Overview of our results</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#committee-finding" class="md-nav__link">Committee finding</a>
+        </li>
+        <li class="md-nav__item"><a href="#committee-comparing" class="md-nav__link">Committee-comparing</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/NPoS/1. Overview.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
             
-  <div class="section" id="-1.-overview-of-results-for-the-npos-election-problem">
-<h1>1. Overview of results for the NPoS election problem<a class="headerlink" href="#-1.-overview-of-results-for-the-npos-election-problem" title="Permalink to this headline">¶</a></h1>
+  
+<h1 id="polkadot-npos-1-overview--page-root">1. Overview of results for the NPoS election problem<a class="headerlink" href="#polkadot-npos-1-overview--page-root" title="Permalink to this headline">¶</a></h1>
 <p>In this note we give a technical presentation of the problem of electing validators for nominated proof-of-stake, and an overview of our results.</p>
 <p>Assume we need to select <span class="math notranslate nohighlight">\(m\)</span> validators. We will run a vote-weighted, approval-based committee election to select them. This means that each nominator can submit a list containing any number of trusted candidates without an order of preference, and that the nominator’s vote is weighted by the amount of stake it puts down.</p>
 <p>Informally speaking the objectives of the election are to capture as much of the nominators’ stake as possible, and to partition this stake pool into <span class="math notranslate nohighlight">\(m\)</span> pieces of roughly equal weight, with one elected validator representing each piece. We want an equal distribution of stake over the validators because in some of our protocols all validators are given the same voting power, so we want to make it difficult for an adversary to control even a few validators. However, we allow for a nominator’s stake to be fractionally split into supporting several of its trusted validators being elected. Another of our objectives will be fair proportionality, in the sense that if a group of nominators controls a fraction <span class="math notranslate nohighlight">\(p\)</span> of the total stake then they should be represented by <span class="math notranslate nohighlight">\(\approx p\cdot m\)</span> validators. We establish these objectives more formally in the Objectives section.</p>
-<div class="section" id="problem-statement-and-notation">
-<h2>Problem statement and notation<a class="headerlink" href="#problem-statement-and-notation" title="Permalink to this headline">¶</a></h2>
+
+<h2 id="problem-statement-and-notation">Problem statement and notation<a class="headerlink" href="#problem-statement-and-notation" title="Permalink to this headline">¶</a></h2>
 <p><strong>Note 1:</strong> In order to simplify the underlying optimization problem, at genesis we will not allow nominators and validator candidates to indicate the interest rate they wish to earn over their stake. This feature might be added in the future, but it is not considered in this note, and we assume that the payoffs will be decided by governance.</p>
 <p><strong>Note 2:</strong> For simplicity, in our model we assume without loss of generality that validator candidates have no stake of their own, by performing the following reduction. Any staked candidate is considered as two parties: a nominator and a non-staked validator candidate, with the former backing the latter exclusively.</p>
 <p>As the NPoS problem is a committee election problem, we use some notation coming from election theory. The input can be succintly represented by a bipartite graph <span class="math notranslate nohighlight">\((N\cup V, E)\)</span>, where <span class="math notranslate nohighlight">\(N\)</span> is the set of nominators, <span class="math notranslate nohighlight">\(V\)</span> is the set of validator candidates, and <span class="math notranslate nohighlight">\(E\subseteq N\times V\)</span> is the set of edges containing the pair <span class="math notranslate nohighlight">\(nv\)</span> whenever nominator <span class="math notranslate nohighlight">\(n\)</span> included <span class="math notranslate nohighlight">\(v\)</span> in its list of trusted candidates. We are also given a vector <span class="math notranslate nohighlight">\(b\in\mathbb{R}_{\geq 0}^N\)</span> of “budgets”, where each component <span class="math notranslate nohighlight">\(b_n\)</span> represents the budget or stake of nominator <span class="math notranslate nohighlight">\(n\)</span>. Finally, we are given the target number <span class="math notranslate nohighlight">\(m\)</span> of validators to elect.</p>
 <p>The output will be a committee <span class="math notranslate nohighlight">\(S\subseteq V\)</span> of <span class="math notranslate nohighlight">\(m\)</span> validators, together with a list of edge weights represented by a vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}^E_{\geq 0}\)</span>, where a component <span class="math notranslate nohighlight">\(w_{nv}\)</span> indicates the amount of <span class="math notranslate nohighlight">\(n\)</span>’s budget  assigned to support <span class="math notranslate nohighlight">\(v\)</span>. We require vector <span class="math notranslate nohighlight">\(w\)</span> to have non-negative components and  to be “affordable”, i.e. to observe the budget constraints <span class="math notranslate nohighlight">\(\sum_{v\in V: \ nv\in E} w_{nv} \leq b_n\)</span> for each nominator <span class="math notranslate nohighlight">\(n\in N\)</span>. Finally, we prefer solutions <span class="math notranslate nohighlight">\((S,w)\)</span> that are “maximally affordable”, meaning that <span class="math notranslate nohighlight">\(\sum_{v\in S: \ nv\in E} w_{nv} = b_n\)</span> for each nominator <span class="math notranslate nohighlight">\(n\)</span> that has at least one neighbor in <span class="math notranslate nohighlight">\(S\)</span>, i.e. all of the available budget is used.</p>
-</div>
-<div class="section" id="operational-concerns">
-<h2>Operational concerns<a class="headerlink" href="#operational-concerns" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="operational-concerns">Operational concerns<a class="headerlink" href="#operational-concerns" title="Permalink to this headline">¶</a></h2>
 <p>Before formally defining the objectives we consider to elect a committee, we have a look at the operational side of the problem.</p>
-<div class="section" id="efficient-algorithms">
-<h3>Efficient algorithms<a class="headerlink" href="#efficient-algorithms" title="Permalink to this headline">¶</a></h3>
+
+<h3 id="efficient-algorithms">Efficient algorithms<a class="headerlink" href="#efficient-algorithms" title="Permalink to this headline">¶</a></h3>
 <p>We call an algorithm “efficient” if its running time is polynomial in the size of the input, and “highly efficient” if its running time is linear in the size of the input. It is important for all on-chain algorithms to be highly efficient, because they must scale well as the size of the Polkadot network grows. In contrast, off-chain algorithms are only required to be efficient.</p>
 <p>In our election problem, the input is given by the tuple <span class="math notranslate nohighlight">\((N\cup V, E, b, m)\)</span>, and its size is <span class="math notranslate nohighlight">\(O(|E|\cdot \log(|V|)+|N|\cdot B)\)</span>, where the first term is the size of the preference lists and the second term is the size of the nominator budget list, and <span class="math notranslate nohighlight">\(B\)</span> is an upper bound on the bit-length of each budget. We assume henceforth that <span class="math notranslate nohighlight">\(B\)</span> is constant, hence the size of the input is <span class="math notranslate nohighlight">\(O(|E|\cdot\log(|V|))\)</span>. </p>
 <p>However, to give ourselves more leeway, we relax the above definition and allow for highly efficient algorithms to have an additional linear dependence on the committee size <span class="math notranslate nohighlight">\(m\)</span>. This is justified by the fact that, unlike the other variables, the value of <span class="math notranslate nohighlight">\(m\)</span> does not grow linearly with the number of nodes on the Polkadot network, but only grows with the number of parachains. Therefore, assuming that <span class="math notranslate nohighlight">\(\log |V| \leq m\)</span>, we define an algorithm to be <em>highly efficient</em> if its running time is</p>
 <div class="math notranslate nohighlight">
 \[O(|E|\cdot (m+ \log(|V|))=O(|E|\cdot m).\]</div>
-</div>
-<div class="section" id="who-elects-the-committee-">
-<h3>Who elects the committee?<a class="headerlink" href="#who-elects-the-committee-" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="who-elects-the-committee-">Who elects the committee?<a class="headerlink" href="#who-elects-the-committee-" title="Permalink to this headline">¶</a></h3>
 <p>Given an input <span class="math notranslate nohighlight">\((N\cup V, E, b, m)\)</span> to the election problem, anyone is welcome to submit a tentative solution <span class="math notranslate nohighlight">\((S,w)\)</span>. In particular, we expect validator candidates to submit tentative solutions in which they themselves are part of the elected committee. Among the submitted solutions, the best one is selected publicly.</p>
 <p>Therefore, we actually need two types of algorithms: a <em>committee-finding</em> algorithm, which will be run off-chain by each candidate and returns a reasonably good solution, and a <em>committee-comparing</em> algorithm, which will be run on-chain and chooses between these submissions.</p>
-</div>
-<div class="section" id="committee-finding-algorithm--off-chain-">
-<h3>Committee-finding algorithm (off-chain)<a class="headerlink" href="#committee-finding-algorithm--off-chain-" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="committee-finding-algorithm--off-chain-">Committee-finding algorithm (off-chain)<a class="headerlink" href="#committee-finding-algorithm--off-chain-" title="Permalink to this headline">¶</a></h3>
 <p>Each party submitting a tentative solution is welcome to use their favorite committee-finding algorithm. In any case, we propose to them two or three algorithms, which provide a trade-off between efficiency and quality. At least one of these algorithms should be highly efficient, so that it can be run on-chain in the edge case that no-one proposes good tentative committees.  The other algorithms will be slower but their output committee will likely be better, so they will be prefered by parties with more computational power. </p>
-</div>
-<div class="section" id="committee-comparing-algorithm--on-chain-">
-<h3>Committee-comparing algorithm (on-chain)<a class="headerlink" href="#committee-comparing-algorithm--on-chain-" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="committee-comparing-algorithm--on-chain-">Committee-comparing algorithm (on-chain)<a class="headerlink" href="#committee-comparing-algorithm--on-chain-" title="Permalink to this headline">¶</a></h3>
 <p>We need to establish a ranking over the collection of all possible committees. The rules for this ranking should be simple to state, unambiguous and public. Moreover, we need a highly efficient committee-comparing algorithm, which takes two or more solutions as input and outputs the better one according to the established ranking. </p>
-</div>
-</div>
-<div class="section" id="objectives">
-<h2>Objectives<a class="headerlink" href="#objectives" title="Permalink to this headline">¶</a></h2>
+
+
+
+<h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permalink to this headline">¶</a></h2>
 <p>We have identified three main objectives of the committee election. These are:</p>
 <ul class="simple">
 <li><p><em>Balance:</em> Once a committee is elected, distribute the nominators’ stake as evenly as possible over the elected validators.</p></li>
@@ -78,16 +493,16 @@
 <li><p><em>Fair representation:</em> Choose a committee where nominators are not under-represented proportional to their budgets.</p></li>
 </ul>
 <p>We go over each of these objectives in detail.</p>
-<div class="section" id="balance">
-<h3>Balance<a class="headerlink" href="#balance" title="Permalink to this headline">¶</a></h3>
+
+<h3 id="balance">Balance<a class="headerlink" href="#balance" title="Permalink to this headline">¶</a></h3>
 <p>Given an input <span class="math notranslate nohighlight">\((N\cup S, E, b, m)\)</span> of the election problem, we are looking for a solution given by a pair <span class="math notranslate nohighlight">\((S,w)\)</span>, where <span class="math notranslate nohighlight">\(S\subseteq V\)</span> is a committee of size <span class="math notranslate nohighlight">\(m\)</span>, and <span class="math notranslate nohighlight">\(w\in\mathbb{R}^E_{\geq 0}\)</span> is a vector of edge weights which is maximally affordable. Relative to vector <span class="math notranslate nohighlight">\(w\)</span>, each validator <span class="math notranslate nohighlight">\(v\in S\)</span> receives a “support” of <span class="math notranslate nohighlight">\(supp_w(v):=\sum_{n\in N: \ nv\in E} w_{nv}\)</span>. In order to achieve a balanced solution, we want to make the list of supports <span class="math notranslate nohighlight">\(\{supp_w(v)\}_{v\in S}\)</span> as uniformly distributed as possible.</p>
 <p>For a given committee <span class="math notranslate nohighlight">\(S\subseteq V\)</span>, the <em>min-norm max-flow</em> problem (MNMF) consists of finding a maximally affordable vector <span class="math notranslate nohighlight">\(w\)</span> for <span class="math notranslate nohighlight">\(S\)</span> that minimizes the sum of squared supports <span class="math notranslate nohighlight">\(\sum_{v\in S} (supp_w(v))^2\)</span>. </p>
 <p>In <a class="reference external" href="2. The min-norm max-flow problem.html">our note on the MNMF problem</a>, we explain in detail why the vector <span class="math notranslate nohighlight">\(w\)</span> thus obtained is optimal for <span class="math notranslate nohighlight">\(S\)</span> for the purposes of NPoS. We also provide two algorithms to solve MNMF, with running times respectively of <span class="math notranslate nohighlight">\(O(|E|m+m^3)\)</span> and <span class="math notranslate nohighlight">\(O(|E|m^2\log m)\)</span>, where the latter one, called star balancing, is much easier to implement and usually as fast as the former. </p>
 <p>Let <span class="math notranslate nohighlight">\(F\)</span> be the complexity of solving an instance of MNMF, which is dependent on the algorithm used, but we consider it to be highly efficient (through a slight stretch of the definition). This complexity will be referenced in many of our algorithms.</p>
 <p>We say that a solution <span class="math notranslate nohighlight">\((S,w)\)</span> observes the balance property if <span class="math notranslate nohighlight">\(w\)</span> is a solution to the MNMF problem for <span class="math notranslate nohighlight">\(S\)</span>. We will ensure that all of our proposed election algorithms have the balance property by running an MNMF algorithm as a post-computation if needed. We also remark that the balance property can be checked on a solution in only <span class="math notranslate nohighlight">\(O(|E|)\)</span> time.</p>
-</div>
-<div class="section" id="support">
-<h3>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="support">Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h3>
 <p>For a feasible solution <span class="math notranslate nohighlight">\((S,w)\)</span>, we extend the notion of support and say that committee <span class="math notranslate nohighlight">\(S\)</span> receives a support from <span class="math notranslate nohighlight">\(w\)</span> of </p>
 <div class="math notranslate nohighlight">
 \[supp_w(S):=\min_{v\in S} supp_w (v)= \min_{v\in S} \sum_{n\in N: \ nv\in E} w_{nv}.\]</div>
@@ -97,9 +512,9 @@
 <div class="math notranslate nohighlight">
 \[\tilde{O}(F\cdot |V|),\]</div>
 <p>where the symbol <span class="math notranslate nohighlight">\(\tilde{O}\)</span> means that we are ignoring a multiplicative factor that is logarithmic in <span class="math notranslate nohighlight">\(m\)</span>, and where we recall that <span class="math notranslate nohighlight">\(F\)</span> is the time it takes to solve an MNMF instance. Its output always has the balance property.</p>
-</div>
-<div class="section" id="fair-representation">
-<h3>Fair representation<a class="headerlink" href="#fair-representation" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="fair-representation">Fair representation<a class="headerlink" href="#fair-representation" title="Permalink to this headline">¶</a></h3>
 <p>In the research literature of approval-based multi-winner elections, it is common to take an axiomatic approach and define properties of voting methods that are intuitively desirable (see <a class="reference external" href="https://aaai.org/ocs/index.php/AAAI/AAAI17/paper/download/14757/13791">Brill et al. (2017)</a> as well as <a class="reference external" href="https://arxiv.org/abs/1609.05370">Sánchez-Fernández et al. (2018)</a>). These properties measure the quality of the elected committee only, ignoring the weight distribution.</p>
 <p>To measure fair representation, we focus on the property of <em>proportional justified representation</em> (PJR), which establishes that if a group of nominators has sufficient budget, and their lists of trusted candidates are sufficiently aligned, then they must be well represented in the elected committee. Let <span class="math notranslate nohighlight">\(V_n\subseteq V\)</span> represent the set of trusted candidates of a nominator <span class="math notranslate nohighlight">\(n\)</span>. Formally, a committee <span class="math notranslate nohighlight">\(S\)</span> of size <span class="math notranslate nohighlight">\(m\)</span> satifies the PJR property if for any integer <span class="math notranslate nohighlight">\(1\leq t\leq m\)</span>, there is no nominator subset <span class="math notranslate nohighlight">\(N'\subseteq N\)</span> such that</p>
 <ul class="simple">
@@ -111,18 +526,18 @@
 <p>The definition of the PJR property was inspired by a method proposed by the end of the 19th century by Swedish mathematician Edvard Phragmén. His method satisifes PJR, but is not computationally efficient. <a class="reference external" href="https://aaai.org/ocs/index.php/AAAI/AAAI17/paper/download/14757/13791">Brill et al. (2017)</a> gave the first known polynomial-time method with this property, called sequential Phragmén’s method.</p>
 <p>In <a class="reference external" href="4. Sequential Phragmén’s method.html">our note on the sequential Phragmén’s method</a>, we adapt this algorithm to our NPoS problem, and provide a proof that it observes the PJR property. In particular, the algorithm runs in time <span class="math notranslate nohighlight">\(O(|E|\cdot m)\)</span>, hence it is highly efficient. If we assume that we run an MNMF algorithm as a post-computation to achieve the balance property, then the algorithm runs in time <span class="math notranslate nohighlight">\(O(F)\)</span>. However we remark that it does not provide a constant-factor guarantee for the maximin support objective.</p>
 <p>To finalize this section, we remark that the PJR property ensures that no subset of the nominators is under-represented proportional to their budgets. On the other hand, in <a class="reference external" href="3. The maximin support problem.html">our note on the maximin support problem</a> we provide some evidence that using the maximin support objective ensures that no subset of the nominators is over-represented. </p>
-</div>
-</div>
-<div class="section" id="overview-of-our-results">
-<h2>Overview of our results<a class="headerlink" href="#overview-of-our-results" title="Permalink to this headline">¶</a></h2>
+
+
+
+<h2 id="overview-of-our-results">Overview of our results<a class="headerlink" href="#overview-of-our-results" title="Permalink to this headline">¶</a></h2>
 <p>A careful read of the previous section reveals that we are so-far lacking an algorithm that simultaneously satisfies the PJR property of fair representation and provides a constant-factor approximation guarantee for the maximin support objective. In <a class="reference external" href="5. A Phragmén-like Heuristic.html">this note</a> we propose a new heuristic that solves this problem as follows: it takes as input an NPoS instance <span class="math notranslate nohighlight">\((N\cup V, E, b, m)\)</span> and a feasible solution <span class="math notranslate nohighlight">\((S,w)\)</span>, and returns a new feasible solution <span class="math notranslate nohighlight">\((S',w')\)</span> such that 
 a) <span class="math notranslate nohighlight">\(S'\)</span> satisfies the PJR property, and
 b) <span class="math notranslate nohighlight">\(supp_{w'}(S')\geq supp_w(S)\)</span>.</p>
 <p>It is thus a “PJR-enabler”: if it is composed with a constant-factor approximation algorithm for the maximin support objective, then the resulting composition of algorithms simultaneously satisifies the PJR property and provides the same constant-factor approximation. Its running time is <span class="math notranslate nohighlight">\(\tilde{O}(|E|\cdot m)\)</span>, hence it is highly efficient (recall that <span class="math notranslate nohighlight">\(\tilde{O}\)</span> means we ignore a factor logarithmic in <span class="math notranslate nohighlight">\(m\)</span>).</p>
 <p>Checking whether a committee <span class="math notranslate nohighlight">\(S\)</span> satisfies PJR is NP-hard. However, in <a class="reference external" href="5. A Phragmén-like Heuristic.html">our note on the new heuristic</a> we define a stronger version of the proportional justified representation property, which we here call PJR’ for short, that implies PJR and that can be inspected in polynomial time. We also present a “PJR’-checker”, i.e. an algorithm that checks if a given committee satisfies PJR’, in time <span class="math notranslate nohighlight">\(O(|E|)\)</span>. In fact, our PJR-enabler is also a PJR’-enabler, and thus all of our proposed algorithms satisfy the PJR’ property.</p>
 <p>Finally, our new heuristic also gives rise to a <span class="math notranslate nohighlight">\(3.15\)</span>-approximation algorithm that satisifes PJR’, in time <span class="math notranslate nohighlight">\(\tilde{O}(F\cdot m)\)</span>.</p>
-<div class="section" id="committee-finding">
-<h3>Committee finding<a class="headerlink" href="#committee-finding" title="Permalink to this headline">¶</a></h3>
+
+<h3 id="committee-finding">Committee finding<a class="headerlink" href="#committee-finding" title="Permalink to this headline">¶</a></h3>
 <p>We can thus propose the following committee-finding algorithms. All of them satisfy the balance property and the PJR’ fair representaion property.</p>
 <ul class="simple">
 <li><p>A <a class="reference external" href="3. The maximin support problem.html"><span class="math notranslate nohighlight">\(2\)</span>-factor approximation algorithm</a> (together with our PJR’-enabler as a post-computation), running in time <span class="math notranslate nohighlight">\(\tilde{O}(F\cdot |V|)\)</span>.</p></li>
@@ -130,9 +545,9 @@ b) <span class="math notranslate nohighlight">\(supp_{w'}(S')\geq supp_w(S)\)</s
 <li><p><a class="reference external" href="4. Sequential Phragmén’s method.html">The sequential Phragmén’s method</a> which provides no constant-factor approximation, and runs in time <span class="math notranslate nohighlight">\(O(F)\)</span>. </p></li>
 </ul>
 <p>The last algorithm is highly efficient and can be run on-chain in the edge case that no-one proposes good tentative committees. The first two algorithms are given as suggestions to be run off-chain by validators. Numerical experiments give evidence that the slower algorithms also tend to give higher-quality results.</p>
-</div>
-<div class="section" id="committee-comparing">
-<h3>Committee-comparing<a class="headerlink" href="#committee-comparing" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="committee-comparing">Committee-comparing<a class="headerlink" href="#committee-comparing" title="Permalink to this headline">¶</a></h3>
 <p>Notice that both the PJR’ property and the balance property can be ensured by running highly efficient post-computations in conjunction with any heuristic for the maximin support objective. Hence, we will only accept tentative solutions that satisfy both of these properties. Given two or more solutions <span class="math notranslate nohighlight">\((S,w)\)</span> with these properties, we rank them with the following lexicographic preferences (meaning that an objective is checked only if the solutions tie in all previous objectives):</p>
 <ul class="simple">
 <li><p>For <span class="math notranslate nohighlight">\(k=1,2,\cdots, m\)</span>:<ul>
@@ -163,115 +578,65 @@ b) <span class="math notranslate nohighlight">\(supp_{w'}(S')\geq supp_w(S)\)</s
 <li><p>If the favorite solution has not been discarded, return it and stop. Else, among the remaining solutions return the one that was submitted first, breaking eventual ties at random.</p></li>
 </ol>
 <p>It can be checked that if <span class="math notranslate nohighlight">\(|I|\)</span> tentative solutions are being simultaneously compared, the previous algorithm executes in time <span class="math notranslate nohighlight">\(O(|I|\cdot |E|)\)</span>.</p>
-</div>
-</div>
-</div>
 
 
-          </div>
+
+
+
+          </article>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../NPoS.html">NPoS</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="index.html">Intro to Nominated Proof-of-Stake</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">1. Overview of results for the NPoS election problem</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#problem-statement-and-notation">Problem statement and notation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#operational-concerns">Operational concerns</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#efficient-algorithms">Efficient algorithms</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#who-elects-the-committee-">Who elects the committee?</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#committee-finding-algorithm--off-chain-">Committee-finding algorithm (off-chain)</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#committee-comparing-algorithm--on-chain-">Committee-comparing algorithm (on-chain)</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#objectives">Objectives</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#balance">Balance</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#support">Support</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#fair-representation">Fair representation</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#overview-of-our-results">Overview of our results</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#committee-finding">Committee finding</a></li>
-<li class="toctree-l5"><a class="reference internal" href="#committee-comparing">Committee-comparing</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="2. The min-norm max-flow problem.html">2. The min-norm max-flow problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="3. The maximin support problem.html">3. The maximin support problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="4. Sequential Phragmén’s method.html">4. Sequential Phragmén’s method.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="5. A Phragmén-like Heuristic.html">5. A Phragmén-like Heuristic</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../../polkadot.html">Polkadot</a><ul>
-  <li><a href="../NPoS.html">NPoS</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Intro to Nominated Proof-of-Stake</a></li>
-      <li>Next: <a href="2. The min-norm max-flow problem.html" title="next chapter">2. The min-norm max-flow problem</a></li>
-  </ul></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+    </main>
+    <footer class="md-footer">
+      <div class="md-footer-nav">
+        <nav class="md-footer-nav__inner md-grid">
+            
+              <a href="index.html" title="Material"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+                 rel="prev">
+                <div class="md-flex__cell md-flex__cell--shrink">
+                  <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+                </div>
+                <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                  <span class="md-flex__ellipsis">
+                    <span
+                        class="md-footer-nav__direction"> Previous </span> Intro to Nominated Proof-of-Stake </span>
+                </div>
+              </a>
+            
+            
+              <a href="2. The min-norm max-flow problem.html" title="Admonition"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--next"
+                 rel="next">
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                  class="md-flex__ellipsis"> <span
+                  class="md-footer-nav__direction"> Next </span> 2. The min-norm max-flow problem </span>
+              </div>
+              <div class="md-flex__cell md-flex__cell--shrink"><i
+                  class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+              </div>
+            
+          </a>
+          
+        </nav>
+      </div>
+      <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+          <div class="md-footer-copyright">
+              <div class="md-footer-copyright__highlight">
+                &#169; Copyright 2019, Web3 Foundation.
+                
+            </div>
+              Created using
+                <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+               and
+              <a href="https://github.com/bashtage/sphinx-material/">Material for
+                Sphinx</a></div>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Web3 Foundation.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../../_sources/polkadot/NPoS/1. Overview.md.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
+    </footer>
+      <script src="../../_static/javascripts/application.js"></script>
+      <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </div>
   </body>
 </html>

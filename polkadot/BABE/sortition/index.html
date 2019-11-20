@@ -4,8 +4,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Cryptographic sortition for constant-time block production &#8212; Web3 Foundation Research  documentation</title>
-    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Cryptographic sortition for constant-time block production &#8212; Research at W3F</title>
+    <link rel="stylesheet" href="../../../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/stylesheets/extra.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -19,38 +61,352 @@
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="NPoS" href="../../NPoS.html" />
     <link rel="prev" title="Sortition" href="../sortition.html" />
+  
    
-  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body dir=ltr
+        data-md-color-primary=deep-orange data-md-color-accent=deep-orange>
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448"
+           id="__github">
+        <path fill="currentColor"
+              d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"></path>
+      </svg>
+    </defs>
+  </svg>
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#polkadot/BABE/sortition/index" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../../index.html" title="Research at W3F"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../../_static/w3f_logo.svg" height="26"
+                   alt="Research at W3F logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Research at W3F</span>
+          <span class="md-header-nav__topic"> Cryptographic sortition for constant-time block production </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../../../index.html" class="md-tabs__link">Research at W3F</a></li>
+          <li class="md-tabs__item"><a href="../../../polkadot.html" class="md-tabs__link">Polkadot</a></li>
+          <li class="md-tabs__item"><a href="../../BABE.html" class="md-tabs__link">BABE</a></li>
+          <li class="md-tabs__item"><a href="../sortition.html" class="md-tabs__link">Sortition</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../../index.html" title="Research at W3F" class="md-nav__button md-logo">
+      
+        <img src="../../../_static/w3f_logo.svg" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../../index.html"
+       title="Research at W3F">Research at W3F</a>
+  </label>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../../polkadot.html" class="md-nav__link">Polkadot</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../../index.html" class="md-nav__link">Polkadot</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../Availability_and_Validity.html" class="md-nav__link">Availability and Validity</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../GRANDPA.html" class="md-nav__link">GRANDPA</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../ICMP.html" class="md-nav__link">ICMP Scheme</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../Parachain-Allocation.html" class="md-nav__link">Parachain Allocation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../Polkadot-Runtime-Environment.html" class="md-nav__link">Polkadot Runtime Environment Specification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../Token Economics.html" class="md-nav__link">Token Economics</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../BABE.html" class="md-nav__link">BABE</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../Babe.html" class="md-nav__link">BABE</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../sortition.html" class="md-nav__link">Sortition</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Cryptographic sortition for constant-time block production </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Cryptographic sortition for constant-time block production</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-babe-sortition-index--page-root" class="md-nav__link">Cryptographic sortition for constant-time block production</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#shuffles" class="md-nav__link">Shuffles</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#verifiable-shuffles" class="md-nav__link">Verifiable shuffles</a>
+        </li>
+        <li class="md-nav__item"><a href="#accountable-shuffles" class="md-nav__link">Accountable shuffles</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#cryptographic-pre-announcements" class="md-nav__link">Cryptographic pre-announcements</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#ring-vrfs" class="md-nav__link">Ring VRFs</a>
+        </li>
+        <li class="md-nav__item"><a href="#group-vrfs" class="md-nav__link">Group VRFs</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#non-cryptographic-pre-announces" class="md-nav__link">Non-cryptographic pre-announces</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#secondary-randomness" class="md-nav__link">Secondary randomness</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../../_sources/polkadot/BABE/sortition/index.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav><ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#shuffles" class="md-nav__link">Shuffles</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#verifiable-shuffles" class="md-nav__link">Verifiable shuffles</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#accountable-shuffles" class="md-nav__link">Accountable shuffles</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#cryptographic-pre-announcements" class="md-nav__link">Cryptographic pre-announcements</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#ring-vrfs" class="md-nav__link">Ring VRFs</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#group-vrfs" class="md-nav__link">Group VRFs</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#non-cryptographic-pre-announces" class="md-nav__link">Non-cryptographic pre-announces</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#secondary-randomness" class="md-nav__link">Secondary randomness</a>
+      
+    </li></ul>
+    </li></ul>
+    </li></ul>
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../NPoS.html" class="md-nav__link">NPoS</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../keys.html" class="md-nav__link">Keys</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../networking.html" class="md-nav__link">Networking</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../slashing.html" class="md-nav__link">Slashing</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../../research_team_members.html" class="md-nav__link">Research Team Members</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-babe-sortition-index--page-root" class="md-nav__link">Cryptographic sortition for constant-time block production</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#shuffles" class="md-nav__link">Shuffles</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#verifiable-shuffles" class="md-nav__link">Verifiable shuffles</a>
+        </li>
+        <li class="md-nav__item"><a href="#accountable-shuffles" class="md-nav__link">Accountable shuffles</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#cryptographic-pre-announcements" class="md-nav__link">Cryptographic pre-announcements</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#ring-vrfs" class="md-nav__link">Ring VRFs</a>
+        </li>
+        <li class="md-nav__item"><a href="#group-vrfs" class="md-nav__link">Group VRFs</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#non-cryptographic-pre-announces" class="md-nav__link">Non-cryptographic pre-announces</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#secondary-randomness" class="md-nav__link">Secondary randomness</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../../_sources/polkadot/BABE/sortition/index.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
             
-  <div class="section" id="cryptographic-sortition-for-constant-time-block-production">
-<h1>Cryptographic sortition for constant-time block production<a class="headerlink" href="#cryptographic-sortition-for-constant-time-block-production" title="Permalink to this headline">¶</a></h1>
+  
+<h1 id="polkadot-babe-sortition-index--page-root">Cryptographic sortition for constant-time block production<a class="headerlink" href="#polkadot-babe-sortition-index--page-root" title="Permalink to this headline">¶</a></h1>
 <p>We like Ouroboros Praos style block production algorithms because anonymous block production helps prevent censorship.  We dislike the numerous empty block production slots and erratic block times intrinsic to Ouroboros Praos though because they constrains our security analysis and create problems whenever block production requires extensive computational work.  </p>
 <p>We thus want block production algorithm that is constant-time in the sense that it assigns all block production slots before an epoch starts, but that also keeps block production slots anonymous.  We shall outline roughly the solution categories below.</p>
 <p>We first quickly address sortition schemes with a bespoke, but often near perfect, anonymity layer built using cryptographic shuffles.  Almost all other schemes require pre-announces that reveal each block slot’s owner to one random other block producer.</p>
 <p>There are important advantages to schemes in which each slot has an associated public key to which users can encrypt their transactions, because this strengthens privacy schemes like QuisQuis and Grin aka MimbleWimble.</p>
-<div class="section" id="shuffles">
-<h2>Shuffles<a class="headerlink" href="#shuffles" title="Permalink to this headline">¶</a></h2>
+
+<h2 id="shuffles">Shuffles<a class="headerlink" href="#shuffles" title="Permalink to this headline">¶</a></h2>
 <p>A cryptographic shuffle has one node reorder and mutate entries, normally ciphertexts or public keys, so that only the node knows the resulting ordering.  Among all schemes listed here, shuffles are unique in that they operate an on-chain anonymity network, which naturally avoids pre-announces, and initially provides strong anonymity for block producers.  </p>
 <p>A priori, shuffles require on-chain bandwidth of order hops count times list size.  We achieve the strongest anonymity when both the list is several repetitions of the full block producer list and then every block producer applies a hop, making the hops count is also the block producer set size, but this sounds excessive.</p>
 <p>We should shuffle more slots than required, but consume them only partially because otherwise anonymity would degrade throughout an epoch as exhaust our candidates.  Any shuffle invokes storage operations linear in the shuffled set size, so we improve performance if validators shuffle less than our full list, and this costs us less confidence if all validators do some such partial shuffle.  </p>
 <p>We expect this last requirement for repeated partial shuffles favours ElGammal ciphertexts, although nice shuffles for curve points exists too.  In essence, any shuffle needs “guide points” that pass through the same cryptographic operations as the shuffled public keys, but if lists do not change then only one guide point is required, while ElGammal-like scheme attaches a guide point to every public key, which works well if combining many partial shuffles (see universal re-encryption).</p>
-<div class="section" id="verifiable-shuffles">
-<h3>Verifiable shuffles<a class="headerlink" href="#verifiable-shuffles" title="Permalink to this headline">¶</a></h3>
+
+<h3 id="verifiable-shuffles">Verifiable shuffles<a class="headerlink" href="#verifiable-shuffles" title="Permalink to this headline">¶</a></h3>
 <p>A verifiable shuffle produces a cryptographic proof that the shuffle happened correctly.  Andrew Neff’s verifiable shuffle from <a class="reference external" href="http://web.cs.elte.hu/~rfid/p116-neff.pdf"><em>A Verifiable Secret Shuffle and its Application to E-Voting</em></a> costs <span class="math notranslate nohighlight">\(8 k + 5\)</span> scalar multiplications where <span class="math notranslate nohighlight">\(k\)</span> denotes the number of validators shuffled (see also <a class="reference external" href="https://crypto.stackexchange.com/a/41674">implementations</a>).  </p>
 <p>TODO: Review more recent modern verifiable shuffle literature</p>
-</div>
-<div class="section" id="accountable-shuffles">
-<h3>Accountable shuffles<a class="headerlink" href="#accountable-shuffles" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="accountable-shuffles">Accountable shuffles<a class="headerlink" href="#accountable-shuffles" title="Permalink to this headline">¶</a></h3>
 <p>We might reduce costs with a simple non-verifiable shuffle for validator public keys that becomes accountable thanks to slashing:</p>
 <p>We ask that initially all <span class="math notranslate nohighlight">\(k\)</span> validators have their public keys <span class="math notranslate nohighlight">\(V_i = v_i G\)</span> registered on-chain.  We also ask that validators register some keys to be shuffled <span class="math notranslate nohighlight">\(S_j = s_j G\)</span> on-chain.  We shuffle lists of points <span class="math notranslate nohighlight">\(L\)</span>, which initially consists of some <span class="math notranslate nohighlight">\(S_j\)</span> not appearing in other lists, along with guide point(s), whether one <span class="math notranslate nohighlight">\(P_j\)</span> per <span class="math notranslate nohighlight">\(S_j\)</span>, or one distinguished guide point <span class="math notranslate nohighlight">\(P\)</span> overall, which we initially take to be <span class="math notranslate nohighlight">\(G\)</span>.  Importantly, we avoid needing a <a class="reference external" href="https://forum.web3.foundation/t/verifiable-random-commitments-or-public-keys/39">VRF that outputs a public private key pair</a> by shuffle these points instead of <span class="math notranslate nohighlight">\(V_i\)</span>.</p>
 <p>In each shuffle step, our <span class="math notranslate nohighlight">\(i\)</span>th validator multiplies this shuffle key <span class="math notranslate nohighlight">\(s_i\)</span> by all points in the list <span class="math notranslate nohighlight">\(L\)</span> and by its associated guide point <span class="math notranslate nohighlight">\(P\)</span> and produce a DLEQ proof that <span class="math notranslate nohighlight">\(\sum L'\)</span> and <span class="math notranslate nohighlight">\(P'\)</span> were correctly multiplied by <span class="math notranslate nohighlight">\(v_i\)</span> from the input <span class="math notranslate nohighlight">\(\sum L\)</span> and <span class="math notranslate nohighlight">\(P\)</span>.  Any validator can find itself in <span class="math notranslate nohighlight">\(L'\)</span> by computing <span class="math notranslate nohighlight">\(s_j P'\)</span>, which ultimately tells it when to produce the block.  </p>
@@ -60,15 +416,15 @@
 <p>We next create new batches of 128 points pulled randomly from all <span class="math notranslate nohighlight">\(k\)</span> output lists and rerun the shuffle algorithm, but now all <span class="math notranslate nohighlight">\(k\)</span> guide points must appear with each shuffle.  If we repeat this <span class="math notranslate nohighlight">\(l\)</span> times then we have <span class="math notranslate nohighlight">\(k^l\)</span> guide points on-chain.  We could reduce this to <span class="math notranslate nohighlight">\(2^l\)</span> with more staggered mixing.  </p>
 <p>We could reduce the amount on-chain by sending the intermediate lists directly between block producers, and our challenge protocol could unwind through several levels, but actually doing this invites its own censorship issues.  </p>
 <p>TODO: Replace with ElGammal version.</p>
-</div>
-</div>
-<div class="section" id="cryptographic-pre-announcements">
-<h2>Cryptographic pre-announcements<a class="headerlink" href="#cryptographic-pre-announcements" title="Permalink to this headline">¶</a></h2>
+
+
+
+<h2 id="cryptographic-pre-announcements">Cryptographic pre-announcements<a class="headerlink" href="#cryptographic-pre-announcements" title="Permalink to this headline">¶</a></h2>
 <p>All remaining schemes operate via some anonymous pre-announcement phase after which we determine the block production slot assignment by sorting the pre-announcements.  </p>
 <p>We must constrain valid pre-announcements so that malicious validators cannot create almost empty epochs by spamming fake pre-announcements, while preserving anonymity for block producers.  We outline several fixes below, both cryptographic and softer economic ones. </p>
 <p>As a rule, we accept the anonymity lost by revealing our block production slot to one other validator.  Yet, almost all these schemes could achieve stronger anonymity by forwarding messages an extra hop, or perhaps coupling with shuffles.</p>
-<div class="section" id="ring-vrfs">
-<h3>Ring VRFs<a class="headerlink" href="#ring-vrfs" title="Permalink to this headline">¶</a></h3>
+
+<h3 id="ring-vrfs">Ring VRFs<a class="headerlink" href="#ring-vrfs" title="Permalink to this headline">¶</a></h3>
 <p>A ring VRF operates like a VRF but only proves its key comes from a specific list without giving any information about which specific key.  Any ring VRF yields sortition:</p>
 <p>In a pre-announce phase, all block producers anonymously publish ring VRF outputs, which either requires revealing their identity to another block producer, or else requires a multi-hop anonymity network.  We then sort these ring VRF outputs and block producers claim them when making blocks.</p>
 <p>There is no slashing when using ring VRFs because we check all ring VRF proofs’ correctness when placing them on-chain.  We expect this pure ring VRF solution to provide the most orthogonality with the most reusable components, due to the on-chain logic being quite simple, and the cryptography sounding useful elsewhere.</p>
@@ -77,9 +433,9 @@
 <p>There are also ring signature constructions that do not require pairings and require only logarithmic size, like (<em>One-out-of-Many Proofs: Or How to Leak a Secret and Spend a Coin</em>)[https://eprint.iacr.org/2014/764] by Jens Groth and Markulf Kohlweiss.  In that scheme, ring signatures need about 32*7 bytes times the logarithm of the number of validators, so under 3kb for 10,000 validators.  </p>
 <p>We expect a ring VRF could be defined using these techniques, likely leveraging proof circuits implemented in the <a class="reference external" href="https://doc-internal.dalek.rs/bulletproofs/notes/index.html">dalek bulletproofs crate</a>, which might prove more efficient by some constant factor.  We also note that ring VRFs are linkable ring signatures, so some existing linkable ring signatures implementations may already provide ring VRFs.</p>
 <p>At these sizes, we expect the non-pairing based technique prove fairly competitive with zkSNARKs, but verification still requires all the public keys being multiplied.  At 10k validators, zkSNARK would costs the prover like 10k-20k scalar multiplications, but provide faster verification, while the non-pairing based scheme might cost verifiers 10k scalar multiplications per slot.  We thus judge zkSNARK scheme more efficient, especially since weak hash functions like MIMC or ??? suffice for the Merkle tree.  </p>
-</div>
-<div class="section" id="group-vrfs">
-<h3>Group VRFs<a class="headerlink" href="#group-vrfs" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="group-vrfs">Group VRFs<a class="headerlink" href="#group-vrfs" title="Permalink to this headline">¶</a></h3>
 <p>A group signature also hides the specific signer, like a ring signature, but group signatures require initial setup via some issuer or MPC. </p>
 <p>We build a group VRF similarly to a group signature by using the rerandomizable signature scheme from <a class="reference external" href="https://eprint.iacr.org/2015/525"><em>Short Randomizable Signatures</em></a> by David Pointcheval and Olivier Sanders as a blind rerandomizable certificate.  Our issuer would first blind sign each validator’s private key, like in section 6.1, so that later each validator can prove correctness their VRF output, replacing the proof of knowledge from section 6.2 there.  We believe this final step resembles the schnorrkel VRF except with the public key replaced by the signature inputs, but run on the pairing based curve.</p>
 <p>In this, we must take care with our pairing assumptions because we loose anonymity if <span class="math notranslate nohighlight">\(x H\)</span> with <span class="math notranslate nohighlight">\(H\)</span> known ever appears on the curve not used for the VRF output.  </p>
@@ -87,129 +443,83 @@
 <p>We’d want at least two thirds, but preferable all, of validators to be aggregate certificate issuers, meaning they have certified the blinded public keys of all validators and we aggregate all certificates and public keys.  We might achieve this with an MPC but doing so requires choosing when we issuers issue certificates.  </p>
 <p>In other words, all new prospective validators certify all previously added prospective validators, and all previously added prospective validators must eventually recertify all more recently added prospective validators.  In this way, any spammed slots originate from prospective but not actual validators, probably along with an actual validator who posts them.  </p>
 <p>We become therefore tempted to run this MPC after election but before establishing final validator list, but this complicates protocol layering unacceptably.  We could look into group signatures with “verifier local revocation” but these get much more complicated if I remember.</p>
-</div>
-</div>
-<div class="section" id="non-cryptographic-pre-announces">
-<h2>Non-cryptographic pre-announces<a class="headerlink" href="#non-cryptographic-pre-announces" title="Permalink to this headline">¶</a></h2>
+
+
+
+<h2 id="non-cryptographic-pre-announces">Non-cryptographic pre-announces<a class="headerlink" href="#non-cryptographic-pre-announces" title="Permalink to this headline">¶</a></h2>
 <p>We could pre-announce VRF outputs without employing any ring or group VRF construction, provided we can tolerate some false VRF outputs being spammed on-chain.  We discuss strategies to limit this spam below.</p>
 <p>In general, there are several approaches that work with smaller numbers of slots and validators, but we shall discuss only schemes tweaked for numerous validators.</p>
-<div class="section" id="secondary-randomness">
-<h3>Secondary randomness<a class="headerlink" href="#secondary-randomness" title="Permalink to this headline">¶</a></h3>
+
+<h3 id="secondary-randomness">Secondary randomness<a class="headerlink" href="#secondary-randomness" title="Permalink to this headline">¶</a></h3>
 <p>We limit the damage caused by spamming pre-announces by resorting the pre-announces using randomness created only after their publication.  Let <span class="math notranslate nohighlight">\(f\)</span> denote the identity map if using non-pairing based scheme or a hash function if using pairing based VRF.</p>
 <p>We divide epoch <span class="math notranslate nohighlight">\(e+0\)</span> into three phases:  In the first phase, any block producer <span class="math notranslate nohighlight">\(V = v G\)</span> creates a limited number of VRF outputs 
 $$ (\omega_{V,e,i},\pi_{V,e,i}) := VRF_v(r_e || i) \quad \textrm{for <span class="math notranslate nohighlight">\(i &lt; N\)</span>.} $$
-If <span class="math notranslate nohighlight">\(H(\omega_{V,e,i} || &quot;IF&quot;) &lt; c\)</span> then they send <span class="math notranslate nohighlight">\((\omega_{V,e,i},\pi_{V,e,i})\)</span> to another block producer <span class="math notranslate nohighlight">\(V'\)</span> identified by <span class="math notranslate nohighlight">\(H(\omega_{V,e,i} || &quot;WHO&quot;)\)</span> taken modulo the number of block producers.  </p>
+If <span class="math notranslate nohighlight">\(H(\omega_{V,e,i} || "IF") &lt; c\)</span> then they send <span class="math notranslate nohighlight">\((\omega_{V,e,i},\pi_{V,e,i})\)</span> to another block producer <span class="math notranslate nohighlight">\(V'\)</span> identified by <span class="math notranslate nohighlight">\(H(\omega_{V,e,i} || "WHO")\)</span> taken modulo the number of block producers.  </p>
 <p>In the second phase, <span class="math notranslate nohighlight">\(V'\)</span> publishes at most <span class="math notranslate nohighlight">\(N'\)</span> such values <span class="math notranslate nohighlight">\(f(\omega_{V,e,i})\)</span>.  </p>
 <p>In the third phase, if <span class="math notranslate nohighlight">\(V'\)</span> did not publish <span class="math notranslate nohighlight">\(f(\omega_{V,e,i})\)</span>, then <span class="math notranslate nohighlight">\(V\)</span> may publish <span class="math notranslate nohighlight">\(f(\omega_{V,e,i})\)</span> itself.  </p>
 <p>At the end of epoch <span class="math notranslate nohighlight">\(e+0\)</span>, we sort the <span class="math notranslate nohighlight">\(H(r_{e+1} || f(\omega_{V,e,i}))\)</span> to declare first <span class="math notranslate nohighlight">\(N''\)</span> of these the block production slot allocations for epoch <span class="math notranslate nohighlight">\(e+1\)</span>.</p>
 <p>In epoch <span class="math notranslate nohighlight">\(e+1\)</span>, any block producers claim their slots by revealing their <span class="math notranslate nohighlight">\((\omega_{V,e,i},\pi_{V,e,i})\)</span>.  </p>
 <p>If <span class="math notranslate nohighlight">\(f(\omega_{V,e,i})\)</span> is a curve point, then anyone may encrypt transactions to the block producer <span class="math notranslate nohighlight">\(V\)</span> without knowing <span class="math notranslate nohighlight">\(V\)</span>’s identity by using <span class="math notranslate nohighlight">\(f(\omega_{V,e,i})\)</span> as <span class="math notranslate nohighlight">\(V\)</span>’s public key, and then sending the ciphertext to <span class="math notranslate nohighlight">\(V'\)</span>. </p>
 <p>In epoch <span class="math notranslate nohighlight">\(e+2\)</span>, we let <span class="math notranslate nohighlight">\(\Omega_{e+2}\)</span> denote all <span class="math notranslate nohighlight">\(\omega_{V,e,i}\)</span> revealed either in block production in epoch <span class="math notranslate nohighlight">\(e+1\)</span> or else in non-anonymous pre-announce in epoch <span class="math notranslate nohighlight">\(e+0\)</span> phase three.  We now define <span class="math notranslate nohighlight">\(r_{e+2}\)</span> by hashing <span class="math notranslate nohighlight">\(r_{e+1}\)</span> together with all points in <span class="math notranslate nohighlight">\(\Omega_{e+2}\)</span>.  In this way, you could only alter <span class="math notranslate nohighlight">\(r_{e+2}\)</span> by not making your own block, not by attacking a non-anonymous pre-announce.</p>
-</div>
-</div>
-</div>
 
 
-          </div>
+
+
+
+          </article>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../../index.html">Web3 Foundation Research</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../../polkadot.html">Polkadot</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../index.html">Polkadot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Availability_and_Validity.html">Availability and Validity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../GRANDPA.html">GRANDPA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../ICMP.html">ICMP Scheme</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Parachain-Allocation.html">Parachain Allocation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Token Economics.html">Token Economics</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../../BABE.html">BABE</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../Babe.html">BABE</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../sortition.html">Sortition</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Cryptographic sortition for constant-time block production</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#shuffles">Shuffles</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="#verifiable-shuffles">Verifiable shuffles</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#accountable-shuffles">Accountable shuffles</a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="#cryptographic-pre-announcements">Cryptographic pre-announcements</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="#ring-vrfs">Ring VRFs</a></li>
-<li class="toctree-l6"><a class="reference internal" href="#group-vrfs">Group VRFs</a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="#non-cryptographic-pre-announces">Non-cryptographic pre-announces</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="#secondary-randomness">Secondary randomness</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../../NPoS.html">NPoS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../keys.html">Keys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../networking.html">Networking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../slashing.html">Slashing</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../../research_team_members.html">Research Team Members</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../../index.html">Documentation overview</a><ul>
-  <li><a href="../../../polkadot.html">Polkadot</a><ul>
-  <li><a href="../../BABE.html">BABE</a><ul>
-  <li><a href="../sortition.html">Sortition</a><ul>
-      <li>Previous: <a href="../sortition.html" title="previous chapter">Sortition</a></li>
-      <li>Next: <a href="../../NPoS.html" title="next chapter">NPoS</a></li>
-  </ul></li>
-  </ul></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+    </main>
+    <footer class="md-footer">
+      <div class="md-footer-nav">
+        <nav class="md-footer-nav__inner md-grid">
+            
+              <a href="../sortition.html" title="Material"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+                 rel="prev">
+                <div class="md-flex__cell md-flex__cell--shrink">
+                  <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+                </div>
+                <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                  <span class="md-flex__ellipsis">
+                    <span
+                        class="md-footer-nav__direction"> Previous </span> Sortition </span>
+                </div>
+              </a>
+            
+            
+              <a href="../../NPoS.html" title="Admonition"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--next"
+                 rel="next">
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                  class="md-flex__ellipsis"> <span
+                  class="md-footer-nav__direction"> Next </span> NPoS </span>
+              </div>
+              <div class="md-flex__cell md-flex__cell--shrink"><i
+                  class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+              </div>
+            
+          </a>
+          
+        </nav>
+      </div>
+      <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+          <div class="md-footer-copyright">
+              <div class="md-footer-copyright__highlight">
+                &#169; Copyright 2019, Web3 Foundation.
+                
+            </div>
+              Created using
+                <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+               and
+              <a href="https://github.com/bashtage/sphinx-material/">Material for
+                Sphinx</a></div>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Web3 Foundation.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../../../_sources/polkadot/BABE/sortition/index.md.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
+    </footer>
+      <script src="../../../_static/javascripts/application.js"></script>
+      <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </div>
   </body>
 </html>

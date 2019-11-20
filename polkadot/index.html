@@ -4,8 +4,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Polkadot &#8212; Web3 Foundation Research  documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Polkadot &#8212; Research at W3F</title>
+    <link rel="stylesheet" href="../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/stylesheets/extra.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -19,46 +61,406 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Availability and Validity" href="Availability_and_Validity.html" />
     <link rel="prev" title="Polkadot" href="../polkadot.html" />
+  
    
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body dir=ltr
+        data-md-color-primary=deep-orange data-md-color-accent=deep-orange>
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448"
+           id="__github">
+        <path fill="currentColor"
+              d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"></path>
+      </svg>
+    </defs>
+  </svg>
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#polkadot/index" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../index.html" title="Research at W3F"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../_static/w3f_logo.svg" height="26"
+                   alt="Research at W3F logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Research at W3F</span>
+          <span class="md-header-nav__topic"> Polkadot </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Research at W3F</a></li>
+          <li class="md-tabs__item"><a href="../polkadot.html" class="md-tabs__link">Polkadot</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../index.html" title="Research at W3F" class="md-nav__button md-logo">
+      
+        <img src="../_static/w3f_logo.svg" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../index.html"
+       title="Research at W3F">Research at W3F</a>
+  </label>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../polkadot.html" class="md-nav__link">Polkadot</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Polkadot </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Polkadot</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-index--page-root" class="md-nav__link">Polkadot</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#-1.-specification-of-the-polkadot-runtime-environment" class="md-nav__link">1. Specification of the Polkadot Runtime Environment</a>
+        </li>
+        <li class="md-nav__item"><a href="#-2.-identifying-participants-to-run-the-network" class="md-nav__link">2. Identifying participants to run the network</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#-2.1-keys" class="md-nav__link">2.1 Keys</a>
+        </li>
+        <li class="md-nav__item"><a href="#-2.2-proof-of-stake" class="md-nav__link">2.2 Proof-of-Stake</a>
+        </li>
+        <li class="md-nav__item"><a href="#-2.3-why-not-use-different-sets-for-different-tasks-" class="md-nav__link">2.3 Why not use different sets for different tasks?</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#-3.-ensuring-state-transition-properties" class="md-nav__link">3. Ensuring state transition properties</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#-3.1-utility" class="md-nav__link">3.1 Utility</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.2-validity" class="md-nav__link">3.2 Validity</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.3-finality" class="md-nav__link">3.3 Finality</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.4-availability" class="md-nav__link">3.4 Availability</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.5-messaging-reliability" class="md-nav__link">3.5 Messaging reliability</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.6.-size" class="md-nav__link">3.6. Size</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#light-client" class="md-nav__link">Light client</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#-3.7-bandwidth" class="md-nav__link">3.7 Bandwidth</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#-4.-desired-architectural-qualities" class="md-nav__link">4. Desired architectural qualities</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/polkadot/index.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav><ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#-1.-specification-of-the-polkadot-runtime-environment" class="md-nav__link">1. Specification of the Polkadot Runtime Environment</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-2.-identifying-participants-to-run-the-network" class="md-nav__link">2. Identifying participants to run the network</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#-2.1-keys" class="md-nav__link">2.1 Keys</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-2.2-proof-of-stake" class="md-nav__link">2.2 Proof-of-Stake</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-2.3-why-not-use-different-sets-for-different-tasks-" class="md-nav__link">2.3 Why not use different sets for different tasks?</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-3.-ensuring-state-transition-properties" class="md-nav__link">3. Ensuring state transition properties</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#-3.1-utility" class="md-nav__link">3.1 Utility</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-3.2-validity" class="md-nav__link">3.2 Validity</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-3.3-finality" class="md-nav__link">3.3 Finality</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-3.4-availability" class="md-nav__link">3.4 Availability</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-3.5-messaging-reliability" class="md-nav__link">3.5 Messaging reliability</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-3.6.-size" class="md-nav__link">3.6. Size</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#light-client" class="md-nav__link">Light client</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-3.7-bandwidth" class="md-nav__link">3.7 Bandwidth</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#-4.-desired-architectural-qualities" class="md-nav__link">4. Desired architectural qualities</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="Availability_and_Validity.html" class="md-nav__link">Availability and Validity</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="GRANDPA.html" class="md-nav__link">GRANDPA</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="ICMP.html" class="md-nav__link">ICMP Scheme</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="Parachain-Allocation.html" class="md-nav__link">Parachain Allocation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="Polkadot-Runtime-Environment.html" class="md-nav__link">Polkadot Runtime Environment Specification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="Token Economics.html" class="md-nav__link">Token Economics</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="BABE.html" class="md-nav__link">BABE</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="NPoS.html" class="md-nav__link">NPoS</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="keys.html" class="md-nav__link">Keys</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="networking.html" class="md-nav__link">Networking</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="slashing.html" class="md-nav__link">Slashing</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../research_team_members.html" class="md-nav__link">Research Team Members</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-index--page-root" class="md-nav__link">Polkadot</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#-1.-specification-of-the-polkadot-runtime-environment" class="md-nav__link">1. Specification of the Polkadot Runtime Environment</a>
+        </li>
+        <li class="md-nav__item"><a href="#-2.-identifying-participants-to-run-the-network" class="md-nav__link">2. Identifying participants to run the network</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#-2.1-keys" class="md-nav__link">2.1 Keys</a>
+        </li>
+        <li class="md-nav__item"><a href="#-2.2-proof-of-stake" class="md-nav__link">2.2 Proof-of-Stake</a>
+        </li>
+        <li class="md-nav__item"><a href="#-2.3-why-not-use-different-sets-for-different-tasks-" class="md-nav__link">2.3 Why not use different sets for different tasks?</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#-3.-ensuring-state-transition-properties" class="md-nav__link">3. Ensuring state transition properties</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#-3.1-utility" class="md-nav__link">3.1 Utility</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.2-validity" class="md-nav__link">3.2 Validity</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.3-finality" class="md-nav__link">3.3 Finality</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.4-availability" class="md-nav__link">3.4 Availability</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.5-messaging-reliability" class="md-nav__link">3.5 Messaging reliability</a>
+        </li>
+        <li class="md-nav__item"><a href="#-3.6.-size" class="md-nav__link">3.6. Size</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#light-client" class="md-nav__link">Light client</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#-3.7-bandwidth" class="md-nav__link">3.7 Bandwidth</a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#-4.-desired-architectural-qualities" class="md-nav__link">4. Desired architectural qualities</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/polkadot/index.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
             
-  <div class="section" id="polkadot">
-<h1>Polkadot<a class="headerlink" href="#polkadot" title="Permalink to this headline">¶</a></h1>
+  
+<h1 id="polkadot-index--page-root">Polkadot<a class="headerlink" href="#polkadot-index--page-root" title="Permalink to this headline">¶</a></h1>
 <p><em>DRAFT</em></p>
 <p>This article summarizes the research efforts relevant to the Polkadot project, for other information regarding the project please refer to the <a class="reference external" href="https://wiki.polkadot.network">wiki page</a>.</p>
 <p>Polkadot speaking in abstract terms provides a number of connected finalising state machines. Connected means that a state transition of one machine can affect a transition of another machine. The state machines are final, since most networks participants agree on their state after some time. We would also like to enable adding, removing and changing of the state machines as the time goes on to ensure utility.</p>
-<p><img alt="../_images/whole.png" src="../_images/whole.png" />Data structures and participants</p>
+<p><img alt="../_images/whole.png" src="../_images/whole.png"/>Data structures and participants</p>
 <p>The research focuses on how to enable having such publicly available system in the face of possible adversarial conditions. The public can use the system by interacting with state machines that they are interested in via the internet. Each state machine can provide different functionalities and behave in different ways (have a different state and state transition scheme).</p>
 <p>So let us start with abstract state machines. A state machine has a certain state type and state transition type. As the time goes on, state transitions occur.</p>
-<p><img alt="../_images/block_to_transition.png" src="../_images/block_to_transition.png" />Block to transition</p>
+<p><img alt="../_images/block_to_transition.png" src="../_images/block_to_transition.png"/>Block to transition</p>
 <p>The data that determines the state transitions is structured as bundles of transactions - individual small state transitions triggered by the users of the system. Each bundle is called a block. In order to achieve its properties, ensures that those blocks are hash connected forming joint data structure.</p>
-<div class="section" id="-1.-specification-of-the-polkadot-runtime-environment">
-<h2>1. Specification of the Polkadot Runtime Environment<a class="headerlink" href="#-1.-specification-of-the-polkadot-runtime-environment" title="Permalink to this headline">¶</a></h2>
+
+<h2 id="-1.-specification-of-the-polkadot-runtime-environment">1. Specification of the Polkadot Runtime Environment<a class="headerlink" href="#-1.-specification-of-the-polkadot-runtime-environment" title="Permalink to this headline">¶</a></h2>
 <p>We are working on a implementation level specification of the protocol <a class="reference external" href="https://github.com/w3f/polkadot-re-spec">here</a>.</p>
-</div>
-<div class="section" id="-2.-identifying-participants-to-run-the-network">
-<h2>2. Identifying participants to run the network<a class="headerlink" href="#-2.-identifying-participants-to-run-the-network" title="Permalink to this headline">¶</a></h2>
-<p><img alt="../_images/data_structure.png" src="../_images/data_structure.png" />Data structure</p>
-<div class="section" id="-2.1-keys">
-<h3>2.1 Keys<a class="headerlink" href="#-2.1-keys" title="Permalink to this headline">¶</a></h3>
+
+
+<h2 id="-2.-identifying-participants-to-run-the-network">2. Identifying participants to run the network<a class="headerlink" href="#-2.-identifying-participants-to-run-the-network" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../_images/data_structure.png" src="../_images/data_structure.png"/>Data structure</p>
+
+<h3 id="-2.1-keys">2.1 Keys<a class="headerlink" href="#-2.1-keys" title="Permalink to this headline">¶</a></h3>
 <p>To identify unique individual participants that will perform duties on the network we use public key cryptography. You can read more about our approach <a class="reference external" href="https://research.web3.foundation/en/latest/polkadot/keys/">here</a> and see the particular crypto for the first implementation in the <a class="reference external" href="https://github.com/w3f/schnorrkel">Schnorrkel repo</a>.</p>
 <p>Validator keys indicated by the staking key are:
  - transport layer: ed25519
  - GRANDPA and consolidated reporting: BLS
  - block production (VRF): Ristretto</p>
-</div>
-<div class="section" id="-2.2-proof-of-stake">
-<h3>2.2 Proof-of-Stake<a class="headerlink" href="#-2.2-proof-of-stake" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="-2.2-proof-of-stake">2.2 Proof-of-Stake<a class="headerlink" href="#-2.2-proof-of-stake" title="Permalink to this headline">¶</a></h3>
 <p>In order to keep certain parties accountable for ensuring various properties listed below we make sure to be able to punish these participants by taking away some of their funds (Proof-of-Stake). The primary nodes running the network are the validators. To ensure a large set of participants is able to contribute to the security of the network we introduce a Nominated Proof of Stake scheme (NPoS). This scheme allows participants which do not wish to run nodes to be able to help with the validator selection. The current method used to distribute that stake is the <a class="reference external" href="NPoS/index.html">Sequential Phragmén Method</a>.</p>
 <p>For Polkadot use Phragmén’s method as a fallback, but allow for better solutions to be submitted. As an edge case, if no good solution is submitted, run the slow heuristic which provides a 2-approximation (TODO: publish).</p>
 <p>Judging NPoS solutions:</p>
@@ -67,170 +469,128 @@
 <li><p>Among the submissions that observe the first property about fairness, select the one that maximizes the minimum stake of any selected validator. This ensures maximum security threshold for each parachain validator group.</p></li>
 </ul>
 <p>A comprehensive list of misbehaviours that have to be penalized can be found in the <a class="reference external" href="https://docs.google.com/spreadsheets/d/1HSCiAf9pyxUSwojGQzg_pestlS_8yupCOTGnIGSvp9Q/edit?usp=sharing">sanctioning sheet</a>.</p>
-</div>
-<div class="section" id="-2.3-why-not-use-different-sets-for-different-tasks-">
-<h3>2.3 Why not use different sets for different tasks?<a class="headerlink" href="#-2.3-why-not-use-different-sets-for-different-tasks-" title="Permalink to this headline">¶</a></h3>
+
+
+<h3 id="-2.3-why-not-use-different-sets-for-different-tasks-">2.3 Why not use different sets for different tasks?<a class="headerlink" href="#-2.3-why-not-use-different-sets-for-different-tasks-" title="Permalink to this headline">¶</a></h3>
 <p>Use the same validator set for BABE as for GRANDPA as to avoid paying more in total for block production + finality.</p>
-</div>
-</div>
-<div class="section" id="-3.-ensuring-state-transition-properties">
-<h2>3. Ensuring state transition properties<a class="headerlink" href="#-3.-ensuring-state-transition-properties" title="Permalink to this headline">¶</a></h2>
-<p><img alt="../_images/properties.png" src="../_images/properties.png" />State transition properties</p>
-<div class="section" id="-3.1-utility">
-<h3>3.1 Utility<a class="headerlink" href="#-3.1-utility" title="Permalink to this headline">¶</a></h3>
+
+
+
+<h2 id="-3.-ensuring-state-transition-properties">3. Ensuring state transition properties<a class="headerlink" href="#-3.-ensuring-state-transition-properties" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../_images/properties.png" src="../_images/properties.png"/>State transition properties</p>
+
+<h3 id="-3.1-utility">3.1 Utility<a class="headerlink" href="#-3.1-utility" title="Permalink to this headline">¶</a></h3>
 <p>Each state transition should bring some utility to the system participants. In order to ensure that this is the case:</p>
 <ul class="simple">
 <li><p>state machines should provide some utility to participants</p></li>
 <li><p>state transitions processed by these state machines reflect well the state transition needs of participants.</p></li>
 </ul>
-<p><img alt="../_images/usefulness.png" src="../_images/usefulness.png" />Utility</p>
+<p><img alt="../_images/usefulness.png" src="../_images/usefulness.png"/>Utility</p>
 <p>To ensure that the state machines provide utility we should ensure that there is a mechansim that enables participants to decide what state machines should be included and how they should change to reflect participant needs. This mechanism is the <a class="reference external" href="https://github.com/paritytech/polkadot/wiki/Governance">Polkadot governance scheme</a>.</p>
 <p>To ensure that useful state transitions are processed by those state machines, we will want to ensure that useful transactions get included in Polkadot blocks. Polkadot will have a transaction fee mechanism on the relay chain to ensure that transactions issued by parties willing to pay a reasonable price for them are included. There will also be a certain portion of each block that is dedicated to certain high-priority transactions, such as misbehaviour reporting. The utility of the parachain state transitions has to be ensured by the state transition function of a given chain.</p>
-</div>
-<div class="section" id="-3.2-validity">
-<h3>3.2 Validity<a class="headerlink" href="#-3.2-validity" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../_images/validity.png" src="../_images/validity.png" />Validity</p>
+
+
+<h3 id="-3.2-validity">3.2 Validity<a class="headerlink" href="#-3.2-validity" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../_images/validity.png" src="../_images/validity.png"/>Validity</p>
 <p>The notion of validity in Polkadot is determined by a state transition validation function (STVF). Each chain in the ecosystem has to have one implemented. In order for all nodes to be able to run this function it is being distributed as deterministic WebAssembly (Wasm) code which can be executed by the Polkadot Runtime Environment.</p>
 <p>The blocks are produced by parachain collators, then they get validated using the STVF by the subset of validators responsible for the given parachain to finally get included in the Polkadot Relay Chain. During this process validators, parachain collators and other parties are free to challenge claims of validity to trigger additional check, these parties are referred to as fishermen. <a class="reference external" href="Availability_and_Validity.html">Read here about parachain validity</a>.</p>
-</div>
-<div class="section" id="-3.3-finality">
-<h3>3.3 Finality<a class="headerlink" href="#-3.3-finality" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../_images/canonicality.png" src="../_images/canonicality.png" />Finality</p>
+
+
+<h3 id="-3.3-finality">3.3 Finality<a class="headerlink" href="#-3.3-finality" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../_images/canonicality.png" src="../_images/canonicality.png"/>Finality</p>
 <p>Finality of the Polkadot network state machines is achieved via a combination of a block production mechanism with eventual probabilistic consistency (<a class="reference external" href="BABE/Babe.html">BABE scheme</a>) and <a class="reference external" href="GRANDPA.html">GRANDPA finality gadget</a>.</p>
 <p>This approach allows for block production (thus transaction confirmations) to be fast, while allowing for as fast as possible economic finality with compact proofs.</p>
-</div>
-<div class="section" id="-3.4-availability">
-<h3>3.4 Availability<a class="headerlink" href="#-3.4-availability" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../_images/availability.png" src="../_images/availability.png" />Availability</p>
+
+
+<h3 id="-3.4-availability">3.4 Availability<a class="headerlink" href="#-3.4-availability" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../_images/availability.png" src="../_images/availability.png"/>Availability</p>
 <p>In order for the critical data from all chains to remain reachable by users and subsequent block producers, Polkadot makes use of an erasure coding based <a class="reference external" href="Availability_and_Validity.html">availability scheme</a>.</p>
-</div>
-<div class="section" id="-3.5-messaging-reliability">
-<h3>3.5 Messaging reliability<a class="headerlink" href="#-3.5-messaging-reliability" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../_images/messaging.png" src="../_images/messaging.png" />Messaging</p>
+
+
+<h3 id="-3.5-messaging-reliability">3.5 Messaging reliability<a class="headerlink" href="#-3.5-messaging-reliability" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../_images/messaging.png" src="../_images/messaging.png"/>Messaging</p>
 <p>Besides ensuring all the above properties for all parachain, a crucial element of Polkadot is that these state machines are able to affect each others state transitions. This is done via the <a class="reference external" href="ICMP.html">Inter-Chain Message Passing (ICMP) scheme</a>.</p>
-</div>
-<div class="section" id="-3.6.-size">
-<h3>3.6. Size<a class="headerlink" href="#-3.6.-size" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../_images/size.png" src="../_images/size.png" />Size</p>
+
+
+<h3 id="-3.6.-size">3.6. Size<a class="headerlink" href="#-3.6.-size" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../_images/size.png" src="../_images/size.png"/>Size</p>
 <p>To ensure that the state transitions can be processed and stored by the network their size has to be reasonable. Mechanisms such as transaction fees and block limits are there to limit the storage size and computation required for each block.</p>
-<div class="section" id="light-client">
-<h4>Light client<a class="headerlink" href="#light-client" title="Permalink to this headline">¶</a></h4>
+
+<h4 id="light-client">Light client<a class="headerlink" href="#light-client" title="Permalink to this headline">¶</a></h4>
 <p>The protocol is being designed with light client support in mind with existing Substrate implementation supporting one.</p>
-</div>
-</div>
-<div class="section" id="-3.7-bandwidth">
-<h3>3.7 Bandwidth<a class="headerlink" href="#-3.7-bandwidth" title="Permalink to this headline">¶</a></h3>
+
+
+
+<h3 id="-3.7-bandwidth">3.7 Bandwidth<a class="headerlink" href="#-3.7-bandwidth" title="Permalink to this headline">¶</a></h3>
 <p>To ensure usability in realistic network conditions a reasonable bandwidth requirements have to be maintained.</p>
-</div>
-</div>
-<div class="section" id="-4.-desired-architectural-qualities">
-<h2>4. Desired architectural qualities<a class="headerlink" href="#-4.-desired-architectural-qualities" title="Permalink to this headline">¶</a></h2>
+
+
+
+<h2 id="-4.-desired-architectural-qualities">4. Desired architectural qualities<a class="headerlink" href="#-4.-desired-architectural-qualities" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Minimal: Polkadot should have as little functionality as possible.</p></li>
 <li><p>Simple: No additional complexity should be present in the base protocol.</p></li>
 <li><p>General: Polkadot can be optimized through making the model into which extensions fit as abstract as possible.</p></li>
 <li><p>Robust: Polkadot should provide a fundamentally stable base-layer.</p></li>
 </ul>
-</div>
-</div>
 
 
-          </div>
+
+
+          </article>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Web3 Foundation Research</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../polkadot.html">Polkadot</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Polkadot</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#-1.-specification-of-the-polkadot-runtime-environment">1. Specification of the Polkadot Runtime Environment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#-2.-identifying-participants-to-run-the-network">2. Identifying participants to run the network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#-2.1-keys">2.1 Keys</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#-2.2-proof-of-stake">2.2 Proof-of-Stake</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#-2.3-why-not-use-different-sets-for-different-tasks-">2.3 Why not use different sets for different tasks?</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#-3.-ensuring-state-transition-properties">3. Ensuring state transition properties</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#-3.1-utility">3.1 Utility</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#-3.2-validity">3.2 Validity</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#-3.3-finality">3.3 Finality</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#-3.4-availability">3.4 Availability</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#-3.5-messaging-reliability">3.5 Messaging reliability</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#-3.6.-size">3.6. Size</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#light-client">Light client</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="#-3.7-bandwidth">3.7 Bandwidth</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#-4.-desired-architectural-qualities">4. Desired architectural qualities</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Availability_and_Validity.html">Availability and Validity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GRANDPA.html">GRANDPA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ICMP.html">ICMP Scheme</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Parachain-Allocation.html">Parachain Allocation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Token Economics.html">Token Economics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BABE.html">BABE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="NPoS.html">NPoS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="keys.html">Keys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slashing.html">Slashing</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../research_team_members.html">Research Team Members</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="../polkadot.html">Polkadot</a><ul>
-      <li>Previous: <a href="../polkadot.html" title="previous chapter">Polkadot</a></li>
-      <li>Next: <a href="Availability_and_Validity.html" title="next chapter">Availability and Validity</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+    </main>
+    <footer class="md-footer">
+      <div class="md-footer-nav">
+        <nav class="md-footer-nav__inner md-grid">
+            
+              <a href="../polkadot.html" title="Material"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+                 rel="prev">
+                <div class="md-flex__cell md-flex__cell--shrink">
+                  <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+                </div>
+                <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                  <span class="md-flex__ellipsis">
+                    <span
+                        class="md-footer-nav__direction"> Previous </span> Polkadot </span>
+                </div>
+              </a>
+            
+            
+              <a href="Availability_and_Validity.html" title="Admonition"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--next"
+                 rel="next">
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                  class="md-flex__ellipsis"> <span
+                  class="md-footer-nav__direction"> Next </span> Availability and Validity </span>
+              </div>
+              <div class="md-flex__cell md-flex__cell--shrink"><i
+                  class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+              </div>
+            
+          </a>
+          
+        </nav>
+      </div>
+      <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+          <div class="md-footer-copyright">
+              <div class="md-footer-copyright__highlight">
+                &#169; Copyright 2019, Web3 Foundation.
+                
+            </div>
+              Created using
+                <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+               and
+              <a href="https://github.com/bashtage/sphinx-material/">Material for
+                Sphinx</a></div>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Web3 Foundation.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../_sources/polkadot/index.md.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
+    </footer>
+      <script src="../_static/javascripts/application.js"></script>
+      <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </div>
   </body>
 </html>

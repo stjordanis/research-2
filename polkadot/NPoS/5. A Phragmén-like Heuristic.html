@@ -4,8 +4,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>5. A Phragmén-like Heuristic &#8212; Web3 Foundation Research  documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>5. A Phragmén-like Heuristic &#8212; Research at W3F</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/stylesheets/extra.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -19,31 +61,333 @@
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Keys" href="../keys.html" />
     <link rel="prev" title="4. Sequential Phragmén’s method." href="4. Sequential Phragmén’s method.html" />
+  
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body dir=ltr
+        data-md-color-primary=deep-orange data-md-color-accent=deep-orange>
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448"
+           id="__github">
+        <path fill="currentColor"
+              d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"></path>
+      </svg>
+    </defs>
+  </svg>
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#polkadot/NPoS/5. A Phragmén-like Heuristic" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="Research at W3F"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/w3f_logo.svg" height="26"
+                   alt="Research at W3F logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Research at W3F</span>
+          <span class="md-header-nav__topic"> 5. A Phragmén-like Heuristic </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">Research at W3F</a></li>
+          <li class="md-tabs__item"><a href="../../polkadot.html" class="md-tabs__link">Polkadot</a></li>
+          <li class="md-tabs__item"><a href="../NPoS.html" class="md-tabs__link">NPoS</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="Research at W3F" class="md-nav__button md-logo">
+      
+        <img src="../../_static/w3f_logo.svg" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="Research at W3F">Research at W3F</a>
+  </label>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../polkadot.html" class="md-nav__link">Polkadot</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">Polkadot</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Availability_and_Validity.html" class="md-nav__link">Availability and Validity</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../GRANDPA.html" class="md-nav__link">GRANDPA</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../ICMP.html" class="md-nav__link">ICMP Scheme</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Parachain-Allocation.html" class="md-nav__link">Parachain Allocation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Polkadot-Runtime-Environment.html" class="md-nav__link">Polkadot Runtime Environment Specification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../Token Economics.html" class="md-nav__link">Token Economics</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../BABE.html" class="md-nav__link">BABE</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../NPoS.html" class="md-nav__link">NPoS</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="index.html" class="md-nav__link">Intro to Nominated Proof-of-Stake</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="1. Overview.html" class="md-nav__link">1. Overview of results for the NPoS election problem</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="2. The min-norm max-flow problem.html" class="md-nav__link">2. The min-norm max-flow problem</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="3. The maximin support problem.html" class="md-nav__link">3. The maximin support problem</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="4. Sequential Phragmén’s method.html" class="md-nav__link">4. Sequential Phragmén’s method.</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> 5. A Phragmén-like Heuristic </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">5. A Phragmén-like Heuristic</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-npos-5-a-phragmen-like-heuristic--page-root" class="md-nav__link">5. A Phragmén-like Heuristic</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#notation" class="md-nav__link">Notation</a>
+        </li>
+        <li class="md-nav__item"><a href="#the-basic-heuristic" class="md-nav__link">The basic heuristic</a>
+        </li>
+        <li class="md-nav__item"><a href="#--parameterised--proportional-justified-representation." class="md-nav__link">(Parameterised) Proportional Justified Representation.</a>
+        </li>
+        <li class="md-nav__item"><a href="#local-search-for-provable-pjr" class="md-nav__link">Local Search for provable PJR</a>
+        </li>
+        <li class="md-nav__item"><a href="#factor-3.15-approximation-algorithm" class="md-nav__link">Factor 3.15 approximation algorithm</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#analysis" class="md-nav__link">Analysis</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/NPoS/5. A Phragmén-like Heuristic.md.txt">Show Source</a> </li>
+
+  </ul>
+</nav><ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#notation" class="md-nav__link">Notation</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#the-basic-heuristic" class="md-nav__link">The basic heuristic</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#--parameterised--proportional-justified-representation." class="md-nav__link">(Parameterised) Proportional Justified Representation.</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#local-search-for-provable-pjr" class="md-nav__link">Local Search for provable PJR</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#factor-3.15-approximation-algorithm" class="md-nav__link">Factor 3.15 approximation algorithm</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#analysis" class="md-nav__link">Analysis</a>
+      
+    </li></ul>
+    </li></ul>
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../keys.html" class="md-nav__link">Keys</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../networking.html" class="md-nav__link">Networking</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../slashing.html" class="md-nav__link">Slashing</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../research_team_members.html" class="md-nav__link">Research Team Members</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#polkadot-npos-5-a-phragmen-like-heuristic--page-root" class="md-nav__link">5. A Phragmén-like Heuristic</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#notation" class="md-nav__link">Notation</a>
+        </li>
+        <li class="md-nav__item"><a href="#the-basic-heuristic" class="md-nav__link">The basic heuristic</a>
+        </li>
+        <li class="md-nav__item"><a href="#--parameterised--proportional-justified-representation." class="md-nav__link">(Parameterised) Proportional Justified Representation.</a>
+        </li>
+        <li class="md-nav__item"><a href="#local-search-for-provable-pjr" class="md-nav__link">Local Search for provable PJR</a>
+        </li>
+        <li class="md-nav__item"><a href="#factor-3.15-approximation-algorithm" class="md-nav__link">Factor 3.15 approximation algorithm</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#analysis" class="md-nav__link">Analysis</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/polkadot/NPoS/5. A Phragmén-like Heuristic.md.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
             
-  <div class="section" id="-5.-a-phragm-n-like-heuristic">
-<h1>5. A Phragmén-like Heuristic<a class="headerlink" href="#-5.-a-phragm-n-like-heuristic" title="Permalink to this headline">¶</a></h1>
+  
+<h1 id="polkadot-npos-5-a-phragmen-like-heuristic--page-root">5. A Phragmén-like Heuristic<a class="headerlink" href="#polkadot-npos-5-a-phragmen-like-heuristic--page-root" title="Permalink to this headline">¶</a></h1>
 <p>The <a class="reference external" href="4. Sequential Phragmén’s method.html">sequential Phragmén’s method</a> is fast, seems to work well in practice, and gives a solution that satisfies the Proportional Justified Representation (PJR) axiom. However, we identify two problems with it. First, it does not give a constant factor approximation to the <a class="reference external" href="3. The maximin support problem.html">maximin support objective</a>. Second, it lacks versatility, in the sense that it cannot be used to improve upon an arbitrary solution given as input. We describe a heuristic closely related to the sequential Phragmén’s method, which takes as input an arbitrary partial solution, defines scores over the validator candidates, and uses them to add a new validator to the solution, removing another validator if necessary. </p>
 <p>Checking if a committee satisifies the PJR property is NP-hard. However, we define a stronger property called PJR(<span class="math notranslate nohighlight">\(d\)</span>), which depends on a parameter <span class="math notranslate nohighlight">\(d\)</span>. We show that it implies PJR (for an adecuate value of <span class="math notranslate nohighlight">\(d\)</span>), and that it can checked efficiently, using our heuristic. We also build from our heuristic a “PJR(<span class="math notranslate nohighlight">\(d\)</span>)-enabler”; that is, an algorithm that takes as input a solution of minimum support <span class="math notranslate nohighlight">\(d\)</span>, performs some swaps using the heuristic, and returns a solution of minimum support at least <span class="math notranslate nohighlight">\(d\)</span> and observing PJR(<span class="math notranslate nohighlight">\(d\)</span>) (and also PJR). Finally, we provide an efficient factor-3.15 approximation algorithm, which starts with an empty set and alternates between using our heuristic to elect a new validator, and running a flow balancing algorithm to improve the support distribution on the current set.</p>
-<div class="section" id="notation">
-<h2>Notation<a class="headerlink" href="#notation" title="Permalink to this headline">¶</a></h2>
+
+<h2 id="notation">Notation<a class="headerlink" href="#notation" title="Permalink to this headline">¶</a></h2>
 <p>Recall that an instance of the NPoS election problem is a graph <span class="math notranslate nohighlight">\((N\cup V, E)\)</span> representing the trust relations between nominators and validator candidates, a vector <span class="math notranslate nohighlight">\(b\in\mathbb{R}_{\geq 0}^N\)</span> of nominator budgets, and a target number <span class="math notranslate nohighlight">\(m\)</span> of validators to elect.</p>
 <p>A support distribution from nominators to validators is represented by a vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}_{\geq 0}^E\)</span> of edge weights. Such a vector is called <em>affordable</em> if, besides non-negativity constraints, it observes the budget constraints <span class="math notranslate nohighlight">\(\sum_{v\in V: nv\in E} w_{nv}\leq b_n\)</span> for each nominator <span class="math notranslate nohighlight">\(n\in N\)</span>. Furthermore, it is called <em>maximally affordable</em> with respect to a validator set <span class="math notranslate nohighlight">\(S\subseteq V\)</span>  if <span class="math notranslate nohighlight">\(\sum_{v\in S: \ nv\in E} w_{nv} = b_n\)</span> for each <span class="math notranslate nohighlight">\(n\in N\)</span> having at least one neighbor in <span class="math notranslate nohighlight">\(S\)</span>. By a <em>solution</em> we mean a pair <span class="math notranslate nohighlight">\((S,w)\)</span> where <span class="math notranslate nohighlight">\(S\subseteq V\)</span> with <span class="math notranslate nohighlight">\(|S|\leq m\)</span> and <span class="math notranslate nohighlight">\(w\)</span> is maximally affordable for <span class="math notranslate nohighlight">\(S\)</span>. Our algorithm will return solutions of size <span class="math notranslate nohighlight">\(m\)</span>, but we will often consider solutions of smaller sizes in intermediate steps and in the analyses.</p>
 <p>Given an edge weight vector <span class="math notranslate nohighlight">\(w\)</span> and a validator <span class="math notranslate nohighlight">\(v\in V\)</span>, the <em>support</em> of <span class="math notranslate nohighlight">\(v\)</span> relative to <span class="math notranslate nohighlight">\(w\)</span> is <span class="math notranslate nohighlight">\(supp_w(v):=\sum_{n: nv\in E} w_{nv}\)</span>. For a solution <span class="math notranslate nohighlight">\((S,w)\)</span>, we extend this definition to <span class="math notranslate nohighlight">\(supp_w(S):=\min_{v\in S} supp_w(v)\)</span>. The <em>maximin support</em> objective is maximizing <span class="math notranslate nohighlight">\(supp_w(S)\)</span> over all feasible solutions <span class="math notranslate nohighlight">\((S,w)\)</span> to the given instance.</p>
-</div>
-<div class="section" id="the-basic-heuristic">
-<h2>The basic heuristic<a class="headerlink" href="#the-basic-heuristic" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="the-basic-heuristic">The basic heuristic<a class="headerlink" href="#the-basic-heuristic" title="Permalink to this headline">¶</a></h2>
 <p>Suppose that <span class="math notranslate nohighlight">\((S,w)\)</span> is a maximally affordable solution with <span class="math notranslate nohighlight">\(|S|\leq m\)</span>, and we wish to add a new candidate <span class="math notranslate nohighlight">\(v'\in V\setminus S\)</span> and give it some support <span class="math notranslate nohighlight">\(d\)</span>. To do this, in general we will need to reduce the support of any other candidate <span class="math notranslate nohighlight">\(v \in S\)</span> who has a neighbor nominator <span class="math notranslate nohighlight">\(n\)</span> in common with <span class="math notranslate nohighlight">\(v'\)</span>. When we do this, we want to ensure that we do not reduce the support of <span class="math notranslate nohighlight">\(v\)</span> below <span class="math notranslate nohighlight">\(d\)</span> (assuming it was peviously above <span class="math notranslate nohighlight">\(d\)</span>). A simple way to ensure this is to reduce the weight on edge <span class="math notranslate nohighlight">\(nv\)</span> from <span class="math notranslate nohighlight">\(w_{nv}\)</span> to <span class="math notranslate nohighlight">\(w_{nv}\cdot(d/supp_w(v))\)</span>, and assign the difference to edge <span class="math notranslate nohighlight">\(nv'\)</span>. That way, it is clear that even if all nominators <span class="math notranslate nohighlight">\(n\)</span> supporting <span class="math notranslate nohighlight">\(v\)</span> are also neighbors of <span class="math notranslate nohighlight">\(v'\)</span>, the new support of <span class="math notranslate nohighlight">\(v\)</span> does not go below <span class="math notranslate nohighlight">\(d\)</span>.</p>
 <p>Thus, if for each <span class="math notranslate nohighlight">\(n\in N\)</span> and <span class="math notranslate nohighlight">\(d\geq 0\)</span> we define the nominator’s slack as</p>
 <div class="math notranslate nohighlight">
@@ -155,9 +499,9 @@ g(d)&amp;:= score_w(v',d)-d \\
 It is easy to verify that each iteration of the algorithm above executes in time <span class="math notranslate nohighlight">\(O(|E|)\)</span>. Let <span class="math notranslate nohighlight">\(d^*:=\max_{v'\in V\setminus S} score_w(v')=\max_{d\geq 0} \max_{v'\in V\setminus S} score_w(v',d)\)</span>. From point (i) in the corollary, we can reduce our search for <span class="math notranslate nohighlight">\(d^*\)</span> to only the evaluations of function <span class="math notranslate nohighlight">\(\max_{v'\in V\setminus S} score_w(v',d)\)</span> over the <span class="math notranslate nohighlight">\(O(m)\)</span> points <span class="math notranslate nohighlight">\(d_i\)</span>. Moreover, by point (ii), we can perform binary search, so that if <span class="math notranslate nohighlight">\(d_{\max}:=\max_{v'\in V\setminus S} score_w(v',d_i)\)</span> is larger than <span class="math notranslate nohighlight">\(d_i\)</span> then we can restrict our search to values <span class="math notranslate nohighlight">\(d\)</span> larger than the current <span class="math notranslate nohighlight">\(d_i\)</span>, and otherwise we can restrict our search to values smaller than the current <span class="math notranslate nohighlight">\(d_i\)</span>. This shows that only <span class="math notranslate nohighlight">\(O(\log m)\)</span> iterations are performed. Finally, by point (iii) we can also restrict our search to values <span class="math notranslate nohighlight">\(d\)</span> larger than the current <span class="math notranslate nohighlight">\(d_{\max}\)</span>, thus speeding up our search even more. To finish the proof, we remark that we choose to initialize the index <span class="math notranslate nohighlight">\(i\)</span> to zero because it seems to speed up the search in many implementations, but it can be initialized to any other value between <span class="math notranslate nohighlight">\(i_{lo}\)</span> and <span class="math notranslate nohighlight">\(i_{hi}\)</span>.</p>
 <p><span class="math notranslate nohighlight">\(\square\)</span></p>
 <p>When we have the score, we can insert candidate <span class="math notranslate nohighlight">\(v_{\max}\)</span> to the current solution <span class="math notranslate nohighlight">\((S,w)\)</span> using InsertCandidate(<span class="math notranslate nohighlight">\(S,w,v_{\max},d_{\max}\)</span>), thus obtaining a new solution <span class="math notranslate nohighlight">\((S',w')\)</span> with <span class="math notranslate nohighlight">\(supp_{w'}(S')\geq \min\{supp_w(S), \max_{v'\in V\setminus S} score_w(v')\}\)</span>, as desired.</p>
-</div>
-<div class="section" id="--parameterised--proportional-justified-representation.">
-<h2>(Parameterised) Proportional Justified Representation.<a class="headerlink" href="#--parameterised--proportional-justified-representation." title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="--parameterised--proportional-justified-representation.">(Parameterised) Proportional Justified Representation.<a class="headerlink" href="#--parameterised--proportional-justified-representation." title="Permalink to this headline">¶</a></h2>
 <p>We can generalise the PJR property to our weighted votes setting and consider adding a parameter. For each nominator <span class="math notranslate nohighlight">\(n\in N\)</span>, let <span class="math notranslate nohighlight">\(V_n\subseteq V\)</span> be the subset of candidates that are trusted by <span class="math notranslate nohighlight">\(n\)</span>, i.e. <span class="math notranslate nohighlight">\(V_n:=\{v\in V: \ nv\in E\}\)</span>.</p>
 <p><strong>Definition:</strong> A committee <span class="math notranslate nohighlight">\(S\)</span> (of any size) satisfies Proportional Justified Representation with parameter <span class="math notranslate nohighlight">\(d\)</span> (PJR(<span class="math notranslate nohighlight">\(d\)</span>) for short) if there is no subset <span class="math notranslate nohighlight">\(N'\subseteq N\)</span> of nominators and integer <span class="math notranslate nohighlight">\(t&gt;0\)</span> such that:</p>
 <p>a) <span class="math notranslate nohighlight">\(\sum_{n\in N'} b_n \geq t\cdot d\)</span>,</p>
@@ -192,9 +536,9 @@ and if <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</sp
 <li><p>Return true.</p></li>
 </ol>
 <p><strong>Lemma 6:</strong> Algorithm TestThatImpliesPJR(<span class="math notranslate nohighlight">\(S,w,d\)</span>) runs in time <span class="math notranslate nohighlight">\(O(|E|)\)</span>, and if it returns true for a given solution <span class="math notranslate nohighlight">\((S,w)\)</span>, then <span class="math notranslate nohighlight">\(S\)</span> satisfies PJR(<span class="math notranslate nohighlight">\(d\)</span>).</p>
-</div>
-<div class="section" id="local-search-for-provable-pjr">
-<h2>Local Search for provable PJR<a class="headerlink" href="#local-search-for-provable-pjr" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="local-search-for-provable-pjr">Local Search for provable PJR<a class="headerlink" href="#local-search-for-provable-pjr" title="Permalink to this headline">¶</a></h2>
 <p>From the previous lemma, it follows that for a maximally affordable solution <span class="math notranslate nohighlight">\((S,w)\)</span> and for any <span class="math notranslate nohighlight">\(d\geq 0\)</span>, either the solution satisfies PJR(<span class="math notranslate nohighlight">\(d\)</span>), or there is a new candidate which can be inserted with support at least <span class="math notranslate nohighlight">\(d\)</span>, and can be used to replace another candidate with low support. This observation naturally gives rise to the following local search procedure, for which we fix a small constant <span class="math notranslate nohighlight">\(\varepsilon&gt;0\)</span>.</p>
 <p><strong>Algorithm.</strong> LocalSearchForPJR(<span class="math notranslate nohighlight">\(S,w, \varepsilon\)</span>)</p>
 <ol class="simple">
@@ -219,9 +563,9 @@ and if <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</sp
 \[c\cdot d \geq d'=d_{current}^t\geq (1+\varepsilon)^{\lfloor \frac{t-1}{m}\rfloor} \cdot d_{current}^1= (1+\varepsilon)^{\lfloor \frac{t-1}{m}\rfloor} \cdot d.\]</div>
 <p>We conclude that <span class="math notranslate nohighlight">\(\lfloor\frac{t-1}{m}\rfloor \log_{1+\varepsilon} c\)</span>, and so <span class="math notranslate nohighlight">\(t \leq m(1+\log_{1+\varepsilon} c)=m\cdot O(1+ \varepsilon^{-1} \log c)\)</span></p>
 <p><span class="math notranslate nohighlight">\(\square\)</span></p>
-</div>
-<div class="section" id="factor-3.15-approximation-algorithm">
-<h2>Factor 3.15 approximation algorithm<a class="headerlink" href="#factor-3.15-approximation-algorithm" title="Permalink to this headline">¶</a></h2>
+
+
+<h2 id="factor-3.15-approximation-algorithm">Factor 3.15 approximation algorithm<a class="headerlink" href="#factor-3.15-approximation-algorithm" title="Permalink to this headline">¶</a></h2>
 <p>We propose a greedy algorithm that starts with an empty set and runs <span class="math notranslate nohighlight">\(m\)</span> iterations, where each iteration uses our heuristic to insert a new validator and then runs a weight redistribution algorithm over the current set.</p>
 <p>In particular, for a given solution <span class="math notranslate nohighlight">\((S,w)\)</span> with <span class="math notranslate nohighlight">\(|S|\leq m\)</span>, we run a weight rebalancing algorithm that computes an <span class="math notranslate nohighlight">\(\varepsilon\)</span>-approximation of the <a class="reference external" href="2. The min-norm max-flow problem.html">min-norm max-flow (MNMF) weight vector</a> for set <span class="math notranslate nohighlight">\(S\)</span>. We formalize this definition below.</p>
 <p><strong>Definition:</strong> For a non-empty validator set <span class="math notranslate nohighlight">\(S\subseteq V\)</span> and a constant <span class="math notranslate nohighlight">\(\varepsilon&gt;0\)</span>, an edge weight vector <span class="math notranslate nohighlight">\(w\in\mathbb{R}_{\geq 0}^E\)</span> is an <span class="math notranslate nohighlight">\(\varepsilon\)</span>-MNMF for <span class="math notranslate nohighlight">\(S\)</span> if</p>
@@ -242,8 +586,8 @@ and if <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</sp
 </li>
 <li><p>Return <span class="math notranslate nohighlight">\((S,w)\)</span>.</p></li>
 </ol>
-<div class="section" id="analysis">
-<h3>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
+
+<h3 id="analysis">Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
 <p>The main result of the section is showing that the previous algorithm offers a <span class="math notranslate nohighlight">\(3.15\cdot (1+\varepsilon)\)</span>-factor approximation, and satisfies PJR.</p>
 <p><strong>Theorem 8:</strong>  The procedure <span class="math notranslate nohighlight">\(BalanceBetweenHeuristic()\)</span> returns a solution <span class="math notranslate nohighlight">\((S, w)\)</span> for which <span class="math notranslate nohighlight">\(supp_{w}(S) \geq d^*/(3.15\cdot (1+\varepsilon))\)</span>, where <span class="math notranslate nohighlight">\(d^*\)</span> is the maximin support across all solutions of the given NPoS election instance. Moreover, the solution satisfies PJR(<span class="math notranslate nohighlight">\((1+\varepsilon)\cdot supp_{w}(S)\)</span>) and, if <span class="math notranslate nohighlight">\(\varepsilon \leq 1/m\)</span>, PJR.</p>
 <p>We begin with a couple of needed technical result.</p>
@@ -267,15 +611,13 @@ and if <span class="math notranslate nohighlight">\(prescore_w(v',d)\geq d\)</sp
 &lt;a\cdot d^*\Big(1+\frac{\varepsilon}{5m'}\Big)^{i+1}\Big(1+\frac{\varepsilon}{4}\Big)^{-1}.\]</div>
 <p>Let <span class="math notranslate nohighlight">\(d_l\)</span> and <span class="math notranslate nohighlight">\(d_u\)</span> be respectively the lower and upper bounds above, and notice that <span class="math notranslate nohighlight">\(a\cdot d^*/(1+ \varepsilon/4) \leq d_l\leq a\cdot d^*\)</span> . Define the sets <span class="math notranslate nohighlight">\(S_l\)</span> and <span class="math notranslate nohighlight">\(S_u\)</span> as containing the validators <span class="math notranslate nohighlight">\(v\)</span> such that <span class="math notranslate nohighlight">\(supp_w(v)&lt; d_l\)</span> and <span class="math notranslate nohighlight">\(supp_w(v)\geq d_u\)</span>, respectively. By the definition of <span class="math notranslate nohighlight">\(d_l\)</span> and <span class="math notranslate nohighlight">\(d_u\)</span>, we know that <span class="math notranslate nohighlight">\(S_l\)</span> and <span class="math notranslate nohighlight">\(S_u\)</span> partition the set <span class="math notranslate nohighlight">\(S\)</span>. </p>
 <p>Going forward, partition the set <span class="math notranslate nohighlight">\(N=N_l \cup N_u\)</span>, where <span class="math notranslate nohighlight">\(N_l\)</span> contains the <span class="math notranslate nohighlight">\(n\in N\)</span> that have a neighbor in <span class="math notranslate nohighlight">\(S_l\)</span>, and <span class="math notranslate nohighlight">\(N_u\)</span> contains those that do not. We highlight some properties of these sets. </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* $\nexists n\in N_l, v\in S_u$ such that $w_{n,v}&amp;gt;0$: Assuming otherwise that there is such a pair, the fact that $n$ is in $N_l$ implies that it has a neighbor $v&#39;\in S_l$. But then we can apply the definition of $\varepsilon$-MNMF to obtain $supp_w(v)/supp_w(v&#39;)\leq 1+\epsilon/(5m&#39;)=d_u/d_l$, which contradicts the definitions of $S_l$ and $S_u$.
+<div class="codehilite"><pre><span></span>* $\nexists n\in N_l, v\in S_u$ such that $w_{n,v}&gt;0$: Assuming otherwise that there is such a pair, the fact that $n$ is in $N_l$ implies that it has a neighbor $v'\in S_l$. But then we can apply the definition of $\varepsilon$-MNMF to obtain $supp_w(v)/supp_w(v')\leq 1+\epsilon/(5m')=d_u/d_l$, which contradicts the definitions of $S_l$ and $S_u$.
 
 * By the fact that $w$ is maximally affordable, and that each nominator in $N_l$ has neighbors in $S_l$ but gives no support to $S_u$, we have
 </pre></div>
-</div>
 <p><span class="math notranslate nohighlight">\(\sum_{n\in N_l} b_n \leq \sum_{v\in S_l} supp_w(v)&lt; |S_l|\cdot d_l.\)</span></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* If we define $N_a\subseteq N_u$ as those $n\in N_u$ that have a neighbor in $T$, then claim a) becomes evident, and claim c) follows from the fact that $N_a$ has no neighbors in $S_l$ (by def. of $N_u$) and all of its neighbors in $S_u$ have a support of at least $d_u&amp;gt;d_l\geq ad^*/(1+\epsilon/4)$. Hence, it only remains to prove claim b).
+<div class="codehilite"><pre><span></span>* If we define $N_a\subseteq N_u$ as those $n\in N_u$ that have a neighbor in $T$, then claim a) becomes evident, and claim c) follows from the fact that $N_a$ has no neighbors in $S_l$ (by def. of $N_u$) and all of its neighbors in $S_u$ have a support of at least $d_u&gt;d_l\geq ad^*/(1+\epsilon/4)$. Hence, it only remains to prove claim b).
 </pre></div>
-</div>
 <p>Assume without loss of generality that <span class="math notranslate nohighlight">\(w^*\)</span> provides a support of exactly <span class="math notranslate nohighlight">\(d^*\)</span> to each <span class="math notranslate nohighlight">\(v\in S^*\)</span>, by possibly capping its edge weights, and define the edge weight vector <span class="math notranslate nohighlight">\(w'\)</span> by capping <span class="math notranslate nohighlight">\(w\)</span> arbitrarily such that <span class="math notranslate nohighlight">\(supp_{w'}(v)=d_l\)</span> if <span class="math notranslate nohighlight">\(v\in S_u\)</span>, and <span class="math notranslate nohighlight">\(0\)</span> otherwise (these vectors are affordable but in general not maximally affordable). Define <span class="math notranslate nohighlight">\(f:=w^*-w'\in\mathbb{R}^E\)</span>, which we consider as a flow over the network induced by <span class="math notranslate nohighlight">\(N\cup S\cup S^*\)</span>.</p>
 <p>Clearly, the net excess of set <span class="math notranslate nohighlight">\(N\)</span> relative to <span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(md^* - |S_u|d_l\\), the net excess of set $N_l$ is at most $\sum_{n\in N_l} b_n &lt; |S_l|d_l$, and the net demand of set $S_u$ is \(|S^*\cap S_u|(d^*-d_l)\)</span>. By subtracting the last two terms from the first one, we obtain that the flow going from <span class="math notranslate nohighlight">\(N_u\)</span> to <span class="math notranslate nohighlight">\(S^*\setminus S_u\)</span> is at least</p>
 <div class="math notranslate nohighlight">
@@ -343,104 +685,65 @@ In particular, this holds for <span class="math notranslate nohighlight">\(b=1/3
 <p>For the PJR claim, suppose that <span class="math notranslate nohighlight">\(S_m\)</span> does not satify PJR(<span class="math notranslate nohighlight">\(d\)</span>) for some <span class="math notranslate nohighlight">\(d\)</span>. Then nor do any <span class="math notranslate nohighlight">\(S_i\)</span>, since they are subsets of <span class="math notranslate nohighlight">\(S_m\)</span>. So by Lemma 5, for every <span class="math notranslate nohighlight">\(0 \leq i \leq m-1\)</span>, there is a <span class="math notranslate nohighlight">\(v_i \notin S_i\)</span> with <span class="math notranslate nohighlight">\(score_{w_i}(v_i) \geq d\)</span>. The same argument as above gives that <span class="math notranslate nohighlight">\(supp_{w_m}(S_m) \geq d/(1+\epsilon/4)^2 &lt; d/(1+\epsilon)\)</span>. It follows that <span class="math notranslate nohighlight">\(S_m\)</span> does satisfy PJR(<span class="math notranslate nohighlight">\(supp_{w_m}(S_m)(1+epsilon)\)</span>).</p>
 <p>Suppose that <span class="math notranslate nohighlight">\(S_m\)</span> does not satisfy PJR but <span class="math notranslate nohighlight">\(\epsilon \leq 1/m\)</span>. Then by Lemma 5, there exists a <span class="math notranslate nohighlight">\(v \notin S\)</span> with <span class="math notranslate nohighlight">\(score_{w_n}(v) \geq \sum_n b_n/m\)</span>. By Lemmas 2 and 1, we can run InsertNewCandidate(<span class="math notranslate nohighlight">\(w_n, score_{w_n}(v)\)</span>), to obatian a <span class="math notranslate nohighlight">\(w'\)</span> such that <span class="math notranslate nohighlight">\(\supp_{w'}(S_m \cup \{v\}) = \min \{ score_{w_n}(v), supp_{w_m}(S_m) \}\)</span>. But since <span class="math notranslate nohighlight">\(|S_m \cup \{v\}|=m+1\)</span>, we must have <span class="math notranslate nohighlight">\(\supp_{w'}(S_m \cup \{v\}) \leq \sum_n b_n/(m+1)\)</span>. Thus we get that <span class="math notranslate nohighlight">\(supp_{w_m}(S_m) \leq \sum_n b_n/(m+1)\)</span>. So if <span class="math notranslate nohighlight">\(\epsilon \leq 1/m\)</span>, then <span class="math notranslate nohighlight">\(supp_{w_m}(S_m) (1+\epsilon) \leq supp_{w_m(S_m) (m+1)/m \leq sum_n bn /m\)</span> and since PJR
 (<span class="math notranslate nohighlight">\(d\)</span>) implies PJR(<span class="math notranslate nohighlight">\(d'\)</span>) for <span class="math notranslate nohighlight">\(d' &gt; d\)</span>, we have PJR. This means that <span class="math notranslate nohighlight">\(\epsilon \leq 1/m\)</span> implies PJR.</p>
-</div>
-</div>
-</div>
 
 
-          </div>
+
+
+
+          </article>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Web3 Foundation Research</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../polkadot.html">Polkadot</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../index.html">Polkadot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Availability_and_Validity.html">Availability and Validity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../GRANDPA.html">GRANDPA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ICMP.html">ICMP Scheme</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Parachain-Allocation.html">Parachain Allocation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Polkadot-Runtime-Environment.html">Polkadot Runtime Environment Specification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Token Economics.html">Token Economics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../BABE.html">BABE</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../NPoS.html">NPoS</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="index.html">Intro to Nominated Proof-of-Stake</a></li>
-<li class="toctree-l3"><a class="reference internal" href="1. Overview.html">1. Overview of results for the NPoS election problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="2. The min-norm max-flow problem.html">2. The min-norm max-flow problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="3. The maximin support problem.html">3. The maximin support problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="4. Sequential Phragmén’s method.html">4. Sequential Phragmén’s method.</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">5. A Phragmén-like Heuristic</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#notation">Notation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#the-basic-heuristic">The basic heuristic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#--parameterised--proportional-justified-representation.">(Parameterised) Proportional Justified Representation.</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#local-search-for-provable-pjr">Local Search for provable PJR</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#factor-3.15-approximation-algorithm">Factor 3.15 approximation algorithm</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#analysis">Analysis</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../keys.html">Keys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../slashing.html">Slashing</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../research_team_members.html">Research Team Members</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../../polkadot.html">Polkadot</a><ul>
-  <li><a href="../NPoS.html">NPoS</a><ul>
-      <li>Previous: <a href="4. Sequential Phragmén’s method.html" title="previous chapter">4. Sequential Phragmén’s method.</a></li>
-      <li>Next: <a href="../keys.html" title="next chapter">Keys</a></li>
-  </ul></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+    </main>
+    <footer class="md-footer">
+      <div class="md-footer-nav">
+        <nav class="md-footer-nav__inner md-grid">
+            
+              <a href="4. Sequential Phragmén’s method.html" title="Material"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+                 rel="prev">
+                <div class="md-flex__cell md-flex__cell--shrink">
+                  <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+                </div>
+                <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                  <span class="md-flex__ellipsis">
+                    <span
+                        class="md-footer-nav__direction"> Previous </span> 4. Sequential Phragmén’s method. </span>
+                </div>
+              </a>
+            
+            
+              <a href="../keys.html" title="Admonition"
+                 class="md-flex md-footer-nav__link md-footer-nav__link--next"
+                 rel="next">
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                  class="md-flex__ellipsis"> <span
+                  class="md-footer-nav__direction"> Next </span> Keys </span>
+              </div>
+              <div class="md-flex__cell md-flex__cell--shrink"><i
+                  class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+              </div>
+            
+          </a>
+          
+        </nav>
+      </div>
+      <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+          <div class="md-footer-copyright">
+              <div class="md-footer-copyright__highlight">
+                &#169; Copyright 2019, Web3 Foundation.
+                
+            </div>
+              Created using
+                <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+               and
+              <a href="https://github.com/bashtage/sphinx-material/">Material for
+                Sphinx</a></div>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Web3 Foundation.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../../_sources/polkadot/NPoS/5. A Phragmén-like Heuristic.md.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
+    </footer>
+      <script src="../../_static/javascripts/application.js"></script>
+      <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </div>
   </body>
 </html>
