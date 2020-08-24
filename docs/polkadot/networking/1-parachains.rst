@@ -44,6 +44,72 @@ Background
 - Load-balancing across the parachain validators: they can each track capacity
   and redirect collators to other parachain validators.
 
+First principles
+================
+
+We want collators to send us PoV blocks in a way that uses our bandwidth as
+efficently as possible. We want to make it hard for attackers to significantly
+reduce the normal operating efficiency.
+
+Attackers can:
+
+- compete with connection attempts, by regenerating a new identity
+- compete with bandwidth, e.g. by sending valid but redundant / old data. This
+  attack is relatively costly to pull off, however.
+
+We can:
+
+- control per-peer bandwidth
+- select which peers we accept connections from. (typically we cannot directly
+  select, but we can accept a connection then immediately close it.)
+
+During a validator-group rollover, we would like to pass on reputation
+information from the old group to the new group, so that we can more quickly
+find good peers.
+
+Passing "reputation" between validators also allows us to perform some
+load-balancing, since we are aware of which validators are processing which
+collators.
+
+High-level ideas:
+
+1. Track the efficiency of each peer, i.e. byte counts for validation-pending,
+   valid vs valid-but-redundant, vs total byte counts.
+
+2. Optional: top efficient peers get reserved more bandwidth.
+
+3. If any peer remains in the bottom (say) 1/5 efficiency for > X time, we drop
+   them and swap them out for a new stranger peer, if one is waiting.
+
+4. If any peer sends us data that is eventually invalidated, they get put on
+   a blacklist. Since identities are easy to regenerate, we record their
+   address as well, thus building up a "heat map" of bad IP addresses. Since IP
+   addresses are dynamic, this heat map should gradually fade over time.
+
+5. When selecting new stranger peers, we prefer addresses that are on the
+   cooler part(s) of the "heat map".
+
+   Determining which IP addresses are "close" to each other is hard; but since
+   addresses are allocated by block, a basic strategy is better than nothing.
+
+   There may be other criteria we can use, IP address is the most obvious.
+
+   TODO: research how to actually accomplish this; accept() does not expose to
+   you the full set of peers that are currently waiting to connect to you.
+
+6. When rotating groups, we tell the new validators which peers we think are
+   best, i.e. their identities. They are then free to prefer these peers.
+
+   In other words, we have a whitelist over identities, which is passed around
+   here, and a blacklist over addresses, which (in this idea) is not passed
+   around.
+
+We track efficiency and not just validity, which there are a whole class of
+sophisticated bandwidth-wasting attacks that transmit valid-but-redundant data.
+This is a straightforward way of making these attacks much harder, since the
+attacker is forced to compete with actual genuine peers with regards to the end
+performance that the application actually cares about.
+
 Current thoughts
 ================
 
