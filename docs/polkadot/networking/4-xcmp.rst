@@ -30,9 +30,13 @@ Every parachain has a logical egress queue, indicating outgoing messages that ha
 
 Every parachain also has a logical ingress queue, indicating incoming messages that they have not yet acknowledged themselves. These queues are also compactly represented within the relay-chain state at each block. The representation is maintained by trusted relay-chain code, using the egress queue representations as well as acknowledgements from recipients (see below). This allows receivers to know which message bodies they should prepare to receive.
 
+**Ordering**. For a given sender, its egress queue may be thought of as several per-recipient egress queues, whose ordering is independent of each other. That is, there is no guarantee about the relative ordering of when messages will be delivered to recipients between multiple egress queues. By contrast, for a given recipient, its ingress queue is totally-ordered across all recipients - messages queued from multiple senders at a given relay-chain height, are placed in the ingress queue in a pre-determined order to ensure fairness.
+
 To ensure reliability, every parachain block building on relay-chain block ``B`` must include at least one new acknowledgement of a message in their inbox at block ``B``, if it is non-empty. Acknowledgements are transitive, i.e. an ack of the message from sender chain ``C`` at block ``B``, implies an ack of any messages from the same sender at every ancestor of ``B``, i.e. ``B~``, ``B~2``, etc, to use ``gitrevisions(1)`` syntax. To ensure ordering and fairness, recipients are not allowed to ack messages from a block ``B``, until all incoming messages from blocks ``B~``, ``B~2``, etc have been acked.
 
 These transitive acknowledgements are stored on the relay chain as a *watermark*, for each recipient parachain. This consists of some relay-chain block ``W~`` for which the recipient has acknowledged all previously-sent messages, and a set of sending parachains for block ``W`` for which the recipient has acknowledged messages (sent in block ``W``). This data is used to help calculate and maintain the aforementioned ingress and egress queues.
+
+**Bounds**. Ingress queues are bounded in size, and since they are derived from the egress queues, this implies that the egress queues are also bounded in size. That is, if a recipient does not "consume" its ingress queue by acknowledging the message, the sender will eventually be unable to send more messages i.e. append to its egress queue, enforced by the relay-chain trusted logic.
 
 Expected usage
 --------------
